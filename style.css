@@ -346,3 +346,23 @@ select.m-input { cursor: pointer; }
   .pg-grid { grid-template-columns: 1fr; }
   .h-stat { padding: 0 12px; }
 }
+.footer-bottom {
+    display: flex;
+    flex-direction: column;     /* Text aur links ko ek ke upar ek set karega */
+    align-items: center;        /* Horizontal axis par bilkul center (middle) layega */
+    justify-content: center;    /* Vertical axis par perfectly align karega */
+    text-align: center;         /* Agar text mobile screen par break ho toh line center rahe */
+    gap: 12px;                  /* Text aur links ke beech mein clean space dega */
+    padding: 24px 0;            /* Upar aur neeche se clean spacing */
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Footer block se alag karne ke liye halki line */
+    width: 100%;                /* Poori screen width par center align maintain rakhega */
+}
+
+/* Links wrapper ko andar se center rakhne ke liye */
+.footer-bottom-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;            /* Mobile par links automatic adjust ho jayenge */
+    gap: 16px;
+}
