@@ -4,13 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SheherSaathi — Your City Companion</title>
-<meta name="description" content="Find PGs, compare budgets, calculate city fares, and access emergency help across Indian cities.">
+<meta name="description" content="Find PGs, compare budgets, calculate city fares, buy/sell student items, and access emergency help across Indian cities.">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- LOADER -->
 <div id="loader">
   <div class="loader-box">
     <svg width="56" height="56" viewBox="0 0 60 60" fill="none">
@@ -26,7 +25,6 @@
   </div>
 </div>
 
-<!-- NAVBAR -->
 <nav class="navbar">
   <a href="index.html" class="nav-brand">
     <svg width="30" height="30" viewBox="0 0 60 60" fill="none">
@@ -73,44 +71,27 @@
           <div class="pm-info"><strong id="pmName">Guest</strong><span id="pmEmail">Not signed in</span></div>
         </div>
         <div class="pm-divider"></div>
-        <button class="pm-item" onclick="openModal('editProfileModal');toggleProfileMenu()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Edit Profile
-        </button>
-        <button class="pm-item" onclick="openSaved();toggleProfileMenu()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Saved PGs
-        </button>
-        <button class="pm-item" onclick="switchLang();toggleProfileMenu()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          <span id="langBtnText">Switch to Hindi</span>
-        </button>
+        <button class="pm-item" onclick="openModal('editProfileModal');toggleProfileMenu()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Edit Profile</button>
+        <button class="pm-item" onclick="openSaved();toggleProfileMenu()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Saved PGs</button>
+        <button class="pm-item" onclick="switchLang();toggleProfileMenu()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span id="langBtnText">Switch to Hindi</span></button>
         <div class="pm-divider"></div>
-        <button class="pm-item pm-danger" onclick="logout()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
-        </button>
+        <button class="pm-item pm-danger" onclick="logout()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</button>
       </div>
     </div>
   </div>
 </nav>
 
-<!-- HERO — single, clean -->
 <header class="hero">
   <div class="hero-grid-bg"></div>
   <div class="hero-inner">
     <div class="hero-badge">🇮🇳 India's #1 City Companion App</div>
     <h1 id="heroTitle">Find Your Home<br><span>Away From Home</span></h1>
-    <p class="hero-sub" id="heroSub">PG Finder · Fare Calculator · City Guide · Emergency Helplines</p>
+    <p class="hero-sub" id="heroSub">PG Finder · Tiffins · Fare Calc · Marketplace · Expense Splitter</p>
 
     <div class="hero-search-box">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input id="heroSearchInput" placeholder="Search PG, area or city..." onkeydown="if(event.key==='Enter')doHeroSearch()">
       <button onclick="doHeroSearch()">Search</button>
-    </div>
-
-    <div class="smart-chips">
-      <button onclick="runSmartSearch('Girls PG')">👧 Girls PG</button>
-      <button onclick="runSmartSearch('PG under 6000')">💰 Under ₹6k</button>
-      <button onclick="switchTab('budget',document.querySelectorAll('.tab-btn')[6])">📊 Budget</button>
-      <button onclick="switchTab('ai',document.querySelectorAll('.tab-btn')[8])">🤖 Ask AI</button>
     </div>
 
     <div class="city-selector">
@@ -120,227 +101,117 @@
       <button class="city-btn" onclick="switchCity('Pune',this)">🎓 Pune</button>
       <button class="city-btn" onclick="switchCity('Patna',this)">🏞️ Patna</button>
     </div>
-
-    <div class="hero-stats">
-      <div class="h-stat"><strong id="statPGs">18+</strong><span>PGs Listed</span></div>
-      <div class="h-stat-div"></div>
-      <div class="h-stat"><strong>5</strong><span>Cities</span></div>
-      <div class="h-stat-div"></div>
-      <div class="h-stat"><strong>Free</strong><span>Listing</span></div>
-      <div class="h-stat-div"></div>
-      <div class="h-stat"><strong>24/7</strong><span>Support</span></div>
-    </div>
   </div>
   <div class="hero-wave"><svg viewBox="0 0 1440 56" preserveAspectRatio="none"><path d="M0,28 C480,60 960,0 1440,32 L1440,56 L0,56Z" fill="var(--bg)"/></svg></div>
 </header>
 
-<!-- QUICK STRIP -->
-<div class="quick-strip">
-  <button onclick="switchTab('pg',document.querySelectorAll('.tab-btn')[0])"><strong id="stripPG">18+</strong><span>PG Leads</span></button>
-  <button onclick="switchTab('fare',document.querySelectorAll('.tab-btn')[1])"><strong>Fare</strong><span>Auto·Cab·Bike</span></button>
-  <button onclick="switchTab('budget',document.querySelectorAll('.tab-btn')[6])"><strong>Budget</strong><span>Monthly Plan</span></button>
-  <button onclick="switchTab('helpline',document.querySelectorAll('.tab-btn')[3])"><strong>SOS</strong><span>112 + Local</span></button>
-</div>
-
-<!-- TABS -->
 <div class="tab-nav-wrap">
   <div class="tab-nav">
     <button class="tab-btn active" data-tab="pg" onclick="switchTab('pg',this)">🏠 PG Finder</button>
-    <button class="tab-btn" data-tab="fare" onclick="switchTab('fare',this)">🚗 Fare</button>
-    <button class="tab-btn" data-tab="guide" onclick="switchTab('guide',this)">🗺️ Guide</button>
-    <button class="tab-btn" data-tab="helpline" onclick="switchTab('helpline',this)">📞 Helplines</button>
+    <button class="tab-btn" data-tab="tiffin" onclick="switchTab('tiffin',this)">🍲 Tiffin</button> <button class="tab-btn" data-tab="market" onclick="switchTab('market',this)">🛍️ Market</button> <button class="tab-btn" data-tab="split" onclick="switchTab('split',this)">💸 Split</button> <button class="tab-btn" data-tab="fare" onclick="switchTab('fare',this)">🚗 Transit</button> <button class="tab-btn" data-tab="guide" onclick="switchTab('guide',this)">🗺️ Guide</button>
     <button class="tab-btn" data-tab="nearby" onclick="switchTab('nearby',this)">📍 Nearby</button>
-    <button class="tab-btn" data-tab="compare" onclick="switchTab('compare',this)">⚖️ Compare</button>
     <button class="tab-btn" data-tab="budget" onclick="switchTab('budget',this)">💰 Budget</button>
-    <button class="tab-btn" data-tab="checklist" onclick="switchTab('checklist',this)">✅ Checklist</button>
-    <button class="tab-btn" data-tab="ai" onclick="switchTab('ai',this)">🤖 AI Chat</button>
-  </div>
+    <button class="tab-btn" data-tab="ai" onclick="switchTab('ai',this)">🤖 AI Voice</button> </div>
 </div>
 
 <main class="main">
 
-  <!-- PG FINDER -->
   <div id="tab-pg" class="tab-panel active">
-    <div class="panel-header">
-      <div><h2 id="pg-heading">PGs in Bhopal</h2><p id="pg-count" class="panel-sub"></p></div>
-    </div>
+    <div class="panel-header"><div><h2 id="pg-heading">PGs in Bhopal</h2><p id="pg-count" class="panel-sub"></p></div></div>
     <div class="filter-bar">
-      <div class="filter-search">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input id="pgSearch" placeholder="Search PG name..." onkeyup="renderPGs()">
-      </div>
-      <select id="pgGender" class="sel" onchange="renderPGs()">
-        <option value="">All Genders</option><option value="Boys">Boys</option><option value="Girls">Girls</option><option value="Both">Both</option>
-      </select>
-      <select id="pgPrice" class="sel" onchange="renderPGs()">
-        <option value="">Any Budget</option><option value="5000">Under ₹5k</option><option value="7000">Under ₹7k</option><option value="10000">Under ₹10k</option>
-      </select>
-      <select id="pgSort" class="sel" onchange="renderPGs()">
-        <option value="">Sort</option><option value="price_asc">Price ↑</option><option value="price_desc">Price ↓</option><option value="rating">Rating ↓</option>
-      </select>
+      <div class="filter-search"><input id="pgSearch" placeholder="Search PG name..." onkeyup="renderPGs()"></div>
+      <select id="pgGender" class="sel" onchange="renderPGs()"><option value="">All Genders</option><option value="Boys">Boys</option><option value="Girls">Girls</option><option value="Both">Both</option></select>
+      <select id="pgPrice" class="sel" onchange="renderPGs()"><option value="">Any Budget</option><option value="5000">Under ₹5k</option><option value="7000">Under ₹7k</option><option value="10000">Under ₹10k</option></select>
+      <select id="pgSort" class="sel" onchange="renderPGs()"><option value="">Sort</option><option value="price_asc">Price ↑</option><option value="price_desc">Price ↓</option></select>
     </div>
     <div id="pgGrid" class="pg-grid"></div>
-    <div class="list-pg-cta">
-      <div class="cta-left"><div class="cta-icon">🏠</div><div><strong>Own a PG? List for FREE!</strong><p>Reach thousands of students instantly</p></div></div>
-      <button class="btn-primary" onclick="openModal('addPGModal')">+ Add PG</button>
+    <div class="list-pg-cta"><button class="btn-primary" onclick="openModal('addPGModal')">+ Add PG</button></div>
+  </div>
+
+  <div id="tab-tiffin" class="tab-panel">
+    <div class="panel-header"><div><h2>Tiffin & Mess Services</h2><p class="panel-sub">Find home-cooked food options near you</p></div></div>
+    <div class="filter-bar">
+      <select id="tiffinType" class="sel" onchange="renderTiffins()"><option value="">All Diets</option><option value="Veg">Pure Veg</option><option value="Both">Veg & Non-Veg</option></select>
+      <select id="tiffinBudget" class="sel" onchange="renderTiffins()"><option value="">Any Budget</option><option value="3000">Under ₹3000</option><option value="4000">Under ₹4000</option></select>
+    </div>
+    <div id="tiffinGrid" class="pg-grid"></div>
+  </div>
+
+  <div id="tab-market" class="tab-panel">
+    <div class="panel-header">
+      <div><h2>Student Marketplace</h2><p class="panel-sub">Buy & sell second-hand study materials and furniture</p></div>
+      <button class="btn-primary" onclick="openModal('addItemModal')">+ Sell Item</button>
+    </div>
+    <div class="filter-bar">
+      <select id="marketCat" class="sel" onchange="renderMarket()"><option value="">All Categories</option><option value="Furniture">Furniture</option><option value="Books">Books</option><option value="Electronics">Electronics</option></select>
+    </div>
+    <div id="marketGrid" class="pg-grid"></div>
+  </div>
+
+  <div id="tab-split" class="tab-panel">
+    <div class="panel-header"><div><h2>Roommate Expense Splitter</h2><p class="panel-sub">Easily track and divide shared flat expenses</p></div></div>
+    <div class="budget-layout">
+      <div class="budget-left">
+        <div class="budget-card">
+          <div class="budget-card-title">Add Roommates</div>
+          <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <input type="text" id="splitName" class="m-input" placeholder="Name" style="margin:0">
+            <button class="btn-primary" onclick="addRoommate()">Add</button>
+          </div>
+          <div id="roommateList" class="smart-chips"></div>
+        </div>
+        <div class="budget-card" style="margin-top:14px">
+          <div class="budget-card-title">Add Expense</div>
+          <input type="text" id="expenseDesc" class="m-input" placeholder="What was it for? (e.g., Wifi)">
+          <input type="number" id="expenseAmt" class="m-input" placeholder="Amount (₹)">
+          <select id="expensePayer" class="m-input"><option value="">Paid by...</option></select>
+          <button class="btn-primary" style="width:100%" onclick="addExpense()">Add Bill</button>
+        </div>
+      </div>
+      <div class="budget-right">
+        <div class="budget-result-card">
+          <div class="budget-result-title">Who Owes Whom</div>
+          <div id="splitResults" class="budget-breakdown">Add roommates and expenses to see calculations.</div>
+          <button class="btn-ghost-sm" style="margin-top:15px; width:100%" onclick="resetSplitter()">Reset All</button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- FARE -->
   <div id="tab-fare" class="tab-panel">
-    <div class="panel-header"><div><h2 id="fare-heading">Fare Calculator</h2><p class="panel-sub">Instant transport fare estimates</p></div></div>
+    <div class="panel-header"><div><h2>Transit & Fares</h2><p class="panel-sub">Calculate auto fares and find local bus/metro routes</p></div></div>
     <div class="fare-layout">
       <div class="fare-left">
         <div class="fare-box">
-          <div class="fare-box-title">Where are you going?</div>
-          <label class="lbl">From</label>
+          <div class="fare-box-title">Instant Fare Calc</div>
           <select id="fareFrom" class="sel full" onchange="calcFare()"><option value="">Select source...</option></select>
-          <label class="lbl" style="margin-top:14px">To</label>
-          <select id="fareTo" class="sel full" onchange="calcFare()"><option value="">Select destination...</option></select>
+          <select id="fareTo" class="sel full" onchange="calcFare()" style="margin-top:14px"><option value="">Select destination...</option></select>
           <div id="fareResult" class="fare-result hidden">
-            <div class="fare-meta-row">
-              <span class="fare-meta-item" id="f-time"></span>
-              <span class="fare-meta-item" id="f-dist"></span>
-            </div>
             <div class="fare-cards">
-              <div class="fare-card-item"><div class="fci-icon">🛺</div><div class="fci-label">Auto</div><div class="fci-price" id="f-auto"></div></div>
-              <div class="fare-card-item best"><div class="fci-best">Best</div><div class="fci-icon">🚕</div><div class="fci-label">Cab</div><div class="fci-price" id="f-cab"></div></div>
-              <div class="fare-card-item"><div class="fci-icon">🛵</div><div class="fci-label">Bike</div><div class="fci-price" id="f-bike"></div></div>
-              <div class="fare-card-item"><div class="fci-icon">⚡</div><div class="fci-label">E-Rick</div><div class="fci-price" id="f-erick"></div></div>
+              <div class="fare-card-item"><div class="fci-icon">🛺</div>Auto<div class="fci-price" id="f-auto"></div></div>
+              <div class="fare-card-item best"><div class="fci-icon">🚕</div>Cab<div class="fci-price" id="f-cab"></div></div>
             </div>
-            <div class="fare-note-box" id="f-note"></div>
           </div>
         </div>
       </div>
       <div class="fare-right">
         <div class="tips-card">
-          <div class="tips-title">💡 Travel Smart</div>
-          <div class="tip-row">📌 Fix auto fare before boarding</div>
-          <div class="tip-row">📱 Use Ola/Uber for transparent pricing</div>
-          <div class="tip-row">🌙 Prefer cab at night for safety</div>
-          <div class="tip-row">🎫 Use prepaid booth at station</div>
-          <div class="tip-row">💳 Pay via UPI — no change issues</div>
-          <div class="tip-row">📷 Note vehicle number before boarding</div>
+          <div class="tips-title">🚍 Local Routes for <span id="routeCityName">Bhopal</span></div>
+          <div id="routeList"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- GUIDE -->
-  <div id="tab-guide" class="tab-panel">
-    <div class="panel-header"><div><h2 id="guide-heading">City Guide</h2><p class="panel-sub">Just arrived? Follow these steps</p></div></div>
-    <div id="guideSteps" class="guide-wrap"></div>
-  </div>
-
-  <!-- HELPLINES -->
-  <div id="tab-helpline" class="tab-panel">
-    <div class="panel-header"><div><h2>Emergency Helplines</h2><p class="panel-sub">Save these — they could save your life</p></div></div>
-    <div class="sos-grid">
-      <a href="tel:100" class="sos-card"><div class="sos-num">100</div><div class="sos-name">Police</div><div class="sos-call">Call Now</div></a>
-      <a href="tel:108" class="sos-card"><div class="sos-num">108</div><div class="sos-name">Ambulance</div><div class="sos-call">Call Now</div></a>
-      <a href="tel:101" class="sos-card"><div class="sos-num">101</div><div class="sos-name">Fire</div><div class="sos-call">Call Now</div></a>
-      <a href="tel:112" class="sos-card red"><div class="sos-num">112</div><div class="sos-name">All Emergency</div><div class="sos-call">Call Now</div></a>
-    </div>
-    <h3 class="sub-title" style="margin:24px 0 12px">City-Specific Numbers</h3>
-    <div id="helplineItems" class="helpline-list"></div>
-  </div>
-
-  <!-- NEARBY -->
-  <div id="tab-nearby" class="tab-panel">
-    <div class="panel-header"><div><h2 id="nearby-heading">Nearby Places</h2><p class="panel-sub" id="nearby-sub"></p></div></div>
-    <div class="nearby-cats">
-      <button class="cat-btn active" onclick="showCategory('hospital',this)">🏥 Hospital</button>
-      <button class="cat-btn" onclick="showCategory('police',this)">🚔 Police</button>
-      <button class="cat-btn" onclick="showCategory('atm',this)">🏧 ATM</button>
-      <button class="cat-btn" onclick="showCategory('food',this)">🍽️ Food</button>
-      <button class="cat-btn" onclick="showCategory('transport',this)">🚌 Transport</button>
-    </div>
-    <div id="nearbyItems" class="nearby-list"></div>
-  </div>
-
-  <!-- COMPARE -->
-  <div id="tab-compare" class="tab-panel">
-    <div class="panel-header"><div><h2>Compare PGs</h2><p class="panel-sub">Add up to 3 PGs and compare side by side</p></div></div>
-    <div class="compare-search-bar" style="position:relative;margin-bottom:14px">
-      <input id="compareSearch" class="m-input" placeholder="Search PG to add..." onkeyup="searchCompare(this.value)" style="margin:0;width:100%">
-      <div id="compareDropdown" class="compare-dropdown hidden"></div>
-    </div>
-    <div id="compareSelected" class="compare-selected-pills"></div>
-    <div id="compareTable" class="compare-table-wrap"><div class="compare-empty">🔍 Search and add PGs to compare</div></div>
-  </div>
-
-  <!-- BUDGET -->
-  <div id="tab-budget" class="tab-panel">
-    <div class="panel-header"><div><h2>Budget Planner</h2><p class="panel-sub">Plan your monthly expenses in a new city</p></div></div>
-    <div class="budget-layout">
-      <div class="budget-left">
-        <div class="budget-card">
-          <div class="budget-card-title">Select City</div>
-          <div class="city-btns-small">
-            <button class="cbs active" onclick="setBudgetCity('Bhopal',this)">Bhopal</button>
-            <button class="cbs" onclick="setBudgetCity('Delhi',this)">Delhi</button>
-            <button class="cbs" onclick="setBudgetCity('Mumbai',this)">Mumbai</button>
-            <button class="cbs" onclick="setBudgetCity('Pune',this)">Pune</button>
-            <button class="cbs" onclick="setBudgetCity('Patna',this)">Patna</button>
-          </div>
-          <div class="budget-card-title" style="margin-top:18px">Monthly Income (₹)</div>
-          <input type="number" id="budgetIncome" class="m-input" placeholder="e.g. 15000" oninput="calcBudget()" style="margin-bottom:0">
-        </div>
-        <div class="budget-card" style="margin-top:14px">
-          <div class="budget-card-title">Adjust Expenses</div>
-          <div class="budget-slider-row"><label>🏠 PG/Rent</label><input type="range" id="bPG" min="2000" max="20000" step="500" oninput="calcBudget()"><span id="bPGVal">₹0</span></div>
-          <div class="budget-slider-row"><label>🍽️ Food</label><input type="range" id="bFood" min="1000" max="10000" step="200" oninput="calcBudget()"><span id="bFoodVal">₹0</span></div>
-          <div class="budget-slider-row"><label>🚌 Transport</label><input type="range" id="bTransport" min="500" max="5000" step="100" oninput="calcBudget()"><span id="bTransportVal">₹0</span></div>
-          <div class="budget-slider-row"><label>📱 Internet</label><input type="range" id="bInternet" min="200" max="1000" step="50" oninput="calcBudget()"><span id="bInternetVal">₹0</span></div>
-          <div class="budget-slider-row"><label>🎬 Fun</label><input type="range" id="bEntertain" min="0" max="5000" step="200" oninput="calcBudget()"><span id="bEntertainVal">₹0</span></div>
-          <div class="budget-slider-row"><label>🛍️ Misc</label><input type="range" id="bMisc" min="0" max="5000" step="200" oninput="calcBudget()"><span id="bMiscVal">₹0</span></div>
-        </div>
-      </div>
-      <div class="budget-right">
-        <div class="budget-result-card">
-          <div class="budget-result-title">Monthly Summary</div>
-          <div class="budget-city-tag" id="budgetCityTag">📍 Bhopal</div>
-          <div id="budgetBreakdown" class="budget-breakdown"></div>
-          <div class="budget-total-row"><span>Total Expenses</span><strong id="budgetTotal">₹0</strong></div>
-          <div class="budget-savings-row" id="budgetSavings"></div>
-          <div id="budgetTip" class="budget-tip"></div>
-        </div>
-        <div class="budget-avg-card" id="budgetAvgCard"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CHECKLIST -->
-  <div id="tab-checklist" class="tab-panel">
-    <div class="panel-header">
-      <div><h2>New City Checklist</h2><p class="panel-sub">Complete these steps when you arrive</p></div>
-      <button onclick="resetChecklist()" class="btn-ghost-sm">Reset</button>
-    </div>
-    <div class="checklist-progress-wrap">
-      <div class="checklist-progress-bar"><div id="checkProgressFill" class="checklist-progress-fill" style="width:0%"></div></div>
-      <span id="checkProgressText" class="checklist-progress-text">0 / 18 completed</span>
-    </div>
-    <div id="checklistItems" class="checklist-wrap"></div>
-  </div>
-
-  <!-- AI CHAT -->
   <div id="tab-ai" class="tab-panel">
-    <div class="panel-header"><div><h2>AI City Assistant</h2><p class="panel-sub">Ask anything — PG, transport, food, budget</p></div></div>
+    <div class="panel-header"><div><h2>AI City Assistant</h2><p class="panel-sub">Ask anything via text or voice! 🎤</p></div></div>
     <div class="ai-chat-wrap">
       <div id="aiMessages" class="ai-messages">
-        <div class="ai-msg bot">
-          <div class="ai-avatar">🤖</div>
-          <div class="ai-bubble">Hi! I'm your SheherSaathi AI. Ask me about PGs, fares, food, budget or anything about your city! 😊</div>
-        </div>
-      </div>
-      <div class="ai-suggestions">
-        <button class="ai-suggestion" onclick="askAI(this.textContent)">PG under ₹6000 in Bhopal</button>
-        <button class="ai-suggestion" onclick="askAI(this.textContent)">Best areas to stay in Delhi</button>
-        <button class="ai-suggestion" onclick="askAI(this.textContent)">Monthly cost in Mumbai</button>
-        <button class="ai-suggestion" onclick="askAI(this.textContent)">Tips for new arrivals in Pune</button>
+        <div class="ai-msg bot"><div class="ai-avatar">🤖</div><div class="ai-bubble">Hi! I'm your SheherSaathi AI. Ask me about PGs, fares, food, or tap the mic to speak! 😊</div></div>
       </div>
       <div class="ai-input-row">
         <input id="aiInput" class="m-input" placeholder="Ask me anything..." style="margin:0;flex:1" onkeydown="if(event.key==='Enter')sendAIMessage()">
+        <button onclick="startAIVoice()" class="ai-send-btn bg-danger" id="aiVoiceBtn" title="Speak">🎤</button>
         <button onclick="sendAIMessage()" class="ai-send-btn">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
@@ -350,116 +221,14 @@
 
 </main>
 
-<!-- FOOTER -->
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-brand-col">
-      <div class="footer-logo">
-        <svg width="26" height="26" viewBox="0 0 60 60" fill="none"><rect width="60" height="60" rx="13" fill="url(#nf)"/><path d="M30 8L38 20H22L30 8Z" fill="white"/><rect x="18" y="20" width="24" height="22" rx="2" fill="white"/><rect x="24" y="28" width="5" height="14" fill="#1d4ed8"/><rect x="31" y="28" width="5" height="10" fill="#1d4ed8" opacity=".6"/><defs><linearGradient id="nf" x1="0" y1="0" x2="60" y2="60"><stop stop-color="#1e40af"/><stop offset="1" stop-color="#1e3a8a"/></linearGradient></defs></svg>
-        <span>Sheher<em>Saathi</em></span>
-      </div>
-      <p>Your trusted companion in every new city.</p>
-      <div class="footer-cities">🏛️ Bhopal · 🗼 Delhi · 🌆 Mumbai · 🎓 Pune · 🏞️ Patna</div>
-    </div>
-    <div class="footer-links-col">
-      <div class="footer-col">
-        <div class="footer-col-title">App</div>
-        <a href="#" onclick="switchTab('pg',document.querySelectorAll('.tab-btn')[0]);return false">PG Finder</a>
-        <a href="#" onclick="switchTab('fare',document.querySelectorAll('.tab-btn')[1]);return false">Fare Calculator</a>
-        <a href="#" onclick="switchTab('guide',document.querySelectorAll('.tab-btn')[2]);return false">City Guide</a>
-        <a href="#" onclick="switchTab('ai',document.querySelectorAll('.tab-btn')[8]);return false">AI Assistant</a>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Help</div>
-        <a href="contact.html">Contact Us</a>
-        <a href="policy.html">Privacy Policy</a>
-        <a href="#" onclick="openModal('addPGModal');return false">List Your PG</a>
-        <a href="tel:9534196255">Call Support</a>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Emergency</div>
-        <a href="tel:100">Police — 100</a>
-        <a href="tel:108">Ambulance — 108</a>
-        <a href="tel:101">Fire — 101</a>
-        <a href="tel:112">All — 112</a>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>© 2026 SheherSaathi — Made with ❤️ for students across India</p>
-    <div class="footer-bottom-links"><a href="contact.html">Contact</a><a href="policy.html">Privacy</a></div>
-  </div>
-</footer>
-
-<!-- LOGIN MODAL -->
-<div id="loginModal" class="overlay">
-  <div class="modal auth-modal">
-    <div class="auth-logo">
-      <svg width="42" height="42" viewBox="0 0 60 60" fill="none"><rect width="60" height="60" rx="13" fill="url(#na)"/><path d="M30 8L38 20H22L30 8Z" fill="white"/><rect x="18" y="20" width="24" height="22" rx="2" fill="white"/><rect x="24" y="28" width="5" height="14" fill="#1d4ed8"/><rect x="31" y="28" width="5" height="10" fill="#1d4ed8" opacity=".6"/><defs><linearGradient id="na" x1="0" y1="0" x2="60" y2="60"><stop stop-color="#1e40af"/><stop offset="1" stop-color="#1e3a8a"/></linearGradient></defs></svg>
-    </div>
-    <h2 class="auth-title">Welcome to SheherSaathi</h2>
-    <p class="auth-sub">Your city companion starts here</p>
-    <div class="auth-tabs">
-      <button class="auth-tab active" onclick="showAuthTab('login')">Sign In</button>
-      <button class="auth-tab" onclick="showAuthTab('register')">Register</button>
-    </div>
-    <div id="loginForm">
-      <div class="input-group"><label>Full Name</label><input id="loginName" type="text" placeholder="Your name" class="m-input"></div>
-      <div class="input-group"><label>Email</label><input id="loginEmail" type="email" placeholder="Your email" class="m-input"></div>
-      <div class="input-group"><label>Password</label><div class="pass-wrap"><input id="loginPass" type="password" placeholder="Password" class="m-input"><button class="eye-btn" onclick="togglePass('loginPass')">👁️</button></div></div>
-      <button onclick="doLogin()" class="btn-full">Sign In</button>
-      <button onclick="doGuest()" class="btn-full btn-ghost" style="margin-top:8px">Continue as Guest</button>
-    </div>
-    <div id="registerForm" style="display:none">
-      <div class="input-group"><label>Full Name *</label><input id="regName" type="text" placeholder="Your full name" class="m-input"></div>
-      <div class="input-group"><label>Email *</label><input id="regEmail" type="email" placeholder="Your email" class="m-input"></div>
-      <div class="input-group"><label>Phone</label><input id="regPhone" type="tel" placeholder="Phone (optional)" class="m-input"></div>
-      <div class="input-group"><label>Password *</label><div class="pass-wrap"><input id="regPass" type="password" placeholder="Min 6 characters" class="m-input"><button class="eye-btn" onclick="togglePass('regPass')">👁️</button></div></div>
-      <div class="input-group"><label>Confirm Password *</label><div class="pass-wrap"><input id="regPass2" type="password" placeholder="Repeat password" class="m-input"><button class="eye-btn" onclick="togglePass('regPass2')">👁️</button></div></div>
-      <button onclick="doRegister()" class="btn-full">Create Account</button>
-    </div>
-  </div>
-</div>
-
-<!-- EDIT PROFILE -->
-<div id="editProfileModal" class="overlay hidden">
+<div id="addItemModal" class="overlay hidden">
   <div class="modal">
-    <div class="modal-top"><h3>Edit Profile</h3><button class="close-btn" onclick="closeModal('editProfileModal')">✕</button></div>
-    <div class="profile-pic-edit">
-      <div class="profile-pic-big" id="editAvatar"></div>
-      <label class="upload-label-btn">📷 Change Photo<input type="file" accept="image/*" onchange="changeDP(event)"></label>
-    </div>
-    <div class="input-group"><label>Full Name</label><input id="editName" class="m-input" placeholder="Your name"></div>
-    <div class="input-group"><label>Email</label><input id="editEmail" class="m-input" placeholder="Your email" type="email"></div>
-    <div class="input-group"><label>Phone</label><input id="editPhone" class="m-input" placeholder="Phone number" type="tel"></div>
-    <div class="input-group"><label>New Password</label><div class="pass-wrap"><input id="editPass" class="m-input" placeholder="Leave blank = no change" type="password"><button class="eye-btn" onclick="togglePass('editPass')">👁️</button></div></div>
-    <div class="modal-btns"><button onclick="saveProfile()">Save Changes</button><button class="btn-ghost" onclick="closeModal('editProfileModal')">Cancel</button></div>
+    <div class="modal-top"><h3>Sell an Item</h3><button class="close-btn" onclick="closeModal('addItemModal')">✕</button></div>
+    <div class="input-group"><label>Item Title</label><input id="newItemTitle" class="m-input" placeholder="e.g. Study Table"></div>
+    <div class="input-group"><label>Category</label><select id="newItemCat" class="m-input"><option>Furniture</option><option>Books</option><option>Electronics</option></select></div>
+    <div class="input-group"><label>Price (₹)</label><input id="newItemPrice" class="m-input" type="number" placeholder="e.g. 1500"></div>
+    <div class="modal-btns"><button onclick="addNewMarketItem()">✅ Post Item</button><button class="btn-ghost" onclick="closeModal('addItemModal')">Cancel</button></div>
   </div>
-</div>
-
-<!-- SAVED -->
-<div id="savedPGModal" class="overlay hidden">
-  <div class="modal"><div class="modal-top"><h3>❤️ Saved PGs</h3><button class="close-btn" onclick="closeModal('savedPGModal')">✕</button></div><div id="savedPGList"></div></div>
-</div>
-
-<!-- ADD PG -->
-<div id="addPGModal" class="overlay hidden">
-  <div class="modal">
-    <div class="modal-top"><h3>List Your PG — Free!</h3><button class="close-btn" onclick="closeModal('addPGModal')">✕</button></div>
-    <div class="input-group"><label>PG Name *</label><input id="newPGName" class="m-input" placeholder="e.g. Sunrise Boys Hostel"></div>
-    <div class="input-group"><label>City *</label><select id="newPGCity" class="m-input"><option>Bhopal</option><option>Delhi</option><option>Mumbai</option><option>Pune</option><option>Patna</option></select></div>
-    <div class="input-group"><label>Monthly Rent (₹) *</label><input id="newPGPrice" class="m-input" type="number" placeholder="e.g. 6000"></div>
-    <div class="input-group"><label>For</label><select id="newPGGender" class="m-input"><option value="Boys">Boys Only</option><option value="Girls">Girls Only</option><option value="Both">Both</option></select></div>
-    <div class="input-group"><label>Contact *</label><input id="newPGContact" class="m-input" type="tel" placeholder="Your phone number"></div>
-    <div class="input-group"><label>Address</label><input id="newPGAddress" class="m-input" placeholder="Area, City"></div>
-    <div class="input-group"><label>Amenities</label><input id="newPGAmen" class="m-input" placeholder="WiFi, AC, Meals..."></div>
-    <div class="modal-btns"><button onclick="addNewPG()">✅ Submit</button><button class="btn-ghost" onclick="closeModal('addPGModal')">Cancel</button></div>
-  </div>
-</div>
-
-<!-- PG DETAIL -->
-<div id="pgDetailModal" class="overlay hidden">
-  <div class="modal detail-modal"><div class="modal-top"><h3>PG Details</h3><button class="close-btn" onclick="closeModal('pgDetailModal')">✕</button></div><div id="pgDetailBody"></div></div>
 </div>
 
 <script src="data.js"></script>
