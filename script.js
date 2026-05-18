@@ -7,14 +7,22 @@ let savedPGs = JSON.parse(localStorage.getItem('ss_saved_pgs')) || [];
 let checklistState = JSON.parse(localStorage.getItem('ss_checklist')) || {};
 
 // ==========================================
+// ==========================================
 // 2. LOADER & APP INITIALIZATION
 // ==========================================
 window.addEventListener('DOMContentLoaded', () => {
-    // Hide Loader after a small delay
+    // Hide Loader smoothly after page loads
     setTimeout(() => {
         const loader = document.getElementById('loader');
-        if (loader) loader.style.style.display = 'none'; // Fixing potential overlay issues
-        if (loader) loader.remove(); 
+        if (loader) {
+            loader.style.opacity = '0';
+            loader.style.transition = 'opacity 0.4s ease';
+            
+            // 400ms baad DOM se completely hata do taaki click ho sake
+            setTimeout(() => {
+                loader.remove();
+            }, 400);
+        }
     }, 1200);
 
     // Initialize UI Component states
@@ -24,7 +32,6 @@ window.addEventListener('DOMContentLoaded', () => {
     renderPGs();
     initNearby();
 });
-
 // ==========================================
 // 3. TAB SWITCHING (SPA LOGIC)
 // ==========================================
