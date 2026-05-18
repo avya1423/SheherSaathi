@@ -1,39 +1,25 @@
 const pgData = [
-
-{
-  name:'Lake View Girls PG',
-  city:'Bhopal',
-  gender:'Girls',
-  price:5500,
-  image:'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1200&auto=format&fit=crop',
-  features:['WiFi','Food','Security']
-},
-
-{
-  name:'Royal Boys Hostel',
-  city:'Delhi',
-  gender:'Boys',
-  price:7000,
-  image:'https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop',
-  features:['Laundry','Parking','WiFi']
-},
-
-{
-  name:'Comfort Stay PG',
-  city:'Pune',
-  gender:'Both',
-  price:6200,
-  image:'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1200&auto=format&fit=crop',
-  features:['AC','Meals','CCTV']
-},
-
-{
-  name:'Metro Living PG',
-  city:'Mumbai',
-  gender:'Both',
-  price:9000,
-  image:'https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=1200&auto=format&fit=crop',
-  features:['WiFi','Gym','Security']
-}
-
+  // BHOPAL
+  { name:"Shri Ram Boys Hostel", city:"Bhopal", price:"₹5000", contact:"8123869239", image:"https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600", gender:"Boys", address:"Near Hamidia Hospital, Bhopal", amenities:"WiFi, Meals, Laundry, Security" },
+  { name:"City Boys Hostel", city:"Bhopal", price:"₹6000", contact:"9876543210", image:"https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=600", gender:"Boys", address:"MP Nagar Zone 1, Bhopal", amenities:"WiFi, Parking, Security, 24x7 Water" },
+  { name:"Lake View Girls PG", city:"Bhopal", price:"₹6500", contact:"9111111111", image:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600", gender:"Girls", address:"Near Upper Lake, Bhopal", amenities:"WiFi, Meals, AC, Security, CCTV" },
+  { name:"MP Nagar Comfort PG", city:"Bhopal", price:"₹5500", contact:"9222222222", image:"https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=600", gender:"Boys", address:"MP Nagar Zone 2, Bhopal", amenities:"WiFi, Meals, Laundry, Gym" },
+  { name:"Arera Colony Premium PG", city:"Bhopal", price:"₹7000", contact:"9300011122", image:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600", gender:"Both", address:"Arera Colony E-7, Bhopal", amenities:"WiFi, AC, Meals, Gym, Parking" },
+  // DELHI
+  { name:"Delhi Comfort PG", city:"Delhi", price:"₹8000", contact:"9812345678", image:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600", gender:"Boys", address:"Karol Bagh, New Delhi", amenities:"WiFi, AC, Meals, Laundry, Security" },
+  { name:"North Delhi Boys Hostel", city:"Delhi", price:"₹7000", contact:"9898989898", image:"https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=600", gender:"Boys", address:"Paharganj, New Delhi", amenities:"WiFi, Meals, Security, Parking" },
+  { name:"Lajpat Nagar Girls PG", city:"Delhi", price:"₹9000", contact:"9711223344", image:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600", gender:"Girls", address:"Lajpat Nagar Part 2, Delhi", amenities:"WiFi, AC, Meals, CCTV, Laundry" },
+  // MUMBAI
+  { name:"Mumbai Stay PG", city:"Mumbai", price:"₹10000", contact:"9765432109", image:"https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600", gender:"Boys", address:"Andheri West, Mumbai", amenities:"WiFi, AC, Meals, Gym, Security" },
+  { name:"Andheri Girls PG", city:"Mumbai", price:"₹9000", contact:"9988776655", image:"https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=600", gender:"Girls", address:"Andheri East, Mumbai", amenities:"WiFi, AC, Meals, Security, CCTV" },
+  { name:"Dadar Boys Hostel", city:"Mumbai", price:"₹8500", contact:"9870011223", image:"https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600", gender:"Boys", address:"Dadar West, Mumbai", amenities:"WiFi, Meals, Parking, Laundry" },
+  // PUNE
+  { name:"Pune City Hostel", city:"Pune", price:"₹7000", contact:"8877665544", image:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600", gender:"Boys", address:"Shivajinagar, Pune", amenities:"WiFi, Meals, Laundry, Security" },
+  { name:"Koregaon Park Girls PG", city:"Pune", price:"₹8000", contact:"7766554433", image:"https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=600", gender:"Girls", address:"Koregaon Park, Pune", amenities:"WiFi, AC, Meals, CCTV, Gym" },
+  { name:"Hinjawadi Tech PG", city:"Pune", price:"₹9000", contact:"9922334455", image:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600", gender:"Both", address:"Hinjawadi Phase 1, Pune", amenities:"WiFi, AC, Meals, Gym, Parking" },
+  // PATNA
+  { name:"Patna City Boys PG", city:"Patna", price:"₹5000", contact:"9333333333", image:"https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=600", gender:"Boys", address:"Fraser Road, Patna", amenities:"WiFi, Meals, Security, Laundry" },
+  { name:"Girls Comfort PG Patna", city:"Patna", price:"₹6000", contact:"9444444444", image:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600", gender:"Girls", address:"Bailey Road, Patna", amenities:"WiFi, Meals, AC, Laundry, CCTV" },
+  { name:"Kankarbagh Hostel", city:"Patna", price:"₹5500", contact:"9555555555", image:"https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=600", gender:"Boys", address:"Kankarbagh Colony, Patna", amenities:"WiFi, Parking, Security, Water" },
+  { name:"Patna Premium PG", city:"Patna", price:"₹7000", contact:"9666666666", image:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600", gender:"Girls", address:"Rajendra Nagar, Patna", amenities:"WiFi, AC, Meals, CCTV, Security" },
 ];
