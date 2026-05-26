@@ -3,37 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SheherSaathi | Ultimate Student Companion</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>SheherSaathi | City Companion for Students</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="logo"><i class="fa-solid fa-compass"></i> Sheher<span>Saathi</span></a>
+            <a href="#" class="logo"><i class="fa-solid fa-map-location-dot"></i> Sheher<span>Saathi</span></a>
             <div class="nav-actions">
-                <button id="theme-toggle" class="icon-btn" title="Toggle Theme"><i class="fas fa-moon"></i></button>
-                <button class="btn btn-outline" onclick="openModal('login-modal')">Login</button>
-                <button class="btn btn-primary" onclick="openModal('add-pg-modal')"><i class="fa-solid fa-plus"></i> List PG</button>
+                <button id="theme-toggle" class="icon-btn" title="Dark Mode"><i class="fas fa-moon"></i></button>
+                <div id="auth-section">
+                    <button class="btn btn-outline" onclick="openModal('login-modal')">Login</button>
+                </div>
+                <button class="btn btn-primary" onclick="openModal('add-pg-modal')"><i class="fa-solid fa-plus"></i> Add Listing</button>
             </div>
         </div>
     </nav>
 
     <div class="app-container">
-        
         <aside class="sidebar">
             <div class="sidebar-menu">
-                <button class="sidebar-btn active" onclick="switchTab('pg-finder')"><i class="fa-solid fa-house-chimney"></i> PG & Rooms</button>
+                <button class="sidebar-btn active" onclick="switchTab('pg-finder')"><i class="fa-solid fa-building"></i> Flats & PGs</button>
                 <button class="sidebar-btn" onclick="switchTab('fare-calc')"><i class="fa-solid fa-calculator"></i> Fare Calculator</button>
-                <button class="sidebar-btn" onclick="switchTab('tiffin-gym')"><i class="fa-solid fa-utensils"></i> Food & Fitness</button>
-                <button class="sidebar-btn" onclick="switchTab('expense-tracker')"><i class="fa-solid fa-wallet"></i> Expense & Split</button>
-                <button class="sidebar-btn" onclick="switchTab('flatmate-matcher')"><i class="fa-solid fa-users"></i> Flatmate Matcher</button>
-                <button class="sidebar-btn" onclick="switchTab('marketplace')"><i class="fa-solid fa-store"></i> Second-Hand Shop</button>
-                <button class="sidebar-btn" onclick="switchTab('academic-hub')"><i class="fa-solid fa-graduation-cap"></i> Academic Hub</button>
-                <button class="sidebar-btn" onclick="switchTab('checklist')"><i class="fa-solid fa-list-check"></i> Day-1 Checklist</button>
-                <button class="sidebar-btn text-danger" onclick="switchTab('emergency')"><i class="fa-solid fa-circle-exclamation"></i> Emergency Helplines</button>
+                <button class="sidebar-btn" onclick="switchTab('tiffin-gym')"><i class="fa-solid fa-dumbbell"></i> Food & Fitness</button>
+                <button class="sidebar-btn" onclick="switchTab('expense-tracker')"><i class="fa-solid fa-wallet"></i> Expense Tracker</button>
+                <button class="sidebar-btn" onclick="switchTab('academic-hub')"><i class="fa-solid fa-laptop-code"></i> Tech & Study</button>
+                <button class="sidebar-btn text-danger" onclick="switchTab('emergency')"><i class="fa-solid fa-truck-medical"></i> Emergency</button>
+                
+                <hr class="divider">
+                <a href="dashboard.html" class="sidebar-btn link-btn"><i class="fa-solid fa-chart-line"></i> User Dashboard</a>
+                <a href="admin.html" class="sidebar-btn link-btn"><i class="fa-solid fa-user-tie"></i> Admin Panel</a>
+                <a href="contact.html" class="sidebar-btn link-btn"><i class="fa-solid fa-envelope"></i> Contact Us</a>
+                <a href="policy.html" class="sidebar-btn link-btn"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a>
             </div>
         </aside>
 
@@ -41,81 +44,51 @@
             
             <section id="pg-finder" class="tab-content active">
                 <div class="tab-header">
-                    <h2>Verified Accommodations</h2>
-                    <p>Find premium rooms and PGs matching your budget</p>
+                    <h2>Verified Flats & PGs</h2>
+                    <p>Find premium private flats and accommodations.</p>
                 </div>
                 <div class="filter-wrapper">
-                    <div class="filter-box">
-                        <i class="fa-solid fa-location-dot"></i>
-                        <select id="city-select" onchange="filterPGs()">
-                            <option value="All">All Cities</option>
-                            <option value="Bhopal">Bhopal</option>
-                            <option value="Patna">Patna</option>
-                            <option value="Delhi">Delhi</option>
-                        </select>
-                    </div>
-                    <div class="filter-box">
-                        <i class="fa-solid fa-indian-rupee-sign"></i>
-                        <select id="budget-select" onchange="filterPGs()">
-                            <option value="All">Any Budget</option>
-                            <option value="6000">Under ₹6,000</option>
-                            <option value="9000">Under ₹9,000</option>
-                        </select>
-                    </div>
-                    <div class="filter-box">
-                        <i class="fa-solid fa-venus-mars"></i>
-                        <select id="gender-select" onchange="filterPGs()">
-                            <option value="All">All Genders</option>
-                            <option value="Boys">Boys Only</option>
-                            <option value="Girls">Girls Only</option>
-                        </select>
-                    </div>
+                    <select id="city-select" class="form-input w-auto" onchange="filterPGs()">
+                        <option value="All">All Cities</option>
+                        <option value="Bhopal">Bhopal</option>
+                        <option value="Patna">Patna</option>
+                    </select>
+                    <select id="budget-select" class="form-input w-auto" onchange="filterPGs()">
+                        <option value="All">Any Budget</option>
+                        <option value="8000">Under ₹8,000</option>
+                        <option value="15000">Under ₹15,000</option>
+                    </select>
                 </div>
                 <div class="grid-layout" id="pg-grid"></div>
             </section>
 
             <section id="fare-calc" class="tab-content">
                 <div class="tab-header">
-                    <h2>Smart Fare Estimator</h2>
-                    <p>Avoid local transit scams. Get exact pricing instantly.</p>
+                    <h2>City Fare Estimator</h2>
+                    <p>Get instant estimates for auto, cab, and bike rides.</p>
                 </div>
                 <div class="card card-center">
                     <div class="form-group">
-                        <label>Pickup Location</label>
-                        <input type="text" id="pickup-loc" placeholder="e.g., Railway Station" class="form-input">
+                        <input type="text" id="pickup-loc" placeholder="Pickup (e.g., Railway Station)" class="form-input">
                     </div>
                     <div class="form-group">
-                        <label>Drop Location</label>
-                        <input type="text" id="drop-loc" placeholder="e.g., MP Nagar / Flat" class="form-input">
+                        <input type="text" id="drop-loc" placeholder="Dropoff (e.g., MP Nagar)" class="form-input">
                     </div>
                     <button class="btn btn-primary w-100" onclick="runFareCalculation()">Estimate Cost</button>
-                    
                     <div class="fare-dashboard" id="fare-dashboard" style="display: none;">
-                        <div class="fare-metric">
-                            <i class="fa-solid fa-motorcycle"></i>
-                            <span>Bike Taxi</span>
-                            <h3 id="fare-bike">₹0</h3>
-                        </div>
-                        <div class="fare-metric highlighted">
-                            <i class="fa-solid fa-truck-monster"></i>
-                            <span>Auto Rickshaw</span>
-                            <h3 id="fare-auto">₹0</h3>
-                        </div>
-                        <div class="fare-metric">
-                            <i class="fa-solid fa-car"></i>
-                            <span>Premium Cab</span>
-                            <h3 id="fare-cab">₹0</h3>
-                        </div>
+                        <div class="fare-metric"><i class="fa-solid fa-motorcycle"></i><h3 id="fare-bike">₹0</h3></div>
+                        <div class="fare-metric highlighted"><i class="fa-solid fa-truck-monster"></i><h3 id="fare-auto">₹0</h3></div>
+                        <div class="fare-metric"><i class="fa-solid fa-car"></i><h3 id="fare-cab">₹0</h3></div>
                     </div>
                 </div>
             </section>
 
             <section id="tiffin-gym" class="tab-content">
                 <div class="tab-header">
-                    <h2>Food & Fitness Directory</h2>
-                    <p>Healthy tiffin networks and budget gyms near you</p>
+                    <h2>Diet & Fitness Directory</h2>
+                    <p>High-protein tiffins and muscle-building gyms nearby.</p>
                 </div>
-                <div class="directory-toggle">
+                <div class="directory-toggle mb-20">
                     <button class="btn btn-primary" onclick="toggleDirectory('tiffin')">Tiffin Centers</button>
                     <button class="btn btn-outline" onclick="toggleDirectory('gym')">Local Gyms</button>
                 </div>
@@ -124,124 +97,61 @@
 
             <section id="expense-tracker" class="tab-content">
                 <div class="tab-header">
-                    <h2>Student Budget Dashboard</h2>
-                    <p>Track your room expenses and split bills with flatmates seamlessly</p>
+                    <h2>Flat Monthly Budget Tracker</h2>
+                    <p>Track rent, groceries, and split bills.</p>
                 </div>
                 <div class="expense-overview">
-                    <div class="overview-box">
-                        <span>Total Monthly Spend</span>
-                        <h2 id="total-spend">₹0</h2>
-                    </div>
-                    <div class="overview-box text-success">
-                        <span>Your Split Share</span>
-                        <h2 id="split-share">₹0</h2>
-                    </div>
+                    <div class="overview-box"><span>Total Spent</span><h2 id="total-spend">₹0</h2></div>
+                    <button class="btn btn-outline" onclick="clearExpenses()">Reset Data</button>
                 </div>
                 <div class="tracker-layout">
                     <div class="card">
-                        <h3>Log New Expense</h3>
-                        <div class="form-group">
-                            <input type="text" id="exp-title" placeholder="Expense Title (e.g., Room Rent, Milk)" class="form-input">
-                        </div>
-                        <div class="form-group">
-                            <input type="number" id="exp-amount" placeholder="Amount (₹)" class="form-input">
-                        </div>
-                        <div class="form-group">
-                            <select id="exp-split" class="form-input">
-                                <option value="1">Personal Expense (No Split)</option>
-                                <option value="2">Split with 1 Flatmate</option>
-                                <option value="3">Split with 2 Flatmates</option>
-                            </select>
-                        </div>
+                        <h3>Add Expense</h3>
+                        <input type="text" id="exp-title" placeholder="Item (e.g., Soya Chunks, Rent)" class="form-input mb-10">
+                        <input type="number" id="exp-amount" placeholder="Amount (₹)" class="form-input mb-10">
                         <button class="btn btn-primary w-100" onclick="addNewExpense()">Add to Ledger</button>
                     </div>
                     <div class="card">
-                        <h3>Expense Ledger</h3>
-                        <div class="table-wrapper">
-                            <table>
-                               <thead>
-                                   <tr>
-                                       <th>Item</th>
-                                       <th>Amount</th>
-                                       <th>Strategy</th>
-                                   </tr>
-                               </thead>
-                               <tbody id="expense-tbody">
-                                   </tbody>
-                            </table>
-                        </div>
+                        <h3>Recent Expenses</h3>
+                        <table style="width: 100%; text-align: left;">
+                            <thead><tr><th>Item</th><th>Amount</th></tr></thead>
+                            <tbody id="expense-tbody"></tbody>
+                        </table>
                     </div>
                 </div>
             </section>
-
-            <section id="flatmate-matcher" class="tab-content">
-                <div class="tab-header">
-                    <h2>Flatmate Matcher</h2>
-                    <p>Find compatible peers based on living habits and preferences</p>
-                </div>
-                <div class="grid-layout" id="matcher-grid"></div>
-            </section>
-
-            <section id="marketplace" class="tab-content">
-                <div class="tab-header">
-                    <h2>Student Marketplace</h2>
-                    <p>Buy or sell room furniture, electronics, and books directly from seniors</p>
-                </div>
-                <div class="grid-layout" id="market-grid"></div>
-            </section>
-
+            
             <section id="academic-hub" class="tab-content">
                 <div class="tab-header">
-                    <h2>Academic Resource Hub</h2>
-                    <p>Access notes, dynamic libraries, and reading rooms</p>
+                    <h2>Tech & Study Hub</h2>
+                    <p>Resources for Computer Science Engineering and Development.</p>
                 </div>
                 <div class="grid-layout">
                     <div class="card">
-                        <h3><i class="fa-solid fa-book-bookmark"></i> PYQs & Engineering Notes</h3>
-                        <p class="text-muted text-sm">Download Semester-wise Question Papers and Assignments shared by senior student creators.</p>
-                        <button class="btn btn-outline w-100 style-top" onclick="alert('Downloading standard study materials bundle...')">Download CSE Notes Bundle</button>
+                        <h3><i class="fa-brands fa-python"></i> Machine Learning Kits</h3>
+                        <p class="text-muted mt-10">Templates for Python, Streamlit, and model deployment.</p>
+                        <button class="btn btn-outline w-100 mt-15" onclick="alert('Opening GitHub Repo Templates...')">Access Repos</button>
                     </div>
                     <div class="card">
-                        <h3><i class="fa-solid fa-building-columns"></i> Verified Libraries & Study Spaces</h3>
-                        <p class="text-muted text-sm">Quiet, air-conditioned workspaces with high-speed Wi-Fi across popular student zones.</p>
-                        <button class="btn btn-primary w-100 style-top" onclick="alert('Opening Google Map links to top reading rooms...')">Locate Reading Rooms</button>
-                    </div>
-                </div>
-            </section>
-
-            <section id="checklist" class="tab-content">
-                <div class="tab-header">
-                    <h2>"Just Arrived" Master Checklist</h2>
-                    <p>Essential immediate actionable milestones for day one in any new city</p>
-                </div>
-                <div class="card container-sm">
-                    <div class="todo-item"><input type="checkbox" id="chk1" onchange="updateChecklistProgress()"><label for="chk1">Set up dynamic local transport routes & verify localized auto rates.</label></div>
-                    <div class="todo-item"><input type="checkbox" id="chk2" onchange="updateChecklistProgress()"><label for="chk2">Verify high-protein local grocery/sattu and raw egg supplies nearby.</label></div>
-                    <div class="todo-item"><input type="checkbox" id="chk3" onchange="updateChecklistProgress()"><label for="chk3">Locate the nearest 24/7 continuous emergency hospital pharmacy line.</label></div>
-                    <div class="todo-item"><input type="checkbox" id="chk4" onchange="updateChecklistProgress()"><label for="chk4">Open a normalized institutional account or upgrade existing banking lines.</label></div>
-                    <div class="progress-bar-wrapper">
-                        <div class="progress-bar-fill" id="checklist-progress" style="width: 0%;"></div>
+                        <h3><i class="fa-solid fa-code"></i> Core CS Notes</h3>
+                        <p class="text-muted mt-10">C Programming, OOPs concepts, and Data Structures.</p>
+                        <button class="btn btn-primary w-100 mt-15" onclick="alert('Downloading Drive Link...')">Get Notes</button>
                     </div>
                 </div>
             </section>
 
             <section id="emergency" class="tab-content">
-                <div class="tab-header text-center">
-                    <h2 class="text-danger">Critical One-Tap Emergency Lifelines</h2>
-                    <p>Immediate structural contact networks active 24/7</p>
+                <div class="tab-header">
+                    <h2 class="text-danger">Emergency Helplines</h2>
                 </div>
-                <div class="emergency-container">
-                    <a href="tel:100" class="emergency-bar bg-blue">
-                        <div class="em-left"><i class="fa-solid fa-building-shield"></i> <span>Police Control Room</span></div>
-                        <div class="em-right"><strong>100</strong> <i class="fa-solid fa-phone"></i></div>
+                <div class="grid-layout">
+                    <a href="tel:100" class="card text-center" style="text-decoration:none; color:inherit;">
+                        <i class="fa-solid fa-shield-halved text-danger fa-3x mb-10"></i>
+                        <h3>Police - 100</h3>
                     </a>
-                    <a href="tel:108" class="emergency-bar bg-green">
-                        <div class="em-left"><i class="fa-solid fa-truck-medical"></i> <span>Ambulance Dispatch Line</span></div>
-                        <div class="em-right"><strong>108</strong> <i class="fa-solid fa-phone"></i></div>
-                    </a>
-                    <a href="tel:1091" class="emergency-bar bg-purple">
-                        <div class="em-left"><i class="fa-solid fa-person-dress"></i> <span>Women Protection Helpline</span></div>
-                        <div class="em-right"><strong>1091</strong> <i class="fa-solid fa-phone"></i></div>
+                    <a href="tel:108" class="card text-center" style="text-decoration:none; color:inherit;">
+                        <i class="fa-solid fa-truck-medical text-danger fa-3x mb-10"></i>
+                        <h3>Ambulance - 108</h3>
                     </a>
                 </div>
             </section>
@@ -252,26 +162,13 @@
     <div class="modal-overlay" id="modal-overlay" onclick="closeAllModals()"></div>
     
     <div class="modal" id="login-modal">
-        <div class="modal-header"><h3>Account Authentication</h3><i class="fa-solid fa-xmark pointer" onclick="closeAllModals()"></i></div>
+        <div class="modal-header"><h3>Welcome Back</h3><i class="fa-solid fa-xmark pointer" onclick="closeAllModals()"></i></div>
         <div class="modal-body">
-            <input type="email" placeholder="Institutional Email" class="form-input">
-            <input type="password" placeholder="Access Password" class="form-input">
-            <button class="btn btn-primary w-100" onclick="closeAllModals()">Sign In</button>
-        </div>
-    </div>
-
-    <div class="modal" id="add-pg-modal">
-        <div class="modal-header"><h3>List Your PG (Free)</h3><i class="fa-solid fa-xmark pointer" onclick="closeAllModals()"></i></div>
-        <div class="modal-body">
-            <input type="text" id="new-pg-name" placeholder="PG Name" class="form-input">
-            <select id="new-pg-city" class="form-input"><option value="Bhopal">Bhopal</option><option value="Patna">Patna</option></select>
-            <input type="number" id="new-pg-price" placeholder="Rent per Month (₹)" class="form-input">
-            <select id="new-pg-gender" class="form-input"><option value="Boys">Boys</option><option value="Girls">Girls</option></select>
-            <button class="btn btn-primary w-100" onclick="submitNewPGListing()">Submit Verified Listing</button>
+            <input type="text" id="login-name" placeholder="Enter your Name" class="form-input mb-10">
+            <button class="btn btn-primary w-100" onclick="handleLogin()">Simulate Login</button>
         </div>
     </div>
 
     <script src="script.js"></script>
-
 </body>
 </html>
