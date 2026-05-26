@@ -3,144 +3,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SheherSaathi | Premium City Companion</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>SheherSaathi | Ultimate Student Companion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">Sheher<span>Saathi</span></a>
-            <div class="nav-links">
-                <a href="#pg-finder"><i class="fas fa-home"></i> PGs</a>
-                <a href="#fare-calc"><i class="fas fa-calculator"></i> Fares</a>
-                <a href="#emergency"><i class="fas fa-phone-alt"></i> Emergency</a>
-            </div>
+            <a href="#" class="logo"><i class="fa-solid fa-compass"></i> Sheher<span>Saathi</span></a>
             <div class="nav-actions">
-                <button id="theme-toggle" class="icon-btn"><i class="fas fa-moon"></i></button>
-                <button id="login-btn" class="btn btn-outline">Login</button>
-                <button id="add-pg-btn" class="btn btn-primary">List PG Free</button>
+                <button id="theme-toggle" class="icon-btn" title="Toggle Theme"><i class="fas fa-moon"></i></button>
+                <button class="btn btn-outline" onclick="openModal('login-modal')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('add-pg-modal')"><i class="fa-solid fa-plus"></i> List PG</button>
             </div>
         </div>
     </nav>
 
-    <header class="hero">
-        <div class="hero-content">
-            <h1>Find Your Home <span>Away From Home</span></h1>
-            <p>India's premium city companion. PGs, transit fares, and emergency helplines all in one place.</p>
+    <div class="app-container">
+        
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <button class="sidebar-btn active" onclick="switchTab('pg-finder')"><i class="fa-solid fa-house-chimney"></i> PG & Rooms</button>
+                <button class="sidebar-btn" onclick="switchTab('fare-calc')"><i class="fa-solid fa-calculator"></i> Fare Calculator</button>
+                <button class="sidebar-btn" onclick="switchTab('tiffin-gym')"><i class="fa-solid fa-utensils"></i> Food & Fitness</button>
+                <button class="sidebar-btn" onclick="switchTab('expense-tracker')"><i class="fa-solid fa-wallet"></i> Expense & Split</button>
+                <button class="sidebar-btn" onclick="switchTab('flatmate-matcher')"><i class="fa-solid fa-users"></i> Flatmate Matcher</button>
+                <button class="sidebar-btn" onclick="switchTab('marketplace')"><i class="fa-solid fa-store"></i> Second-Hand Shop</button>
+                <button class="sidebar-btn" onclick="switchTab('academic-hub')"><i class="fa-solid fa-graduation-cap"></i> Academic Hub</button>
+                <button class="sidebar-btn" onclick="switchTab('checklist')"><i class="fa-solid fa-list-check"></i> Day-1 Checklist</button>
+                <button class="sidebar-btn text-danger" onclick="switchTab('emergency')"><i class="fa-solid fa-circle-exclamation"></i> Emergency Helplines</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
             
-            <div class="search-bar">
-                <select id="city-select">
-                    <option value="All">All Cities</option>
-                    <option value="Bhopal">Bhopal</option>
-                    <option value="Patna">Patna</option>
-                    <option value="Delhi">Delhi</option>
-                    <option value="Pune">Pune</option>
-                    <option value="Mumbai">Mumbai</option>
-                </select>
-                <select id="budget-select">
-                    <option value="All">Any Budget</option>
-                    <option value="5000">Under ₹5,000</option>
-                    <option value="8000">Under ₹8,000</option>
-                    <option value="12000">Under ₹12,000</option>
-                </select>
-                <button class="btn btn-primary" onclick="filterPGs()"><i class="fas fa-search"></i> Search</button>
-            </div>
-        </div>
-    </header>
-
-    <section id="pg-finder" class="section">
-        <div class="section-header">
-            <h2>Top Rated PGs</h2>
-            <p>Verified, safe, and comfortable accommodations.</p>
-        </div>
-        <div class="pg-grid" id="pg-container">
-            </div>
-    </section>
-
-    <section id="fare-calc" class="section bg-light">
-        <div class="section-header">
-            <h2>Fare Calculator</h2>
-            <p>Don't overpay. Get instant transport estimates.</p>
-        </div>
-        <div class="calculator-card">
-            <div class="input-group">
-                <div class="input-field">
-                    <label>Pickup Location</label>
-                    <input type="text" id="pickup" placeholder="e.g., Railway Station">
+            <section id="pg-finder" class="tab-content active">
+                <div class="tab-header">
+                    <h2>Verified Accommodations</h2>
+                    <p>Find premium rooms and PGs matching your budget</p>
                 </div>
-                <div class="input-field">
-                    <label>Drop Location</label>
-                    <input type="text" id="dropoff" placeholder="e.g., MP Nagar">
+                <div class="filter-wrapper">
+                    <div class="filter-box">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <select id="city-select" onchange="filterPGs()">
+                            <option value="All">All Cities</option>
+                            <option value="Bhopal">Bhopal</option>
+                            <option value="Patna">Patna</option>
+                            <option value="Delhi">Delhi</option>
+                        </select>
+                    </div>
+                    <div class="filter-box">
+                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                        <select id="budget-select" onchange="filterPGs()">
+                            <option value="All">Any Budget</option>
+                            <option value="6000">Under ₹6,000</option>
+                            <option value="9000">Under ₹9,000</option>
+                        </select>
+                    </div>
+                    <div class="filter-box">
+                        <i class="fa-solid fa-venus-mars"></i>
+                        <select id="gender-select" onchange="filterPGs()">
+                            <option value="All">All Genders</option>
+                            <option value="Boys">Boys Only</option>
+                            <option value="Girls">Girls Only</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <button class="btn btn-primary w-100" onclick="calculateFare()">Calculate Fares</button>
-            
-            <div class="fare-results" id="fare-results" style="display: none;">
-                <div class="fare-item">
-                    <i class="fas fa-motorcycle"></i>
-                    <span>Bike</span>
-                    <strong id="bike-fare">₹0</strong>
-                </div>
-                <div class="fare-item">
-                    <i class="fas fa-subway"></i>
-                    <span>Auto</span>
-                    <strong id="auto-fare">₹0</strong>
-                </div>
-                <div class="fare-item">
-                    <i class="fas fa-car"></i>
-                    <span>Cab</span>
-                    <strong id="cab-fare">₹0</strong>
-                </div>
-            </div>
-        </div>
-    </section>
+                <div class="grid-layout" id="pg-grid"></div>
+            </section>
 
-    <section id="emergency" class="section">
-        <div class="section-header">
-            <h2>Emergency Helplines</h2>
-            <p>One-tap call access for immediate assistance.</p>
-        </div>
-        <div class="emergency-grid">
-            <a href="tel:100" class="emergency-card police">
-                <i class="fas fa-shield-alt"></i>
-                <h3>Police</h3>
-                <span>100</span>
-            </a>
-            <a href="tel:108" class="emergency-card ambulance">
-                <i class="fas fa-ambulance"></i>
-                <h3>Ambulance</h3>
-                <span>108</span>
-            </a>
-            <a href="tel:101" class="emergency-card fire">
-                <i class="fas fa-fire-extinguisher"></i>
-                <h3>Fire</h3>
-                <span>101</span>
-            </a>
-            <a href="tel:1091" class="emergency-card women">
-                <i class="fas fa-female"></i>
-                <h3>Women Helpline</h3>
-                <span>1091</span>
-            </a>
-        </div>
-    </section>
+            <section id="fare-calc" class="tab-content">
+                <div class="tab-header">
+                    <h2>Smart Fare Estimator</h2>
+                    <p>Avoid local transit scams. Get exact pricing instantly.</p>
+                </div>
+                <div class="card card-center">
+                    <div class="form-group">
+                        <label>Pickup Location</label>
+                        <input type="text" id="pickup-loc" placeholder="e.g., Railway Station" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Drop Location</label>
+                        <input type="text" id="drop-loc" placeholder="e.g., MP Nagar / Flat" class="form-input">
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="runFareCalculation()">Estimate Cost</button>
+                    
+                    <div class="fare-dashboard" id="fare-dashboard" style="display: none;">
+                        <div class="fare-metric">
+                            <i class="fa-solid fa-motorcycle"></i>
+                            <span>Bike Taxi</span>
+                            <h3 id="fare-bike">₹0</h3>
+                        </div>
+                        <div class="fare-metric highlighted">
+                            <i class="fa-solid fa-truck-monster"></i>
+                            <span>Auto Rickshaw</span>
+                            <h3 id="fare-auto">₹0</h3>
+                        </div>
+                        <div class="fare-metric">
+                            <i class="fa-solid fa-car"></i>
+                            <span>Premium Cab</span>
+                            <h3 id="fare-cab">₹0</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-    <footer>
-        <p>© 2026 SheherSaathi. Premium City Companion.</p>
-    </footer>
+            <section id="tiffin-gym" class="tab-content">
+                <div class="tab-header">
+                    <h2>Food & Fitness Directory</h2>
+                    <p>Healthy tiffin networks and budget gyms near you</p>
+                </div>
+                <div class="directory-toggle">
+                    <button class="btn btn-primary" onclick="toggleDirectory('tiffin')">Tiffin Centers</button>
+                    <button class="btn btn-outline" onclick="toggleDirectory('gym')">Local Gyms</button>
+                </div>
+                <div class="grid-layout" id="directory-grid"></div>
+            </section>
 
-    <div id="modal-overlay" class="modal-overlay"></div>
+            <section id="expense-tracker" class="tab-content">
+                <div class="tab-header">
+                    <h2>Student Budget Dashboard</h2>
+                    <p>Track your room expenses and split bills with flatmates seamlessly</p>
+                </div>
+                <div class="expense-overview">
+                    <div class="overview-box">
+                        <span>Total Monthly Spend</span>
+                        <h2 id="total-spend">₹0</h2>
+                    </div>
+                    <div class="overview-box text-success">
+                        <span>Your Split Share</span>
+                        <h2 id="split-share">₹0</h2>
+                    </div>
+                </div>
+                <div class="tracker-layout">
+                    <div class="card">
+                        <h3>Log New Expense</h3>
+                        <div class="form-group">
+                            <input type="text" id="exp-title" placeholder="Expense Title (e.g., Room Rent, Milk)" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <input type="number" id="exp-amount" placeholder="Amount (₹)" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <select id="exp-split" class="form-input">
+                                <option value="1">Personal Expense (No Split)</option>
+                                <option value="2">Split with 1 Flatmate</option>
+                                <option value="3">Split with 2 Flatmates</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary w-100" onclick="addNewExpense()">Add to Ledger</button>
+                    </div>
+                    <div class="card">
+                        <h3>Expense Ledger</h3>
+                        <div class="table-wrapper">
+                            <table>
+                               <thead>
+                                   <tr>
+                                       <th>Item</th>
+                                       <th>Amount</th>
+                                       <th>Strategy</th>
+                                   </tr>
+                               </thead>
+                               <tbody id="expense-tbody">
+                                   </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="flatmate-matcher" class="tab-content">
+                <div class="tab-header">
+                    <h2>Flatmate Matcher</h2>
+                    <p>Find compatible peers based on living habits and preferences</p>
+                </div>
+                <div class="grid-layout" id="matcher-grid"></div>
+            </section>
+
+            <section id="marketplace" class="tab-content">
+                <div class="tab-header">
+                    <h2>Student Marketplace</h2>
+                    <p>Buy or sell room furniture, electronics, and books directly from seniors</p>
+                </div>
+                <div class="grid-layout" id="market-grid"></div>
+            </section>
+
+            <section id="academic-hub" class="tab-content">
+                <div class="tab-header">
+                    <h2>Academic Resource Hub</h2>
+                    <p>Access notes, dynamic libraries, and reading rooms</p>
+                </div>
+                <div class="grid-layout">
+                    <div class="card">
+                        <h3><i class="fa-solid fa-book-bookmark"></i> PYQs & Engineering Notes</h3>
+                        <p class="text-muted text-sm">Download Semester-wise Question Papers and Assignments shared by senior student creators.</p>
+                        <button class="btn btn-outline w-100 style-top" onclick="alert('Downloading standard study materials bundle...')">Download CSE Notes Bundle</button>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fa-solid fa-building-columns"></i> Verified Libraries & Study Spaces</h3>
+                        <p class="text-muted text-sm">Quiet, air-conditioned workspaces with high-speed Wi-Fi across popular student zones.</p>
+                        <button class="btn btn-primary w-100 style-top" onclick="alert('Opening Google Map links to top reading rooms...')">Locate Reading Rooms</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="checklist" class="tab-content">
+                <div class="tab-header">
+                    <h2>"Just Arrived" Master Checklist</h2>
+                    <p>Essential immediate actionable milestones for day one in any new city</p>
+                </div>
+                <div class="card container-sm">
+                    <div class="todo-item"><input type="checkbox" id="chk1" onchange="updateChecklistProgress()"><label for="chk1">Set up dynamic local transport routes & verify localized auto rates.</label></div>
+                    <div class="todo-item"><input type="checkbox" id="chk2" onchange="updateChecklistProgress()"><label for="chk2">Verify high-protein local grocery/sattu and raw egg supplies nearby.</label></div>
+                    <div class="todo-item"><input type="checkbox" id="chk3" onchange="updateChecklistProgress()"><label for="chk3">Locate the nearest 24/7 continuous emergency hospital pharmacy line.</label></div>
+                    <div class="todo-item"><input type="checkbox" id="chk4" onchange="updateChecklistProgress()"><label for="chk4">Open a normalized institutional account or upgrade existing banking lines.</label></div>
+                    <div class="progress-bar-wrapper">
+                        <div class="progress-bar-fill" id="checklist-progress" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="emergency" class="tab-content">
+                <div class="tab-header text-center">
+                    <h2 class="text-danger">Critical One-Tap Emergency Lifelines</h2>
+                    <p>Immediate structural contact networks active 24/7</p>
+                </div>
+                <div class="emergency-container">
+                    <a href="tel:100" class="emergency-bar bg-blue">
+                        <div class="em-left"><i class="fa-solid fa-building-shield"></i> <span>Police Control Room</span></div>
+                        <div class="em-right"><strong>100</strong> <i class="fa-solid fa-phone"></i></div>
+                    </a>
+                    <a href="tel:108" class="emergency-bar bg-green">
+                        <div class="em-left"><i class="fa-solid fa-truck-medical"></i> <span>Ambulance Dispatch Line</span></div>
+                        <div class="em-right"><strong>108</strong> <i class="fa-solid fa-phone"></i></div>
+                    </a>
+                    <a href="tel:1091" class="emergency-bar bg-purple">
+                        <div class="em-left"><i class="fa-solid fa-person-dress"></i> <span>Women Protection Helpline</span></div>
+                        <div class="em-right"><strong>1091</strong> <i class="fa-solid fa-phone"></i></div>
+                    </a>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="modal-overlay" onclick="closeAllModals()"></div>
     
-    <div id="login-modal" class="modal">
-        <div class="modal-header">
-            <h3>Welcome Back</h3>
-            <button class="close-btn" onclick="closeModals()"><i class="fas fa-times"></i></button>
-        </div>
+    <div class="modal" id="login-modal">
+        <div class="modal-header"><h3>Account Authentication</h3><i class="fa-solid fa-xmark pointer" onclick="closeAllModals()"></i></div>
         <div class="modal-body">
-            <input type="email" placeholder="Email Address" class="form-input">
-            <input type="password" placeholder="Password" class="form-input">
-            <button class="btn btn-primary w-100">Login</button>
+            <input type="email" placeholder="Institutional Email" class="form-input">
+            <input type="password" placeholder="Access Password" class="form-input">
+            <button class="btn btn-primary w-100" onclick="closeAllModals()">Sign In</button>
+        </div>
+    </div>
+
+    <div class="modal" id="add-pg-modal">
+        <div class="modal-header"><h3>List Your PG (Free)</h3><i class="fa-solid fa-xmark pointer" onclick="closeAllModals()"></i></div>
+        <div class="modal-body">
+            <input type="text" id="new-pg-name" placeholder="PG Name" class="form-input">
+            <select id="new-pg-city" class="form-input"><option value="Bhopal">Bhopal</option><option value="Patna">Patna</option></select>
+            <input type="number" id="new-pg-price" placeholder="Rent per Month (₹)" class="form-input">
+            <select id="new-pg-gender" class="form-input"><option value="Boys">Boys</option><option value="Girls">Girls</option></select>
+            <button class="btn btn-primary w-100" onclick="submitNewPGListing()">Submit Verified Listing</button>
         </div>
     </div>
 
