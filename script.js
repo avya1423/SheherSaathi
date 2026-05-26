@@ -1,84 +1,103 @@
-// --- Complete Application State Engine ---
-
-// Unified Mock Databases
-let pgsDatabase = [
-    { name: "Shiv Residency", city: "Bhopal", price: 5500, gender: "Boys", img: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=400&q=80" },
-    { name: "Patliputra Safe Rooms", city: "Patna", price: 4500, gender: "Boys", img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=400&q=80" },
-    { name: "Delhi Elite Stay", city: "Delhi", price: 8500, gender: "Girls", img: "https://images.unsplash.com/photo-1502672260266-1c1c24240f38?auto=format&fit=crop&w=400&q=80" }
+// Database Mock
+const flatsData = [
+    { name: "Premium Indrapuri Flat", city: "Bhopal", price: 12000, img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=400&q=80" },
+    { name: "MP Nagar Private PG", city: "Bhopal", price: 7500, img: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=400&q=80" },
+    { name: "Boring Road Independent", city: "Patna", price: 9000, img: "https://images.unsplash.com/photo-1502672260266-1c1c24240f38?auto=format&fit=crop&w=400&q=80" }
 ];
 
-const foodFitnessDatabase = {
+const fitnessFood = {
     tiffin: [
-        { name: "Maa Annapurna Tiffin Network", metric: "Pure Veg / Gym Diet Active", sub: "Bhopal, MP Nagar", action: "Call: 9876543210" },
-        { name: "Sinha Kitchens", metric: "High-Protein Options available", sub: "Patna, Boring Road", action: "Call: 8765432109" }
+        { name: "Sattu & Protein Meals", loc: "Bhopal & Patna", tag: "High Protein" },
+        { name: "Home Style Kitchen", loc: "Local Network", tag: "Daily Needs" }
     ],
     gym: [
-        { name: "Iron Paradise Fitness Club", metric: "₹800/month Student Offer", sub: "Indrapuri Sector C", action: "Locate Gym" },
-        { name: "Gold Standard Gym", metric: "₹1000/month Cardio included", sub: "Kankarbagh Arena", action: "Locate Gym" }
+        { name: "Iron Core Fitness", loc: "Bhopal", tag: "Heavy Weights" },
+        { name: "Pro-Fit Gym", loc: "Patna", tag: "Cardio & Strength" }
     ]
 };
 
-const flatmatesDatabase = [
-    { name: "Vivek Kumar", detail: "B.Tech CSE student | Non-smoker", badge: "Coding-focused" },
-    { name: "Piyush Sharma", detail: "Fitness oriented | Strict Gym Routines", badge: "Early Bird" }
-];
-
-const marketplaceDatabase = [
-    { title: "Student Room Cooler (Voltas)", price: "₹1,800", sub: "Excellent Condition | Bhopal" },
-    { title: "B.Tech 1st Year Reference Books", price: "₹500", sub: "Complete Set | Patna" }
-];
-
-let expenseLedger = [];
-
-// --- Global Core Initialization ---
+// --- Initialization ---
 document.addEventListener("DOMContentLoaded", () => {
-    initThemeEngine();
-    renderPGsGrid(pgsDatabase);
+    initTheme();
+    checkLoginState();
+    renderFlats(flatsData);
     toggleDirectory('tiffin');
-    renderFlatmates();
-    renderMarketplace();
-    updateChecklistProgress();
+    loadExpenses();
 });
 
-// Tab Router
+// --- UI Navigation ---
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.sidebar-btn').forEach(el => el.classList.remove('active'));
-    
     document.getElementById(tabId).classList.add('active');
-    
-    // Toggle active layout button color state
-    const btnIndex = ['pg-finder', 'fare-calc', 'tiffin-gym', 'expense-tracker', 'flatmate-matcher', 'marketplace', 'academic-hub', 'checklist', 'emergency'].indexOf(tabId);
-    if(btnIndex !== -1) {
-        document.querySelectorAll('.sidebar-btn')[btnIndex].classList.add('active');
-    }
+    event.currentTarget.classList.add('active');
 }
 
-// Dark Mode Controller
-function initThemeEngine() {
+// --- Theme Logic ---
+function initTheme() {
     const toggle = document.getElementById('theme-toggle');
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    toggle.innerHTML = savedTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+
     toggle.addEventListener('click', () => {
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        const newTheme = isDark ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
         toggle.innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
     });
 }
 
-// --- 1. Accommodation Engine ---
-function renderPGsGrid(data) {
+// --- Modals & Login Simulation (Using LocalStorage) ---
+function openModal(id) {
+    document.getElementById('modal-overlay').style.display = 'block';
+    document.getElementById(id).style.display = 'block';
+}
+
+function closeAllModals() {
+    document.getElementById('modal-overlay').style.display = 'none';
+    document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+}
+
+function handleLogin() {
+    const name = document.getElementById('login-name').value.trim();
+    if(!name) return alert("Please enter your name!");
+    
+    // Save to browser
+    localStorage.setItem('sheherSaathi_user', name);
+    closeAllModals();
+    checkLoginState();
+}
+
+function checkLoginState() {
+    const user = localStorage.getItem('sheherSaathi_user');
+    const authSection = document.getElementById('auth-section');
+    
+    if(user) {
+        authSection.innerHTML = `<span class="user-profile"><i class="fa-solid fa-circle-user"></i> ${user} <button class="btn btn-outline" style="padding: 5px 10px; margin-left:10px;" onclick="handleLogout()">Logout</button></span>`;
+    } else {
+        authSection.innerHTML = `<button class="btn btn-outline" onclick="openModal('login-modal')">Login</button>`;
+    }
+}
+
+function handleLogout() {
+    localStorage.removeItem('sheherSaathi_user');
+    checkLoginState();
+}
+
+// --- Core Features ---
+function renderFlats(data) {
     const grid = document.getElementById('pg-grid');
-    grid.innerHTML = data.length ? '' : '<p class="text-muted">No specific rooms found matching criteria.</p>';
+    grid.innerHTML = data.length ? '' : '<p class="text-muted">No flats found.</p>';
     data.forEach(item => {
         grid.innerHTML += `
             <div class="card">
-                <img src="${item.img}" class="card-img" alt="Room View">
-                <h3 class="card-title">${item.name}</h3>
-                <span class="card-subtitle"><i class="fa-solid fa-map-marker-alt"></i> ${item.city} Area</span>
-                <div class="card-footer">
-                    <span class="card-price">₹${item.price}<small>/mo</small></span>
-                    <span class="badge">${item.gender}</span>
-                </div>
-                <button class="btn btn-outline w-100 style-top" onclick="alert('Connecting with trusted listing verification team...')">Contact Owner</button>
+                <img src="${item.img}" class="card-img">
+                <h3>${item.name}</h3>
+                <p class="text-muted mb-10"><i class="fa-solid fa-location-dot"></i> ${item.city}</p>
+                <h2 style="color: var(--primary);">₹${item.price}<small style="font-size:14px; color:var(--text-muted);">/mo</small></h2>
+                <button class="btn btn-outline w-100 mt-15">View Details</button>
             </div>`;
     });
 }
@@ -86,125 +105,62 @@ function renderPGsGrid(data) {
 function filterPGs() {
     const city = document.getElementById('city-select').value;
     const budget = document.getElementById('budget-select').value;
-    const gender = document.getElementById('gender-select').value;
     
-    let filtered = pgsDatabase.filter(item => {
-        return (city === "All" || item.city === city) &&
-               (budget === "All" || item.price <= parseInt(budget)) &&
-               (gender === "All" || item.gender === gender);
+    let filtered = flatsData.filter(item => {
+        return (city === "All" || item.city === city) && (budget === "All" || item.price <= parseInt(budget));
     });
-    renderPGsGrid(filtered);
+    renderFlats(filtered);
 }
 
-// --- 2. Live Transit Calculator Engine ---
 function runFareCalculation() {
-    const pick = document.getElementById('pickup-loc').value.trim();
-    const drop = document.getElementById('drop-loc').value.trim();
-    if(!pick || !drop) return alert("Please fill structural route paths.");
-
-    const distanceModifier = Math.floor(Math.random() * 8) + 4; // 4 to 12 KM simulation
-    document.getElementById('fare-bike').innerText = `₹${distanceModifier * 9}`;
-    document.getElementById('fare-auto').innerText = `₹${distanceModifier * 16}`;
-    document.getElementById('fare-cab').innerText = `₹${distanceModifier * 26}`;
+    document.getElementById('fare-bike').innerText = `₹${Math.floor(Math.random() * 30) + 40}`;
+    document.getElementById('fare-auto').innerText = `₹${Math.floor(Math.random() * 50) + 70}`;
+    document.getElementById('fare-cab').innerText = `₹${Math.floor(Math.random() * 100) + 150}`;
     document.getElementById('fare-dashboard').style.display = 'grid';
 }
 
-// --- 3. Directory Management System ---
 function toggleDirectory(type) {
-    const btnContainer = document.querySelectorAll('.directory-toggle .btn');
-    if (type === 'tiffin') {
-        btnContainer[0].className = "btn btn-primary"; btnContainer[1].className = "btn btn-outline";
-    } else {
-        btnContainer[0].className = "btn btn-outline"; btnContainer[1].className = "btn btn-primary";
-    }
-    
     const grid = document.getElementById('directory-grid');
     grid.innerHTML = '';
-    foodFitnessDatabase[type].forEach(item => {
-        grid.innerHTML += `
-            <div class="card">
-                <h3 class="card-title">${item.name}</h3>
-                <span class="badge style-top">${item.metric}</span>
-                <span class="card-subtitle style-top"><i class="fa-solid fa-location-arrow"></i> ${item.sub}</span>
-                <button class="btn btn-outline w-100 style-top" onclick="alert('Connecting...')">${item.action}</button>
-            </div>`;
+    fitnessFood[type].forEach(item => {
+        grid.innerHTML += `<div class="card"><h3>${item.name}</h3><span class="text-muted d-block mb-10">${item.loc}</span><span style="background:var(--border); padding:5px 10px; border-radius:5px; font-size:12px;">${item.tag}</span></div>`;
     });
 }
 
-// --- 4. Live Ledger Split Engine ---
+// --- Persistent Expense Tracker (LocalStorage) ---
+let expenses = JSON.parse(localStorage.getItem('sheherSaathi_expenses')) || [];
+
 function addNewExpense() {
-    const title = document.getElementById('exp-title').value.trim();
-    const amount = parseFloat(document.getElementById('exp-amount').value);
-    const splitCount = parseInt(document.getElementById('exp-split').value);
-
-    if(!title || isNaN(amount)) return alert("Please provide valid ledger metadata.");
-
-    expenseLedger.push({ title, amount, splitCount });
+    const title = document.getElementById('exp-title').value;
+    const amount = parseInt(document.getElementById('exp-amount').value);
+    
+    if(!title || isNaN(amount)) return alert("Enter valid details");
+    
+    expenses.push({ title, amount });
+    localStorage.setItem('sheherSaathi_expenses', JSON.stringify(expenses)); // Save permanently
+    
     document.getElementById('exp-title').value = '';
     document.getElementById('exp-amount').value = '';
-    
-    recalculateExpenseDashboard();
+    loadExpenses();
 }
 
-function recalculateExpenseDashboard() {
+function loadExpenses() {
     const tbody = document.getElementById('expense-tbody');
     tbody.innerHTML = '';
-    let totalSpend = 0;
-    let splitShare = 0;
-
-    expenseLedger.forEach(item => {
-        totalSpend += item.amount;
-        splitShare += (item.amount / item.splitCount);
-        tbody.innerHTML += `<tr><td>${item.title}</td><td>₹${item.amount}</td><td>${item.splitCount > 1 ? 'Split / ' + item.splitCount : 'Personal'}</td></tr>`;
+    let total = 0;
+    
+    expenses.forEach(item => {
+        total += item.amount;
+        tbody.innerHTML += `<tr><td>${item.title}</td><td style="font-weight:bold;">₹${item.amount}</td></tr>`;
     });
-
-    document.getElementById('total-spend').innerText = `₹${Math.round(totalSpend)}`;
-    document.getElementById('split-share').innerText = `₹${Math.round(splitShare)}`;
+    
+    document.getElementById('total-spend').innerText = `₹${total}`;
 }
 
-// --- 5 & 6. Remaining Sub-views Population ---
-function renderFlatmates() {
-    const grid = document.getElementById('matcher-grid');
-    flatmatesDatabase.forEach(item => {
-        grid.innerHTML += `<div class="card"><h3>${item.name}</h3><span class="badge style-top">${item.badge}</span><p class="text-muted text-sm style-top">${item.detail}</p><button class="btn btn-primary w-100 style-top" onclick="alert('Match Request Transmitted.')">Send Match Request</button></div>`;
-    });
-}
-
-function renderMarketplace() {
-    const grid = document.getElementById('market-grid');
-    marketplaceDatabase.forEach(item => {
-        grid.innerHTML += `<div class="card"><h3>${item.title}</h3><h2 class="card-price style-top">${item.price}</h2><span class="card-subtitle style-top">${item.sub}</span><button class="btn btn-outline w-100" onclick="alert('Notifying senior student vendor...')">Chat with Seller</button></div>`;
-    });
-}
-
-// --- 7. Checklist Action Milestones Engine ---
-function updateChecklistProgress() {
-    const checkboxes = document.querySelectorAll('#checklist input[type="checkbox"]');
-    let checkedCount = 0;
-    checkboxes.forEach(chk => { if(chk.checked) checkedCount++; });
-    const percent = (checkedCount / checkboxes.length) * 100;
-    document.getElementById('checklist-progress').style.width = `${percent}%`;
-}
-
-// --- 8. Modal Utilities System ---
-function openModal(id) {
-    document.getElementById('modal-overlay').style.display = 'block';
-    document.getElementById(id).style.display = 'block';
-}
-function closeAllModals() {
-    document.getElementById('modal-overlay').style.display = 'none';
-    document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
-}
-function submitNewPGListing() {
-    const name = document.getElementById('new-pg-name').value;
-    const city = document.getElementById('new-pg-city').value;
-    const price = parseInt(document.getElementById('new-pg-price').value);
-    const gender = document.getElementById('new-pg-gender').value;
-
-    if(!name || isNaN(price)) return alert("Complete verification data fields first.");
-
-    pgsDatabase.unshift({ name, city, price, gender, img: "https://images.unsplash.com/photo-1598928506311-c55dd18a68b4?auto=format&fit=crop&w=400&q=80" });
-    renderPGsGrid(pgsDatabase);
-    closeAllModals();
-    switchTab('pg-finder');
+function clearExpenses() {
+    if(confirm("Are you sure you want to clear your budget data?")) {
+        expenses = [];
+        localStorage.removeItem('sheherSaathi_expenses');
+        loadExpenses();
+    }
 }
