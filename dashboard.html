@@ -1,27 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Dashboard - PGKhojo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard | SheherSaathi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="data.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo"><i class="fa-solid fa-compass-navigational"></i> Sheher<span>Saathi</span></a>
+            <div class="nav-actions">
+                <button id="theme-toggle" class="icon-btn"><i class="fas fa-moon"></i></button>
+                <a href="index.html" class="btn btn-outline-nav"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+            </div>
+        </div>
+    </nav>
 
-<body style="font-family:Arial;padding:20px;">
+    <div class="app-container" style="justify-content: center;">
+        <main class="main-content" style="max-width: 900px; margin-left: 0;">
+            <div class="tab-header">
+                <h2><i class="fa-solid fa-chart-line text-primary"></i> User Dashboard</h2>
+                <p>Manage your saved accommodations and recent activity.</p>
+            </div>
 
-<h2>❤️ Favourite PG</h2>
-<div id="favList"></div>
+            <div class="tracker-layout">
+                <div class="card">
+                    <h3>❤️ Saved PGs & Flats</h3>
+                    <div id="favList" class="style-top text-muted">
+                        <p><i class="fa-regular fa-bookmark"></i> Premium Indrapuri Flat (Bhopal)</p>
+                        <p><i class="fa-regular fa-bookmark"></i> Boring Road Independent (Patna)</p>
+                    </div>
+                </div>
 
-<h2>📅 My Bookings</h2>
-<div id="bookingList"></div>
+                <div class="card">
+                    <h3>📅 My Bookings & Visits</h3>
+                    <div id="bookingList" class="style-top text-muted">
+                        <p><i class="fa-regular fa-calendar-check text-success"></i> Visit Scheduled: MP Nagar Zone 2</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 
-<script>
-let fav = JSON.parse(localStorage.getItem("fav")) || [];
-let bookings = JSON.parse(localStorage.getItem("booking")) || [];
-
-document.getElementById("favList").innerHTML =
-  fav.map(p => `<p>${p}</p>`).join("");
-
-document.getElementById("bookingList").innerHTML =
-  bookings.map(p => `<p>${p}</p>`).join("");
-</script>
-
+    <script src="script.js"></script>
 </body>
 </html>
