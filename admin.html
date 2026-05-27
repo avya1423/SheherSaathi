@@ -1,130 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Admin Panel - PGKhojo</title>
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body{
-  font-family:'Segoe UI';
-  background:#f4f6fb;
-  text-align:center;
-  margin:0;
-}
-
-.container{
-  max-width:400px;
-  margin:50px auto;
-  background:white;
-  padding:20px;
-  border-radius:15px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
-}
-
-h2{
-  margin-bottom:20px;
-}
-
-input{
-  width:90%;
-  padding:10px;
-  margin:10px 0;
-  border-radius:8px;
-  border:1px solid #ccc;
-}
-
-button{
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  background:#ff4d4d;
-  color:white;
-  cursor:pointer;
-  width:100%;
-}
-
-button:hover{
-  background:#e63946;
-}
-
-img{
-  width:100%;
-  height:150px;
-  object-fit:cover;
-  border-radius:10px;
-  margin-top:10px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | SheherSaathi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo"><i class="fa-solid fa-user-tie"></i> Admin<span>Panel</span></a>
+            <div class="nav-actions">
+                <button id="theme-toggle" class="icon-btn"><i class="fas fa-moon"></i></button>
+                <a href="index.html" class="btn btn-outline-nav">Exit Admin</a>
+            </div>
+        </div>
+    </nav>
 
-<div class="container">
+    <div class="app-container" style="justify-content: center;">
+        <main class="main-content" style="max-width: 600px; margin-left: 0;">
+            <div class="card">
+                <div class="tab-header text-center">
+                    <h2><i class="fa-solid fa-square-plus text-primary"></i> Add New PG</h2>
+                    <p>Deploy a new verified listing directly to the database.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>PG / Flat Name</label>
+                    <input type="text" id="pg-name" placeholder="Enter Property Name" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>City Hub</label>
+                    <select id="pg-city" class="form-input">
+                        <option value="Bhopal">Bhopal</option>
+                        <option value="Patna">Patna</option>
+                        <option value="Delhi">Delhi</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Monthly Rent (₹)</label>
+                    <input type="number" id="pg-price" placeholder="e.g., 5000" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Contact Number</label>
+                    <input type="tel" id="pg-contact" placeholder="+91 XXXXX XXXXX" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Image URL (Optional)</label>
+                    <input type="text" id="pg-image" placeholder="https://..." class="form-input" oninput="previewImg()">
+                </div>
+                
+                <img id="preview" src="" class="card-img" style="display:none; margin-top: 15px;">
+                
+                <button class="btn btn-primary w-100 style-top" onclick="addPG()"><i class="fa-solid fa-cloud-arrow-up"></i> Publish Listing</button>
+            </div>
+        </main>
+    </div>
 
-<h2>➕ Add New PG</h2>
+    <script src="script.js"></script>
+    <script>
+        function previewImg() {
+            let url = document.getElementById('pg-image').value;
+            let img = document.getElementById('preview');
+            if(url) { img.style.display = "block"; img.src = url; } 
+            else { img.style.display = "none"; }
+        }
 
-<input id="name" placeholder="PG Name">
-<input id="city" placeholder="City">
-<input id="price" placeholder="Price (₹5000)">
-<input id="contact" placeholder="Contact Number">
-<input id="image" placeholder="Image URL" oninput="previewImg()">
+        function addPG() {
+            let n = document.getElementById('pg-name').value;
+            let c = document.getElementById('pg-city').value;
+            let p = document.getElementById('pg-price').value;
+            
+            if(!n || !c || !p) return alert("⚠️ Please fill all required structural fields.");
 
-<img id="preview" src="" style="display:none">
+            // Save Logic
+            let oldData = JSON.parse(localStorage.getItem("ss_custom_pgs")) || [];
+            oldData.push({ name: n, city: c, price: p, img: document.getElementById('pg-image').value });
+            localStorage.setItem("ss_custom_pgs", JSON.stringify(oldData));
 
-<button onclick="addPG()">Add PG</button>
-
-</div>
-
-<script src="data.js"></script>
-
-<script>
-
-// IMAGE PREVIEW
-function previewImg(){
-  let url = image.value;
-
-  if(url){
-    preview.style.display = "block";
-    preview.src = url;
-  } else {
-    preview.style.display = "none";
-  }
-}
-
-// ADD PG
-function addPG(){
-
-  // VALIDATION
-  if(!name.value || !city.value || !price.value || !contact.value || !image.value){
-    alert("⚠️ Sab fields fill karo");
-    return;
-  }
-
-  let oldData = JSON.parse(localStorage.getItem("pgData")) || pgData;
-
-  oldData.push({
-    name: name.value,
-    city: city.value,
-    price: price.value,
-    contact: contact.value,
-    image: image.value
-  });
-
-  localStorage.setItem("pgData", JSON.stringify(oldData));
-
-  alert("✅ PG Added Successfully!");
-
-  // CLEAR FORM
-  name.value="";
-  city.value="";
-  price.value="";
-  contact.value="";
-  image.value="";
-  preview.style.display="none";
-}
-
-</script>
-
+            alert("✅ Secure Listing Deployed Successfully!");
+            
+            // Clear Form
+            document.querySelectorAll('.form-input').forEach(input => input.value = '');
+            document.getElementById('preview').style.display = "none";
+        }
+    </script>
 </body>
 </html>
