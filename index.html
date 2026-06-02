@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="data.js"></script>
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,8 +17,8 @@
             <a href="#" class="logo"><i class="fa-solid fa-compass-navigational"></i> Sheher<span>Saathi</span></a>
             <div class="nav-actions">
                 <button id="menu-toggle" class="icon-btn mobile-menu">
-    <i class="fas fa-bars"></i>
-</button>
+                    <i class="fas fa-bars"></i>
+                </button>
                 <button id="theme-toggle" class="icon-btn" title="Toggle Dark Mode"><i class="fas fa-moon"></i></button>
                 <div id="auth-section">
                     <button class="btn btn-outline-nav" onclick="openModal('login-modal')"><i class="fa-regular fa-user"></i> Sign In</button>
@@ -54,41 +53,38 @@
 
         <main class="main-content">
             <section class="hero-section">
-    <div class="hero-content">
-        <h1>🏙️ Har Naye Shahar Mein Aapka Saathi</h1>
-        <p>
-            Find Verified PGs, Flats, Hostels, Food Services,
-            Travel Guidance and Student Essentials.
-        </p>
+                <div class="hero-content">
+                    <h1>🏙️ Har Naye Shahar Mein Aapka Saathi</h1>
+                    <p>
+                        Find Verified PGs, Flats, Hostels, Food Services,
+                        Travel Guidance and Student Essentials.
+                    </p>
 
-        <div class="hero-actions">
-            <button class="btn btn-primary" onclick="switchTab('pg-finder')">
-                Explore Properties
-            </button>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary" onclick="switchTab('pg-finder')">
+                            Explore Properties
+                        </button>
+                        <button class="btn btn-outline" onclick="switchTab('fare-calc')">
+                            Fare Calculator
+                        </button>
+                    </div>
+                </div>
+            </section>
 
-            <button class="btn btn-outline" onclick="switchTab('fare-calc')">
-                Fare Calculator
-            </button>
-        </div>
-    </div>
-</section>
-
-<section class="stats-section">
-    <div class="card">
-        <h2>500+</h2>
-        <p>Listings</p>
-    </div>
-
-    <div class="card">
-        <h2>1000+</h2>
-        <p>Students Helped</p>
-    </div>
-
-    <div class="card">
-        <h2>25+</h2>
-        <p>Cities</p>
-    </div>
-</section>
+            <section class="stats-section">
+                <div class="card">
+                    <h2>500+</h2>
+                    <p>Listings</p>
+                </div>
+                <div class="card">
+                    <h2>1000+</h2>
+                    <p>Students Helped</p>
+                </div>
+                <div class="card">
+                    <h2>25+</h2>
+                    <p>Cities</p>
+                </div>
+            </section>
             
             <section id="pg-finder" class="tab-content active">
                 <div class="tab-header">
@@ -96,12 +92,8 @@
                     <p>Browse premium private flats and student rooms across major hubs.</p>
                 </div>
                 <div class="form-group">
-    <input
-        type="text"
-        id="search-pg"
-        class="form-input"
-        placeholder="🔍 Search PG, Flat, Hostel or City">
-</div>
+                    <input type="text" id="search-pg" class="form-input" placeholder="🔍 Search PG, Flat, Hostel or City">
+                </div>
                 <div class="filter-wrapper">
                     <div class="filter-box">
                         <i class="fa-solid fa-location-crosshairs"></i>
@@ -122,8 +114,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="grid-layout" id="pg-grid">
-                    </div>
+                <div class="grid-layout" id="pg-grid"></div>
             </section>
 
             <section id="fare-calc" class="tab-content">
@@ -299,53 +290,41 @@
                         <div><i class="fa-solid fa-person-dress"></i> Women Safety & Help Line</div>
                         <strong>1091 <i class="fa-solid fa-phone"></i></strong>
                     </a>
+                    <a href="tel:112" class="em-bar bg-blue">
+                        <div><i class="fa-solid fa-triangle-exclamation"></i> National Emergency</div>
+                        <strong>112 <i class="fa-solid fa-phone"></i></strong>
+                    </a>
+                    <a href="tel:139" class="em-bar bg-green">
+                        <div><i class="fa-solid fa-train"></i> Railway Helpline</div>
+                        <strong>139 <i class="fa-solid fa-phone"></i></strong>
+                    </a>
+                    <a href="tel:1098" class="em-bar bg-purple">
+                        <div><i class="fa-solid fa-child"></i> Child Helpline</div>
+                        <strong>1098 <i class="fa-solid fa-phone"></i></strong>
+                    </a>
                 </div>
             </section>
-            <a href="tel:112" class="em-bar bg-blue">
-    <div>
-        <i class="fa-solid fa-triangle-exclamation"></i>
-        National Emergency
-    </div>
-    <strong>112</strong>
-</a>
 
-<a href="tel:139" class="em-bar bg-green">
-    <div>
-        <i class="fa-solid fa-train"></i>
-        Railway Helpline
-    </div>
-    <strong>139</strong>
-</a>
-
-<a href="tel:1098" class="em-bar bg-purple">
-    <div>
-        <i class="fa-solid fa-child"></i>
-        Child Helpline
-    </div>
-    <strong>1098</strong>
-</a>
             <section class="card founder-card">
-    <h2>About Founder</h2>
-
-    <p>
-        Hi, I'm Avya Nand.
-        I built SheherSaathi to help students,
-        job seekers and newcomers find verified
-        accommodation and settle easily in a new city.
-    </p>
-</section>
+                <h2>About Founder</h2>
+                <p>
+                    Hi, I'm Avya Nand.
+                    I built SheherSaathi to help students,
+                    job seekers and newcomers find verified
+                    accommodation and settle easily in a new city.
+                </p>
+            </section>
 
         </main>
+
         <footer class="footer">
-    <h3>SheherSaathi</h3>
-
-    <p>Har Naye Shahar Mein Aapka Saathi</p>
-
-    <p>
-        © 2026 SheherSaathi.
-        All Rights Reserved.
-    </p>
-</footer>
+            <h3>SheherSaathi</h3>
+            <p>Har Naye Shahar Mein Aapka Saathi</p>
+            <p>
+                © 2026 SheherSaathi.
+                All Rights Reserved.
+            </p>
+        </footer>
     </div>
 
     <div class="modal-overlay" id="modal-overlay" onclick="closeAllModals()"></div>
@@ -378,16 +357,22 @@
 
             <button class="btn btn-primary w-100 style-top" onclick="handleRealLogin()">Sign In</button>
             <button class="btn btn-outline w-100 style-top" onclick="alert('Connecting secure Google Authentication process...')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" style="width:16px; margin-right:8px;"> Sign in with Google
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" style="width:16px; margin-right:8px;" alt="Google Logo"> Sign in with Google
             </button>
         </div>
     </div>
 
     <div class="modal" id="add-pg-modal">
-        <div class="modal-header"><h3>List Your Property (Free)</h3><i class="fa-solid fa-xmark pointer" onclick="closeAllModals()"></i></div>
+        <div class="modal-header">
+            <h3>List Your Property (Free)</h3>
+            <i class="fa-solid fa-xmark pointer" onclick="closeAllModals()"></i>
+        </div>
         <div class="modal-body">
             <input type="text" id="add-name" placeholder="Flat / PG Name" class="form-input mb-10">
-            <select id="add-city" class="form-input mb-10"><option value="Bhopal">Bhopal</option><option value="Patna">Patna</option></select>
+            <select id="add-city" class="form-input mb-10">
+                <option value="Bhopal">Bhopal</option>
+                <option value="Patna">Patna</option>
+            </select>
             <input type="number" id="add-price" placeholder="Rent per Month (₹)" class="form-input mb-10">
             <button class="btn btn-primary w-100" onclick="submitCustomListing()">Deploy Listing</button>
         </div>
