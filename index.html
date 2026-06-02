@@ -314,7 +314,7 @@
                 </section>
 
                 <!-- STATS COUNTER -->
-                <section class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                <section class="stats-section grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center card-hover">
                         <div class="inline-block bg-blue-100 text-blue-600 p-3 rounded-full mb-3">
                             <i class="fa-solid fa-building text-xl"></i>
@@ -342,7 +342,7 @@
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row gap-4">
                     <div class="flex-1 relative">
                         <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
-                        <input type="text" id="search-pg" placeholder="Search by location, name..." class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 block pl-10 p-3 transition">
+                        <input type="text" id="search-pg" placeholder="Search by location, name..." class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 pl-10 p-3 transition outline-none">
                     </div>
                     <select id="city-select" class="bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 p-3 transition">
                         <option value="All">All Cities</option>
@@ -370,11 +370,11 @@
                     <div class="space-y-5">
                         <div>
                             <label class="text-sm font-semibold text-slate-700 block mb-2">Pickup Location</label>
-                            <input type="text" id="pickup-loc" placeholder="e.g., Railway Station" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition outline-none">
+                            <input type="text" id="pickup-loc" placeholder="e.g., Railway Station" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none transition">
                         </div>
                         <div>
                             <label class="text-sm font-semibold text-slate-700 block mb-2">Drop Location</label>
-                            <input type="text" id="drop-loc" placeholder="e.g., Your Flat" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition outline-none">
+                            <input type="text" id="drop-loc" placeholder="e.g., Your Flat" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none transition">
                         </div>
                         <button class="w-full bg-brand-600 text-white font-bold py-3.5 rounded-xl hover:bg-brand-700 transition shadow-md" onclick="runFareCalculation()">Calculate Fare</button>
                     </div>
@@ -608,63 +608,6 @@
     </div>
 
     <!-- Scripts -->
-    <script>
-        // Hamburger menu toggle
-        const hamburger = document.getElementById('hamburger');
-        const sidebarMobile = document.getElementById('sidebar-mobile');
-        
-        hamburger.addEventListener('click', function() {
-            hamburger.classList.toggle('active');
-            sidebarMobile.classList.toggle('active');
-        });
-
-        function toggleSidebar() {
-            hamburger.classList.remove('active');
-            sidebarMobile.classList.remove('active');
-        }
-
-        // Tab switching
-        function switchTab(tabName) {
-            const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            
-            const selectedTab = document.getElementById(tabName);
-            if(selectedTab) selectedTab.classList.add('active');
-
-            // Update sidebar active state
-            const buttons = document.querySelectorAll('.sidebar-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
-            const activeBtn = Array.from(buttons).find(btn => btn.getAttribute('onclick').includes(tabName));
-            if(activeBtn) activeBtn.classList.add('active');
-        }
-
-        // Modal functions
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            const overlay = document.getElementById('modal-overlay');
-            if(modal && overlay) {
-                modal.classList.add('active');
-                overlay.classList.add('active');
-            }
-        }
-
-        function closeAllModals() {
-            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
-            document.getElementById('modal-overlay').classList.remove('active');
-        }
-
-        // Utility functions
-        function addNewExpense() { alert('✅ Expense added!'); }
-        function clearExpenses() { alert('✅ Ledger reset!'); }
-        function runFareCalculation() { alert('✅ Fare calculated!'); }
-        function submitCustomListing() { 
-            closeAllModals();
-            alert('✅ Property listed successfully!'); 
-        }
-
-        // Initialize
-        switchTab('pg-finder');
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

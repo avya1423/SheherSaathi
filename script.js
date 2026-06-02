@@ -4,9 +4,9 @@
 
 // --- Initial Mock Data (Tailored for Students & Private Flats) ---
 let flatsData = JSON.parse(localStorage.getItem("ss_flats")) || [
-    { name: "Premium 2BHK Flat (Shared)", city: "Bhopal", loc: "Indrapuri Sector C", price: 8500, ac: true, wifi: true, food: false, brokerFree: true, img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80", contact: "9123456789" },
-    { name: "Independent Studio Flat", city: "Bhopal", loc: "MP Nagar Zone 2", price: 11000, ac: true, wifi: true, food: false, brokerFree: true, img: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80", contact: "9234567890" },
-    { name: "Student Room (Private)", city: "Patna", loc: "Boring Road", price: 6500, ac: false, wifi: true, food: true, brokerFree: false, img: "https://images.unsplash.com/photo-1555854877-bab0e5a6b56f?auto=format&fit=crop&w=800&q=80", contact: "9345678901" }
+    { name: "Premium 2BHK Flat (Shared)", city: "Bhopal", loc: "Indrapuri Sector C", price: 8500, ac: true, wifi: true, food: false, brokerFree: true, img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80", contact: "9876543210" },
+    { name: "Independent Studio Flat", city: "Bhopal", loc: "MP Nagar Zone 2", price: 11000, ac: true, wifi: true, food: false, brokerFree: true, img: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80", contact: "9876543211" },
+    { name: "Student Room (Private)", city: "Patna", loc: "Boring Road", price: 6500, ac: false, wifi: true, food: true, brokerFree: false, img: "https://images.unsplash.com/photo-1555854877-bab0e5f47500?auto=format&fit=crop&w=600&q=80", contact: "9876543212" }
 ];
 
 const tiffinsData = [
@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initExpenseTracker();
     initChecklist();
     animateStats();
+    setupFilterListeners();
 });
 
 // --- Hamburger Menu Toggle ---
@@ -119,6 +120,7 @@ function renderFlatsGrid(data) {
         if(item.ac) tags += `<span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded-md"><i class="fa-solid fa-snowflake mr-1"></i> AC</span>`;
         if(item.brokerFree) tags += `<span class="bg-emerald-50 text-emerald-600 text-xs px-2 py-1 rounded-md"><i class="fa-solid fa-handshake-slash mr-1"></i> No Broker</span>`;
 
+        const contactPhone = item.contact || "9999999999";
         container.innerHTML += `
             <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 card-hover">
                 <div class="h-48 bg-slate-200 relative">
@@ -134,10 +136,20 @@ function renderFlatsGrid(data) {
                     </div>
                     <p class="text-slate-500 text-sm mb-4"><i class="fa-solid fa-location-dot mr-1"></i> ${item.loc}, ${item.city}</p>
                     <div class="flex flex-wrap gap-2 mb-5">${tags}</div>
-                    <button class="w-full bg-brand-50 text-brand-700 font-semibold py-2.5 rounded-xl hover:bg-brand-600 hover:text-white transition btn-hover" onclick="alert('Contact: ${item.contact}\\n\\nConnecting to owner...')">View & Contact</button>
+                    <button class="w-full bg-brand-50 text-brand-700 font-semibold py-2.5 rounded-xl hover:bg-brand-600 hover:text-white transition btn-hover" onclick="alert('Owner Contact: ${contactPhone}\\n\\nPlease reach out to verify property details.')">View & Contact</button>
                 </div>
             </div>`;
     });
+}
+
+function setupFilterListeners() {
+    const searchInput = document.getElementById('search-pg');
+    const citySelect = document.getElementById('city-select');
+    const budgetSelect = document.getElementById('budget-select');
+    
+    if(searchInput) searchInput.addEventListener('input', filterPGs);
+    if(citySelect) citySelect.addEventListener('change', filterPGs);
+    if(budgetSelect) budgetSelect.addEventListener('change', filterPGs);
 }
 
 function filterPGs() {
@@ -156,19 +168,23 @@ function filterPGs() {
     renderFlatsGrid(filtered);
 }
 
-document.getElementById("search-pg")?.addEventListener("input", filterPGs);
-
 // --- Add Custom Property ---
 function submitCustomListing() {
-    const name = document.getElementById('add-name').value;
-    const city = document.getElementById('add-city').value;
-    const price = document.getElementById('add-price').value;
+    const name = document.getElementById('add-name')?.value;
+    const city = document.getElementById('add-city')?.value;
+    const price = document.getElementById('add-price')?.value;
     
-    if(!name || !price) return alert("Please fill in the flat name and price.");
+    if(!name || !price || !city) return alert("Please fill in all fields (name, city, and price).");
     
     const newFlat = {
-        name: name, city: city, loc: "New Listing", price: parseInt(price),
-        ac: false, wifi: true, food: false, brokerFree: true,
+        name: name, 
+        city: city, 
+        loc: "New Listing", 
+        price: parseInt(price),
+        ac: false, 
+        wifi: true, 
+        food: false, 
+        brokerFree: true,
         img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80",
         contact: "9999999999"
     };
@@ -178,9 +194,10 @@ function submitCustomListing() {
     
     renderFlatsGrid(flatsData);
     closeAllModals();
-    alert("Property listed successfully!");
+    alert("✅ Property listed successfully!");
     
     document.getElementById('add-name').value = '';
+    document.getElementById('add-city').value = '';
     document.getElementById('add-price').value = '';
 }
 
@@ -192,11 +209,11 @@ function initExpenseTracker() {
 }
 
 function addNewExpense() {
-    const title = document.getElementById('exp-title').value;
-    const amount = parseFloat(document.getElementById('exp-amount').value);
-    const splitType = parseInt(document.getElementById('exp-split').value);
+    const title = document.getElementById('exp-title')?.value;
+    const amount = parseFloat(document.getElementById('exp-amount')?.value);
+    const splitType = parseInt(document.getElementById('exp-split')?.value) || 1;
     
-    if(!title || isNaN(amount)) return alert("Please enter a valid expense name and amount.");
+    if(!title || isNaN(amount) || amount <= 0) return alert("Please enter a valid expense name and amount.");
     
     expenses.push({ title, amount, split: splitType });
     localStorage.setItem("ss_expenses", JSON.stringify(expenses));
@@ -205,6 +222,7 @@ function addNewExpense() {
     document.getElementById('exp-amount').value = '';
     
     updateExpenseUI();
+    alert("✅ Expense added successfully!");
 }
 
 function updateExpenseUI() {
@@ -254,38 +272,57 @@ function clearExpenses() {
         expenses = [];
         localStorage.removeItem("ss_expenses");
         updateExpenseUI();
+        alert("✅ Ledger reset successfully!");
     }
 }
 
 // --- Transit Fare Calculator ---
 function runFareCalculation() {
-    const p = document.getElementById('pickup-loc').value;
-    const d = document.getElementById('drop-loc').value;
+    const p = document.getElementById('pickup-loc')?.value.trim();
+    const d = document.getElementById('drop-loc')?.value.trim();
     if(!p || !d) return alert("Please enter both Pickup and Drop locations.");
     
     const distanceFactor = Math.abs(p.length - d.length) + 3;
-    alert(`Estimated Fares:\n\nBike: ₹${Math.floor(distanceFactor * 7) + 20}\nAuto: ₹${Math.floor(distanceFactor * 12) + 40}\nCab: ₹${Math.floor(distanceFactor * 25) + 80}`);
+    const bikeFare = Math.floor(distanceFactor * 7) + 20;
+    const autoFare = Math.floor(distanceFactor * 12) + 40;
+    const cabFare = Math.floor(distanceFactor * 25) + 80;
+    
+    alert(`📍 Estimated Fares\n\n🏍️ Bike: ₹${bikeFare}\n🚗 Auto: ₹${autoFare}\n🚕 Cab: ₹${cabFare}\n\n✅ These rates help you avoid scams!`);
 }
 
 // --- Day 1 Checklist ---
 function initChecklist() {
+    const checkboxes = document.querySelectorAll('#checklist input[type="checkbox"]');
     const savedState = JSON.parse(localStorage.getItem('ss_checklist')) || {};
-    updateChecklist();
+    
+    checkboxes.forEach((checkbox, index) => {
+        checkbox.checked = savedState[index] || false;
+        checkbox.addEventListener('change', () => updateChecklistState());
+    });
 }
 
-function updateChecklist() {
+function updateChecklistState() {
+    const checkboxes = document.querySelectorAll('#checklist input[type="checkbox"]');
     const state = {};
+    
+    checkboxes.forEach((checkbox, index) => {
+        state[index] = checkbox.checked;
+    });
+    
     localStorage.setItem('ss_checklist', JSON.stringify(state));
 }
 
 // --- Modals ---
 function openModal(id) { 
-    document.getElementById('modal-overlay').classList.add('active');
-    document.getElementById(id).classList.add('active'); 
+    const overlay = document.getElementById('modal-overlay');
+    const modal = document.getElementById(id);
+    if(overlay) overlay.classList.add('active');
+    if(modal) modal.classList.add('active'); 
 }
 
 function closeAllModals() { 
-    document.getElementById('modal-overlay').classList.remove('active');
+    const overlay = document.getElementById('modal-overlay');
+    if(overlay) overlay.classList.remove('active');
     document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); 
 }
 
