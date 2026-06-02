@@ -40,6 +40,92 @@
         /* Hide scrollbar for sidebar but allow scrolling */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Hamburger Menu Animation */
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background: currentColor;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+        
+        /* Sidebar Mobile Animation */
+        .sidebar-mobile {
+            position: fixed;
+            left: -100%;
+            top: 64px;
+            width: 100%;
+            height: calc(100vh - 64px - 64px);
+            background: white;
+            transition: left 0.3s ease;
+            z-index: 30;
+            overflow-y: auto;
+        }
+        .sidebar-mobile.active {
+            left: 0;
+        }
+        
+        /* Smooth transitions for cards */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Better hover effects */
+        .btn-hover {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-hover::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn-hover:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        /* Dark mode support */
+        .dark .bg-white { background-color: #1f2937; }
+        .dark .text-slate-800 { color: #f3f4f6; }
+        .dark .text-slate-600 { color: #d1d5db; }
+        .dark .border-slate-200 { border-color: #374151; }
+        
+        /* Pulse animation for emergency button */
+        @keyframes pulse-red {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .emergency-pulse {
+            animation: pulse-red 2s infinite;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans pb-20 md:pb-0 overflow-hidden h-screen flex flex-col">
@@ -56,19 +142,65 @@
                 
                 <!-- Desktop Actions -->
                 <div class="hidden md:flex items-center space-x-4">
-                    <button id="theme-toggle" class="p-2 text-slate-500 hover:text-brand-600 transition rounded-full hover:bg-slate-100">
+                    <button id="theme-toggle" class="p-2 text-slate-500 hover:text-brand-600 transition rounded-full hover:bg-slate-100 btn-hover">
                         <i class="fas fa-moon text-lg"></i>
                     </button>
-                    <button onclick="openModal('login-modal')" class="text-slate-600 hover:text-brand-600 font-medium px-3 py-2 transition">
+                    <button onclick="openModal('login-modal')" class="text-slate-600 hover:text-brand-600 font-medium px-3 py-2 transition btn-hover">
                         Sign In
                     </button>
-                    <button onclick="openModal('add-pg-modal')" class="bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-full font-medium transition shadow-md shadow-brand-500/30 flex items-center gap-2">
+                    <button onclick="openModal('add-pg-modal')" class="bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-full font-medium transition shadow-md shadow-brand-500/30 flex items-center gap-2 btn-hover">
                         <i class="fa-solid fa-plus"></i> List Property
+                    </button>
+                </div>
+                
+                <!-- Mobile Hamburger Menu -->
+                <div class="md:hidden flex items-center gap-4">
+                    <button id="theme-toggle-mobile" class="p-2 text-slate-500 hover:text-brand-600 transition rounded-full hover:bg-slate-100">
+                        <i class="fas fa-moon text-lg"></i>
+                    </button>
+                    <button id="hamburger" class="hamburger text-slate-600 hover:text-brand-600">
+                        <span></span>
+                        <span></span>
+                        <span></span>
                     </button>
                 </div>
             </div>
         </div>
     </nav>
+
+    <!-- MOBILE SIDEBAR MENU -->
+    <div id="sidebar-mobile" class="sidebar-mobile md:hidden">
+        <div class="px-4 py-4 space-y-2">
+            <button onclick="switchTab('pg-finder'); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-brand-600 bg-brand-50 transition hover:bg-brand-100">
+                <i class="fa-solid fa-hotel w-5"></i> Private Flats & PGs
+            </button>
+            <button onclick="switchTab('fare-calc'); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-100 hover:text-brand-600 transition">
+                <i class="fa-solid fa-calculator w-5"></i> Fare Calculator
+            </button>
+            <button onclick="switchTab('expense-tracker'); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-100 hover:text-brand-600 transition">
+                <i class="fa-solid fa-wallet w-5"></i> Expense & Split Bill
+            </button>
+            <button onclick="switchTab('tiffin-directory'); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-100 hover:text-brand-600 transition">
+                <i class="fa-solid fa-utensils w-5"></i> Tiffin & Mess
+            </button>
+            <button onclick="switchTab('gym-directory'); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-100 hover:text-brand-600 transition">
+                <i class="fa-solid fa-dumbbell w-5"></i> Gym & Fitness
+            </button>
+            <button onclick="switchTab('academic-hub'); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-100 hover:text-brand-600 transition">
+                <i class="fa-solid fa-laptop-code w-5"></i> CSE Tech Hub
+            </button>
+            <button onclick="switchTab('checklist'); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-100 hover:text-brand-600 transition">
+                <i class="fa-solid fa-clipboard-check w-5"></i> Day-1 Checklist
+            </button>
+            
+            <div class="pt-6 pb-2">
+                <p class="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Help & Safety</p>
+            </div>
+            <button onclick="switchTab('emergency'); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-red-600 hover:bg-red-50 transition">
+                <i class="fa-solid fa-phone-bounce w-5"></i> Emergency Helpline
+            </button>
+        </div>
+    </div>
 
     <!-- MAIN APP LAYOUT -->
     <div class="flex flex-1 overflow-hidden">
@@ -76,32 +208,32 @@
         <!-- SIDEBAR (Desktop Only) -->
         <aside class="hidden md:flex flex-col w-64 bg-white border-r border-slate-200 h-full overflow-y-auto no-scrollbar py-6">
             <div class="px-4 space-y-1 sidebar-menu">
-                <button onclick="switchTab('pg-finder')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-brand-600 bg-brand-50 transition active">
+                <button onclick="switchTab('pg-finder')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-brand-600 bg-brand-50 transition active hover:bg-brand-100 card-hover">
                     <i class="fa-solid fa-hotel w-5"></i> Private Flats & PGs
                 </button>
-                <button onclick="switchTab('fare-calc')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition">
+                <button onclick="switchTab('fare-calc')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition card-hover">
                     <i class="fa-solid fa-calculator w-5"></i> Fare Calculator
                 </button>
-                <button onclick="switchTab('expense-tracker')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition">
+                <button onclick="switchTab('expense-tracker')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition card-hover">
                     <i class="fa-solid fa-wallet w-5"></i> Expense & Split Bill
                 </button>
-                <button onclick="switchTab('tiffin-directory')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition">
+                <button onclick="switchTab('tiffin-directory')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition card-hover">
                     <i class="fa-solid fa-utensils w-5"></i> Tiffin & Mess
                 </button>
-                <button onclick="switchTab('gym-directory')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition">
+                <button onclick="switchTab('gym-directory')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition card-hover">
                     <i class="fa-solid fa-dumbbell w-5"></i> Gym & Fitness
                 </button>
-                <button onclick="switchTab('academic-hub')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition">
+                <button onclick="switchTab('academic-hub')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition card-hover">
                     <i class="fa-solid fa-laptop-code w-5"></i> CSE Tech Hub
                 </button>
-                <button onclick="switchTab('checklist')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition">
+                <button onclick="switchTab('checklist')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition card-hover">
                     <i class="fa-solid fa-clipboard-check w-5"></i> Day-1 Checklist
                 </button>
                 
                 <div class="pt-6 pb-2">
                     <p class="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Help & Safety</p>
                 </div>
-                <button onclick="switchTab('emergency')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-red-600 hover:bg-red-50 transition">
+                <button onclick="switchTab('emergency')" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-red-600 hover:bg-red-50 transition card-hover emergency-pulse">
                     <i class="fa-solid fa-phone-bounce w-5"></i> Emergency Helpline
                 </button>
             </div>
@@ -113,41 +245,51 @@
                 
                 <!-- HERO SECTION -->
                 <section class="bg-gradient-to-br from-brand-600 to-indigo-800 rounded-3xl p-8 md:p-12 text-white shadow-xl shadow-brand-500/20 relative overflow-hidden">
-                    <!-- Decorative element -->
+                    <!-- Decorative elements -->
                     <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+                    <div class="absolute -bottom-12 -left-12 w-48 h-48 bg-white/5 rounded-full blur-2xl"></div>
                     
                     <div class="relative z-10 max-w-2xl">
-                        <span class="inline-block py-1 px-3 rounded-full bg-white/20 backdrop-blur-sm text-sm font-medium mb-4">
+                        <span class="inline-block py-1 px-3 rounded-full bg-white/20 backdrop-blur-sm text-sm font-medium mb-4 animate-pulse">
                             📍 India's #1 Student City App
                         </span>
                         <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
                             Har Naye Shahar Mein <br><span class="text-yellow-300">Aapka Saathi</span>
                         </h1>
                         <p class="text-brand-100 text-lg mb-8 max-w-lg">
-                            Find verified private flats, split expenses seamlessly, and access essential services in your new city.
+                            Find verified private flats, split expenses seamlessly, and access essential services in your new city. Your journey just got easier!
                         </p>
                         <div class="flex flex-wrap gap-4">
-                            <button onclick="switchTab('pg-finder')" class="bg-white text-brand-700 hover:bg-slate-50 px-6 py-3 rounded-xl font-bold shadow-lg transition transform hover:-translate-y-1">
-                                Explore Flats
+                            <button onclick="switchTab('pg-finder')" class="bg-white text-brand-700 hover:bg-slate-50 px-6 py-3 rounded-xl font-bold shadow-lg transition transform hover:-translate-y-1 btn-hover">
+                                🏠 Explore Flats
                             </button>
-                            <button onclick="switchTab('fare-calc')" class="bg-brand-500/30 hover:bg-brand-500/50 backdrop-blur-md border border-white/20 text-white px-6 py-3 rounded-xl font-bold transition">
+                            <button onclick="switchTab('fare-calc')" class="bg-brand-500/30 hover:bg-brand-500/50 backdrop-blur-md border border-white/20 text-white px-6 py-3 rounded-xl font-bold transition btn-hover">
                                 <i class="fa-solid fa-calculator mr-2"></i> Fare Calculator
                             </button>
                         </div>
                     </div>
                 </section>
 
-                <!-- STATS -->
-                <section class="grid grid-cols-3 gap-4 md:gap-6">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center">
+                <!-- STATS COUNTER -->
+                <section class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center card-hover">
+                        <div class="inline-block bg-blue-100 text-blue-600 p-3 rounded-full mb-3">
+                            <i class="fa-solid fa-building text-xl"></i>
+                        </div>
                         <h2 class="text-3xl font-extrabold text-brand-600">500+</h2>
                         <p class="text-sm text-slate-500 font-medium mt-1">Verified Flats</p>
                     </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center card-hover">
+                        <div class="inline-block bg-green-100 text-green-600 p-3 rounded-full mb-3">
+                            <i class="fa-solid fa-users text-xl"></i>
+                        </div>
                         <h2 class="text-3xl font-extrabold text-brand-600">10k+</h2>
-                        <p class="text-sm text-slate-500 font-medium mt-1">Students</p>
+                        <p class="text-sm text-slate-500 font-medium mt-1">Happy Students</p>
                     </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center card-hover">
+                        <div class="inline-block bg-purple-100 text-purple-600 p-3 rounded-full mb-3">
+                            <i class="fa-solid fa-map text-xl"></i>
+                        </div>
                         <h2 class="text-3xl font-extrabold text-brand-600">25+</h2>
                         <p class="text-sm text-slate-500 font-medium mt-1">Cities Active</p>
                     </div>
@@ -166,27 +308,26 @@
                     <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row gap-4">
                         <div class="flex-1 relative">
                             <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
-                            <input type="text" id="search-pg" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-brand-500 focus:border-brand-500 block pl-10 p-3 outline-none" placeholder="Search by locality (e.g., MP Nagar, Bhopal)">
+                            <input type="text" id="search-pg" placeholder="Search by location, name..." class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 block pl-10 p-3 transition">
                         </div>
-                        <select id="city-select" onchange="filterPGs()" class="bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-brand-500 focus:border-brand-500 p-3 outline-none">
+                        <select id="city-select" onchange="filterPGs()" class="bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 p-3 transition">
                             <option value="All">All Cities</option>
                             <option value="Bhopal">Bhopal</option>
                             <option value="Patna">Patna</option>
                         </select>
-                        <select id="budget-select" onchange="filterPGs()" class="bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-brand-500 focus:border-brand-500 p-3 outline-none">
+                        <select id="budget-select" onchange="filterPGs()" class="bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 p-3 transition">
                             <option value="All">Any Budget</option>
                             <option value="6000">Under ₹6,000</option>
                             <option value="15000">Under ₹15,000</option>
                         </select>
-                        <button class="bg-slate-800 text-white p-3 rounded-xl hover:bg-slate-700 transition">
+                        <button class="bg-slate-800 text-white p-3 rounded-xl hover:bg-slate-700 transition btn-hover">
                             <i class="fa-solid fa-sliders"></i>
                         </button>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="pg-grid">
                         <!-- PG Cards will be injected here by script.js -->
-                        <!-- Example Static Card for visualization -->
-                        <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-lg transition">
+                        <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 card-hover">
                             <div class="h-48 bg-slate-200 relative">
                                 <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80" alt="Room" class="w-full h-full object-cover">
                                 <span class="absolute top-3 right-3 bg-white/90 backdrop-blur text-brand-700 text-xs font-bold px-2 py-1 rounded-lg">Verified</span>
@@ -197,12 +338,12 @@
                                     <span class="font-bold text-brand-600">₹8,500<span class="text-xs text-slate-500 font-normal">/mo</span></span>
                                 </div>
                                 <p class="text-slate-500 text-sm mb-4"><i class="fa-solid fa-location-dot mr-1"></i> Indrapuri, Bhopal</p>
-                                <div class="flex gap-2 mb-5">
+                                <div class="flex gap-2 mb-5 flex-wrap">
                                     <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded-md"><i class="fa-solid fa-wifi mr-1"></i> WiFi</span>
                                     <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded-md"><i class="fa-solid fa-bolt mr-1"></i> Backup</span>
                                     <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded-md">Fully Furnished</span>
                                 </div>
-                                <button class="w-full bg-brand-50 text-brand-700 font-semibold py-2 rounded-xl hover:bg-brand-600 hover:text-white transition">View Details</button>
+                                <button class="w-full bg-brand-50 text-brand-700 font-semibold py-2 rounded-xl hover:bg-brand-600 hover:text-white transition btn-hover">View Details</button>
                             </div>
                         </div>
                     </div>
@@ -213,13 +354,13 @@
                     <div class="flex justify-between items-end">
                         <div>
                             <h2 class="text-2xl font-bold text-slate-800">Flat Budget & Expense Ledger</h2>
-                            <p class="text-slate-500">Track Groww investments, room rent, and split bills.</p>
+                            <p class="text-slate-500">Track investments, room rent, and split bills.</p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Overview Cards -->
-                        <div class="bg-brand-600 text-white p-6 rounded-3xl shadow-lg relative overflow-hidden">
+                        <div class="bg-brand-600 text-white p-6 rounded-3xl shadow-lg relative overflow-hidden card-hover">
                             <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
                             <span class="text-brand-100 text-sm font-medium">Total Monthly Expenditure</span>
                             <h2 id="total-spend" class="text-4xl font-bold mt-2">₹0</h2>
@@ -228,7 +369,7 @@
                                     <span class="text-brand-200 text-xs block">Your Share</span>
                                     <span id="split-share" class="font-bold text-lg">₹0</span>
                                 </div>
-                                <button onclick="clearExpenses()" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-sm font-medium transition backdrop-blur-sm">Reset Ledger</button>
+                                <button onclick="clearExpenses()" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-sm font-medium transition backdrop-blur-sm btn-hover">Reset Ledger</button>
                             </div>
                         </div>
 
@@ -236,19 +377,19 @@
                         <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
                             <h3 class="font-bold text-lg mb-4 text-slate-800">Log New Expense</h3>
                             <div class="space-y-4">
-                                <input type="text" id="exp-title" placeholder="e.g., Room Rent, Electricity, Groceries" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition">
+                                <input type="text" id="exp-title" placeholder="e.g., Room Rent, Electricity, Groceries" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition">
                                 <div class="flex gap-4">
                                     <div class="relative flex-1">
                                         <span class="absolute left-3 top-3.5 text-slate-500">₹</span>
-                                        <input type="number" id="exp-amount" placeholder="Amount" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 pl-8 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition">
+                                        <input type="number" id="exp-amount" placeholder="Amount" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 pl-8 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition">
                                     </div>
-                                    <select id="exp-split" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:border-brand-500 transition">
+                                    <select id="exp-split" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition">
                                         <option value="1">Personal (No Split)</option>
                                         <option value="2">Split with 1 Flatmate</option>
                                         <option value="3">Split with 2 Flatmates</option>
                                     </select>
                                 </div>
-                                <button onclick="addNewExpense()" class="w-full bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-900 transition shadow-md">Add Expense</button>
+                                <button onclick="addNewExpense()" class="w-full bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-900 transition shadow-md btn-hover">Add Expense</button>
                             </div>
                         </div>
                     </div>
@@ -270,34 +411,6 @@
                     </div>
                 </section>
 
-                <!-- TAB: ACADEMIC HUB -->
-                <section id="academic-hub" class="tab-content space-y-6">
-                    <div class="flex justify-between items-end">
-                        <div>
-                            <h2 class="text-2xl font-bold text-slate-800">CSE Tech & Academic Hub</h2>
-                            <p class="text-slate-500">Access engineering notes, templates, and libraries.</p>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 border-l-4 border-l-blue-500">
-                            <div class="flex items-center gap-3 mb-4">
-                                <div class="bg-blue-100 text-blue-600 p-3 rounded-xl"><i class="fa-brands fa-python text-xl"></i></div>
-                                <h3 class="font-bold text-lg text-slate-800">Machine Learning Assets</h3>
-                            </div>
-                            <p class="text-slate-500 text-sm mb-6">Insurance Fraud Detection systems, Streamlit app structures, and data science workflows.</p>
-                            <button class="w-full border border-blue-500 text-blue-600 font-semibold py-2.5 rounded-xl hover:bg-blue-50 transition" onclick="alert('Accessing dynamic tech project bundles...')">View ML Codebase</button>
-                        </div>
-                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 border-l-4 border-l-brand-500">
-                            <div class="flex items-center gap-3 mb-4">
-                                <div class="bg-brand-100 text-brand-600 p-3 rounded-xl"><i class="fa-solid fa-code text-xl"></i></div>
-                                <h3 class="font-bold text-lg text-slate-800">B.Tech Courseware</h3>
-                            </div>
-                            <p class="text-slate-500 text-sm mb-6">Comprehensive semester lecture notes for C Language, Data Structures, and OOP concepts.</p>
-                            <button class="w-full bg-brand-600 text-white font-semibold py-2.5 rounded-xl hover:bg-brand-700 transition" onclick="alert('Opening secure drive resource folder...')">Download Notes Bundle</button>
-                        </div>
-                    </div>
-                </section>
-
                 <!-- TAB: FARE CALCULATOR -->
                 <section id="fare-calc" class="tab-content space-y-6">
                     <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 max-w-2xl mx-auto">
@@ -310,29 +423,290 @@
                                 <label class="text-sm font-semibold text-slate-700 block mb-2">Pickup Location</label>
                                 <div class="relative">
                                     <i class="fa-solid fa-location-dot absolute left-4 top-3.5 text-green-500"></i>
-                                    <input type="text" id="pickup-loc" placeholder="e.g., Habibganj Railway Station" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 pl-10 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+                                    <input type="text" id="pickup-loc" placeholder="e.g., Habibganj Railway Station" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 pl-10 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition">
                                 </div>
                             </div>
                             <div>
                                 <label class="text-sm font-semibold text-slate-700 block mb-2">Drop Location</label>
                                 <div class="relative">
                                     <i class="fa-solid fa-location-crosshairs absolute left-4 top-3.5 text-red-500"></i>
-                                    <input type="text" id="drop-loc" placeholder="e.g., Private Flat / MP Nagar" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 pl-10 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+                                    <input type="text" id="drop-loc" placeholder="e.g., Private Flat / MP Nagar" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 pl-10 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition">
                                 </div>
                             </div>
-                            <button class="w-full bg-brand-600 text-white font-bold py-3.5 rounded-xl hover:bg-brand-700 transition shadow-md mt-4" onclick="runFareCalculation()">Calculate Best Rates</button>
+                            <button class="w-full bg-brand-600 text-white font-bold py-3.5 rounded-xl hover:bg-brand-700 transition shadow-md mt-4 btn-hover" onclick="runFareCalculation()">Calculate Best Route</button>
                         </div>
                     </div>
                 </section>
-                
-                <!-- (Include other sections like Checklist, Tiffin, Gym here using the same Tailwind patterns) -->
+
+                <!-- TAB: TIFFIN & MESS -->
+                <section id="tiffin-directory" class="tab-content space-y-6">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-800">Tiffin & Mess Directory</h2>
+                            <p class="text-slate-500">Find trusted tiffin services and mess facilities.</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 card-hover">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="bg-orange-100 text-orange-600 p-3 rounded-xl"><i class="fa-solid fa-bowl-food text-xl"></i></div>
+                                <h3 class="font-bold text-lg text-slate-800">Homeboy Tiffin Service</h3>
+                            </div>
+                            <p class="text-slate-500 text-sm mb-4">₹1,500/month | Daily lunch & dinner | Home-cooked meals</p>
+                            <div class="flex gap-2 mb-4">
+                                <span class="bg-orange-100 text-orange-700 text-xs px-2 py-1 rounded-md">Vegetarian</span>
+                                <span class="bg-orange-100 text-orange-700 text-xs px-2 py-1 rounded-md">Delivery</span>
+                            </div>
+                            <button class="w-full border border-orange-500 text-orange-600 font-semibold py-2.5 rounded-xl hover:bg-orange-50 transition btn-hover">Contact Now</button>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 card-hover">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="bg-red-100 text-red-600 p-3 rounded-xl"><i class="fa-solid fa-utensils text-xl"></i></div>
+                                <h3 class="font-bold text-lg text-slate-800">Campus Mess Co-op</h3>
+                            </div>
+                            <p class="text-slate-500 text-sm mb-4">₹2,000/month | Canteen access | Shared kitchen</p>
+                            <div class="flex gap-2 mb-4">
+                                <span class="bg-red-100 text-red-700 text-xs px-2 py-1 rounded-md">Both</span>
+                                <span class="bg-red-100 text-red-700 text-xs px-2 py-1 rounded-md">Communal</span>
+                            </div>
+                            <button class="w-full border border-red-500 text-red-600 font-semibold py-2.5 rounded-xl hover:bg-red-50 transition btn-hover">Join Now</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB: GYM & FITNESS -->
+                <section id="gym-directory" class="tab-content space-y-6">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-800">Gym & Fitness Centers</h2>
+                            <p class="text-slate-500">Find affordable gyms and fitness studios near you.</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 card-hover">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="bg-green-100 text-green-600 p-3 rounded-xl"><i class="fa-solid fa-dumbbell text-xl"></i></div>
+                                <h3 class="font-bold text-lg text-slate-800">PowerZone Gym</h3>
+                            </div>
+                            <p class="text-slate-500 text-sm mb-4">₹800/month | Full body workout | 24/7 Access</p>
+                            <div class="flex gap-2 mb-4">
+                                <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-md">Equipments</span>
+                                <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-md">Trainers</span>
+                            </div>
+                            <button class="w-full bg-green-600 text-white font-semibold py-2.5 rounded-xl hover:bg-green-700 transition btn-hover">Join Now</button>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 card-hover">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="bg-pink-100 text-pink-600 p-3 rounded-xl"><i class="fa-solid fa-person-hiking text-xl"></i></div>
+                                <h3 class="font-bold text-lg text-slate-800">Yoga & Wellness Hub</h3>
+                            </div>
+                            <p class="text-slate-500 text-sm mb-4">₹600/month | Yoga classes | Mental wellness</p>
+                            <div class="flex gap-2 mb-4">
+                                <span class="bg-pink-100 text-pink-700 text-xs px-2 py-1 rounded-md">Yoga</span>
+                                <span class="bg-pink-100 text-pink-700 text-xs px-2 py-1 rounded-md">Meditation</span>
+                            </div>
+                            <button class="w-full bg-pink-600 text-white font-semibold py-2.5 rounded-xl hover:bg-pink-700 transition btn-hover">Explore</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB: ACADEMIC HUB -->
+                <section id="academic-hub" class="tab-content space-y-6">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-800">CSE Tech & Academic Hub</h2>
+                            <p class="text-slate-500">Access engineering notes, templates, and libraries.</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 border-l-4 border-l-blue-500 card-hover">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="bg-blue-100 text-blue-600 p-3 rounded-xl"><i class="fa-brands fa-python text-xl"></i></div>
+                                <h3 class="font-bold text-lg text-slate-800">Machine Learning Assets</h3>
+                            </div>
+                            <p class="text-slate-500 text-sm mb-6">Insurance Fraud Detection systems, Streamlit app structures, and data science workflows.</p>
+                            <button class="w-full border border-blue-500 text-blue-600 font-semibold py-2.5 rounded-xl hover:bg-blue-50 transition btn-hover" onclick="alert('Accessing dynamic tech project repository...')">Access Resources</button>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 border-l-4 border-l-brand-500 card-hover">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="bg-brand-100 text-brand-600 p-3 rounded-xl"><i class="fa-solid fa-code text-xl"></i></div>
+                                <h3 class="font-bold text-lg text-slate-800">B.Tech Courseware</h3>
+                            </div>
+                            <p class="text-slate-500 text-sm mb-6">Comprehensive semester lecture notes for C Language, Data Structures, and OOP concepts.</p>
+                            <button class="w-full bg-brand-600 text-white font-semibold py-2.5 rounded-xl hover:bg-brand-700 transition btn-hover" onclick="alert('Opening secure drive resource folder...')">Download Notes</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB: DAY-1 CHECKLIST -->
+                <section id="checklist" class="tab-content space-y-6">
+                    <div class="flex justify-between items-end mb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-800">Day-1 Arrival Checklist</h2>
+                            <p class="text-slate-500">Complete checklist for your first day in the city.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <div class="space-y-3">
+                            <label class="flex items-center p-3 rounded-lg hover:bg-slate-50 cursor-pointer transition">
+                                <input type="checkbox" class="w-5 h-5 text-brand-600 rounded focus:ring-2 focus:ring-brand-500">
+                                <span class="ml-3 text-slate-700">Register at college/university</span>
+                                <span class="ml-auto text-xs text-slate-400">Documentation</span>
+                            </label>
+                            <label class="flex items-center p-3 rounded-lg hover:bg-slate-50 cursor-pointer transition">
+                                <input type="checkbox" class="w-5 h-5 text-brand-600 rounded focus:ring-2 focus:ring-brand-500">
+                                <span class="ml-3 text-slate-700">Get SIM card & activate mobile connection</span>
+                                <span class="ml-auto text-xs text-slate-400">Communication</span>
+                            </label>
+                            <label class="flex items-center p-3 rounded-lg hover:bg-slate-50 cursor-pointer transition">
+                                <input type="checkbox" class="w-5 h-5 text-brand-600 rounded focus:ring-2 focus:ring-brand-500">
+                                <span class="ml-3 text-slate-700">Open bank account (Passbook)</span>
+                                <span class="ml-auto text-xs text-slate-400">Financial</span>
+                            </label>
+                            <label class="flex items-center p-3 rounded-lg hover:bg-slate-50 cursor-pointer transition">
+                                <input type="checkbox" class="w-5 h-5 text-brand-600 rounded focus:ring-2 focus:ring-brand-500">
+                                <span class="ml-3 text-slate-700">Buy essential groceries & kitchenware</span>
+                                <span class="ml-auto text-xs text-slate-400">Housing</span>
+                            </label>
+                            <label class="flex items-center p-3 rounded-lg hover:bg-slate-50 cursor-pointer transition">
+                                <input type="checkbox" class="w-5 h-5 text-brand-600 rounded focus:ring-2 focus:ring-brand-500">
+                                <span class="ml-3 text-slate-700">Locate nearest medical center & pharmacy</span>
+                                <span class="ml-auto text-xs text-slate-400">Health</span>
+                            </label>
+                            <label class="flex items-center p-3 rounded-lg hover:bg-slate-50 cursor-pointer transition">
+                                <input type="checkbox" class="w-5 h-5 text-brand-600 rounded focus:ring-2 focus:ring-brand-500">
+                                <span class="ml-3 text-slate-700">Get local transport card/pass</span>
+                                <span class="ml-auto text-xs text-slate-400">Transportation</span>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB: EMERGENCY HELPLINE -->
+                <section id="emergency" class="tab-content space-y-6">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-gradient-to-r from-red-100 to-pink-100 rounded-3xl blur-xl opacity-50"></div>
+                        <div class="relative bg-white p-8 rounded-3xl shadow-lg border-2 border-red-200">
+                            <div class="text-center mb-8">
+                                <div class="inline-block bg-red-100 text-red-600 p-4 rounded-full mb-4 emergency-pulse">
+                                    <i class="fa-solid fa-phone-bounce text-3xl"></i>
+                                </div>
+                                <h2 class="text-2xl font-bold text-red-700">Emergency Helpline</h2>
+                                <p class="text-red-600 mt-2 font-semibold">24/7 Support Available</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                <!-- Emergency Number -->
+                                <div class="bg-gradient-to-br from-red-600 to-red-700 text-white p-6 rounded-2xl shadow-lg">
+                                    <h3 class="font-semibold text-sm opacity-90 mb-2">SheherSaathi Support Line</h3>
+                                    <p class="text-3xl font-bold mb-2">+91 9876543210</p>
+                                    <p class="text-red-100 text-sm">Direct assistance available</p>
+                                </div>
+
+                                <!-- Police Emergency -->
+                                <div class="bg-gradient-to-br from-blue-600 to-blue-700 text-white p-6 rounded-2xl shadow-lg">
+                                    <h3 class="font-semibold text-sm opacity-90 mb-2">Police Emergency</h3>
+                                    <p class="text-3xl font-bold mb-2">100</p>
+                                    <p class="text-blue-100 text-sm">Available 24/7</p>
+                                </div>
+
+                                <!-- Women Helpline -->
+                                <div class="bg-gradient-to-br from-purple-600 to-purple-700 text-white p-6 rounded-2xl shadow-lg">
+                                    <h3 class="font-semibold text-sm opacity-90 mb-2">Women Helpline</h3>
+                                    <p class="text-3xl font-bold mb-2">1091</p>
+                                    <p class="text-purple-100 text-sm">Safe & Confidential</p>
+                                </div>
+
+                                <!-- Medical Emergency -->
+                                <div class="bg-gradient-to-br from-green-600 to-green-700 text-white p-6 rounded-2xl shadow-lg">
+                                    <h3 class="font-semibold text-sm opacity-90 mb-2">Ambulance Service</h3>
+                                    <p class="text-3xl font-bold mb-2">102</p>
+                                    <p class="text-green-100 text-sm">Medical Assistance</p>
+                                </div>
+                            </div>
+
+                            <!-- Quick Contact Form -->
+                            <div class="bg-slate-50 p-6 rounded-2xl">
+                                <h3 class="font-bold text-slate-800 mb-4">Report an Issue</h3>
+                                <div class="space-y-3">
+                                    <input type="text" placeholder="Your Name" class="w-full bg-white border border-slate-200 rounded-lg p-3 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition">
+                                    <input type="tel" placeholder="Your Phone Number" class="w-full bg-white border border-slate-200 rounded-lg p-3 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition">
+                                    <textarea placeholder="Describe the issue..." rows="4" class="w-full bg-white border border-slate-200 rounded-lg p-3 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition"></textarea>
+                                    <button class="w-full bg-red-600 text-white font-bold py-3 rounded-lg hover:bg-red-700 transition btn-hover">Submit Emergency Report</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ABOUT FOUNDER SECTION -->
+                <section class="bg-gradient-to-r from-slate-800 to-slate-900 rounded-3xl p-8 md:p-12 text-white shadow-xl">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h2 class="text-3xl font-extrabold mb-4">Meet the Founder</h2>
+                            <p class="text-slate-300 mb-4 leading-relaxed">
+                                <span class="font-bold text-white">Avya Nand</span> created SheherSaathi after witnessing the struggles of countless students relocating to new cities. With a background in tech and a passion for solving real-world problems, Avya built this platform to make student life easier, safer, and more connected.
+                            </p>
+                            <p class="text-slate-300 mb-6 leading-relaxed">
+                                "Every student deserves a companion when entering a new city. SheherSaathi is that friend who knows everything!"
+                            </p>
+                            <div class="flex gap-3">
+                                <button class="bg-white text-slate-800 px-6 py-2 rounded-full font-semibold hover:bg-slate-100 transition btn-hover">
+                                    <i class="fa-brands fa-linkedin mr-2"></i> LinkedIn
+                                </button>
+                                <button class="border-2 border-white text-white px-6 py-2 rounded-full font-semibold hover:bg-white/10 transition btn-hover">
+                                    <i class="fa-brands fa-twitter mr-2"></i> Twitter
+                                </button>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="inline-block relative">
+                                <div class="absolute inset-0 bg-gradient-to-r from-brand-600 to-indigo-600 rounded-full blur-2xl opacity-30"></div>
+                                <div class="relative w-48 h-48 bg-gradient-to-br from-brand-400 to-brand-600 rounded-full flex items-center justify-center">
+                                    <i class="fa-solid fa-user text-white text-6xl"></i>
+                                </div>
+                            </div>
+                            <h3 class="mt-6 font-bold text-xl">Avya Nand</h3>
+                            <p class="text-slate-400">Founder & Designer</p>
+                        </div>
+                    </div>
+                </section>
 
                 <!-- FOOTER -->
                 <footer class="mt-12 pt-8 border-t border-slate-200 text-center pb-8">
-                    <div class="flex justify-center items-center gap-2 text-xl font-bold text-slate-800 mb-2">
-                        <i class="fa-solid fa-compass-navigational text-brand-600"></i> SheherSaathi
+                    <div class="space-y-4">
+                        <div class="flex justify-center items-center gap-2 text-2xl font-bold text-slate-800">
+                            <i class="fa-solid fa-compass-navigational text-brand-600"></i> SheherSaathi
+                        </div>
+                        <p class="text-slate-600">Har Naye Shahar Mein Aapka Saathi</p>
+                        
+                        <!-- Footer Links -->
+                        <div class="flex justify-center gap-6 text-sm text-slate-600">
+                            <a href="#" class="hover:text-brand-600 transition">Privacy Policy</a>
+                            <span class="text-slate-300">|</span>
+                            <a href="#" class="hover:text-brand-600 transition">Terms of Service</a>
+                            <span class="text-slate-300">|</span>
+                            <a href="#" class="hover:text-brand-600 transition">Contact Us</a>
+                        </div>
+
+                        <!-- Social Links -->
+                        <div class="flex justify-center gap-4 pt-4">
+                            <a href="#" class="bg-slate-100 hover:bg-slate-200 text-slate-600 p-2 rounded-full transition">
+                                <i class="fa-brands fa-facebook"></i>
+                            </a>
+                            <a href="#" class="bg-slate-100 hover:bg-slate-200 text-slate-600 p-2 rounded-full transition">
+                                <i class="fa-brands fa-twitter"></i>
+                            </a>
+                            <a href="#" class="bg-slate-100 hover:bg-slate-200 text-slate-600 p-2 rounded-full transition">
+                                <i class="fa-brands fa-instagram"></i>
+                            </a>
+                            <a href="#" class="bg-slate-100 hover:bg-slate-200 text-slate-600 p-2 rounded-full transition">
+                                <i class="fa-brands fa-linkedin"></i>
+                            </a>
+                        </div>
+
+                        <p class="text-slate-500 text-xs pt-4">Built by Avya Nand. © 2026 All Rights Reserved.</p>
                     </div>
-                    <p class="text-slate-500 text-sm">Built by Avya Nand. © 2026 All Rights Reserved.</p>
                 </footer>
 
             </div>
@@ -341,7 +715,7 @@
 
     <!-- MOBILE BOTTOM NAVIGATION (App-like feel) -->
     <div class="md:hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-lg border-t border-slate-200 flex justify-around items-center h-16 z-50 px-2 pb-safe">
-        <button onclick="switchTab('pg-finder')" class="flex flex-col items-center justify-center w-full h-full text-brand-600">
+        <button onclick="switchTab('pg-finder')" class="flex flex-col items-center justify-center w-full h-full text-brand-600 hover:text-brand-700 transition">
             <i class="fa-solid fa-house text-xl mb-1"></i>
             <span class="text-[10px] font-semibold">Flats</span>
         </button>
@@ -353,9 +727,9 @@
             <i class="fa-solid fa-wallet text-xl mb-1"></i>
             <span class="text-[10px] font-semibold">Expenses</span>
         </button>
-        <button onclick="openModal('login-modal')" class="flex flex-col items-center justify-center w-full h-full text-slate-500 hover:text-brand-600 transition">
-            <i class="fa-solid fa-user text-xl mb-1"></i>
-            <span class="text-[10px] font-semibold">Profile</span>
+        <button onclick="switchTab('emergency')" class="flex flex-col items-center justify-center w-full h-full text-slate-500 hover:text-red-600 transition">
+            <i class="fa-solid fa-phone-bounce text-xl mb-1"></i>
+            <span class="text-[10px] font-semibold">Emergency</span>
         </button>
     </div>
 
@@ -363,6 +737,20 @@
     <!-- Overlay -->
     <div class="modal-overlay fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60]" id="modal-overlay" onclick="closeAllModals()"></div>
     
+    <!-- Login Modal -->
+    <div class="modal fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md bg-white rounded-3xl shadow-2xl z-[70] flex-col" id="login-modal">
+        <div class="flex justify-between items-center p-6 border-b border-slate-100">
+            <h3 class="font-bold text-xl text-slate-800">Sign In</h3>
+            <button onclick="closeAllModals()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+        <div class="p-6 space-y-4">
+            <input type="email" placeholder="Email Address" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition">
+            <input type="password" placeholder="Password" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition">
+            <button class="w-full bg-brand-600 text-white font-bold py-3.5 rounded-xl hover:bg-brand-700 transition shadow-md btn-hover">Sign In</button>
+            <p class="text-center text-slate-600 text-sm">Don't have an account? <a href="#" class="text-brand-600 font-semibold hover:underline">Create one</a></p>
+        </div>
+    </div>
+
     <!-- Add PG Modal -->
     <div class="modal fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md bg-white rounded-3xl shadow-2xl z-[70] flex-col" id="add-pg-modal">
         <div class="flex justify-between items-center p-6 border-b border-slate-100">
@@ -370,14 +758,15 @@
             <button onclick="closeAllModals()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
         <div class="p-6 space-y-4">
-            <input type="text" id="add-name" placeholder="Flat / PG Name" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:border-brand-500">
-            <select id="add-city" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:border-brand-500">
+            <input type="text" id="add-name" placeholder="Flat / PG Name" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition">
+            <select id="add-city" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition">
+                <option value="">Select City</option>
                 <option value="Bhopal">Bhopal</option>
                 <option value="Patna">Patna</option>
                 <option value="Delhi">Delhi</option>
             </select>
-            <input type="number" id="add-price" placeholder="Rent per Month (₹)" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:border-brand-500">
-            <button class="w-full bg-brand-600 text-white font-bold py-3.5 rounded-xl hover:bg-brand-700 transition shadow-md mt-2" onclick="submitCustomListing()">Deploy Listing</button>
+            <input type="number" id="add-price" placeholder="Rent per Month (₹)" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition">
+            <button class="w-full bg-brand-600 text-white font-bold py-3.5 rounded-xl hover:bg-brand-700 transition shadow-md btn-hover" onclick="submitCustomListing()">Deploy Listing</button>
         </div>
     </div>
 
