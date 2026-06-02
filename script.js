@@ -671,6 +671,9 @@ function renderPGs(){
     return (!cityFilter || p.city===cityFilter) &&
       (!typeFilter || type===typeFilter) &&
       (!search||[p.name,p.city,p.address,p.amenities,p.gender,type].filter(Boolean).join(' ').toLowerCase().includes(search)) &&
+    const price=parseInt(p.price.replace(/[^0-9]/g,''));
+    return p.city===activeCity &&
+      (!search||[p.name,p.city,p.address,p.amenities,p.gender].filter(Boolean).join(' ').toLowerCase().includes(search)) &&
       (!gender||p.gender===gender) &&
       price<=(maxPr||999999);
   });
@@ -978,17 +981,39 @@ function doHeroSearch(){
   const val=document.getElementById('heroSearchInput').value.trim();
   runSmartSearch(val, 'hero');
 }
+// =========================================================
+// SheherSaathi - Core Application Logic
+// =========================================================
 
-// =====================================================
-//  CLOSE ON OVERLAY CLICK
-// =====================================================
-document.addEventListener('click',e=>{
-  if(e.target.classList.contains('overlay')&&e.target.id!=='loginModal'){
-    e.target.classList.add('hidden');
-    e.target.style.display='none';
-  }
-  if(!e.target.closest('.profile-wrap')){ const m=document.getElementById('profileMenu'); if(m) m.style.display='none'; }
-  if(!e.target.closest('.notif-btn')&&!e.target.closest('.notif-panel')){ const p=document.getElementById('notifPanel'); if(p) p.classList.add('hidden'); }
+// --- Initial Mock Data (Tailored for Students & Private Flats) ---
+let flatsData = JSON.parse(localStorage.getItem("ss_flats")) || [
+    { name: "Premium 2BHK Flat (Shared)", city: "Bhopal", loc: "Indrapuri Sector C", price: 8500, ac: true, wifi: true, food: false, brokerFree: true, img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80", contact: "9876543210" },
+    { name: "Independent Studio Flat", city: "Bhopal", loc: "MP Nagar Zone 2", price: 11000, ac: true, wifi: true, food: false, brokerFree: true, img: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80", contact: "9876543211" },
+    { name: "Student Room (Private)", city: "Patna", loc: "Boring Road", price: 6500, ac: false, wifi: true, food: true, brokerFree: false, img: "https://images.unsplash.com/photo-1555854877-bab0e5f47500?auto=format&fit=crop&w=600&q=80", contact: "9876543212" }
+];
+
+const tiffinsData = [
+    { name: "FitDiet Meals", desc: "High-protein chicken/paneer diets for bodybuilding & gym routines.", loc: "Bhopal", price: "₹3,500/month", contact: "9100000001" },
+    { name: "Maa Annapurna Tiffin", desc: "Classic home-style vegetarian daily meals.", loc: "Bhopal", price: "₹2,200/month", contact: "9100000002" },
+    { name: "Campus Meals Co", desc: "Mixed diets with breakfast included.", loc: "Patna", price: "₹2,800/month", contact: "9100000003" }
+];
+
+const gymsData = [
+    { name: "PowerZone Gym", desc: "Full body workout | Personal trainers", loc: "Bhopal", price: "₹800/month", contact: "9200000001", features: ["Cardio", "Weights", "Trainers", "24/7"] },
+    { name: "Yoga & Wellness Hub", desc: "Yoga classes | Mental wellness", loc: "Bhopal", price: "₹600/month", contact: "9200000002", features: ["Yoga", "Meditation", "Flexibility"] },
+    { name: "Elite Fitness Center", desc: "Premium gym with CrossFit", loc: "Patna", price: "₹1,200/month", contact: "9200000003", features: ["CrossFit", "Swimming", "Nutrition"] }
+];
+
+// --- Initialization ---
+document.addEventListener("DOMContentLoaded", () => {
+    initThemeControl();
+    initHamburgerMenu();
+    renderFlatsGrid(flatsData);
+    renderSimpleGrids();
+    initExpenseTracker();
+    initChecklist();
+    animateStats();
+    setupFilterListeners();
 });
 
 // =====================================================
@@ -1012,80 +1037,113 @@ function searchCompare(val) {
   ).join('');
   dd.classList.remove('hidden');
 }
-
-function addToCompare(name) {
-  if (compareList.length >= 3) { alert('Maximum 3 PGs can be compared at once.'); return; }
-  const pg = pgData.find(p => p.name === name);
-  if (!pg || compareList.find(c => c.name === name)) return;
-  compareList.push(pg);
-  document.getElementById('compareSearch').value = '';
-  document.getElementById('compareDropdown').classList.add('hidden');
-  renderCompare();
+// --- Hamburger Menu Toggle ---
+function initHamburgerMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const sidebar = document.getElementById('sidebar-mobile');
+    
+    if (!hamburger || !sidebar) return;
+    
+    hamburger.addEventListener('click', toggleSidebar);
 }
 
-function removeFromCompare(name) {
-  compareList = compareList.filter(p => p.name !== name);
-  renderCompare();
+function toggleSidebar() {
+    const hamburger = document.getElementById('hamburger');
+    const sidebar = document.getElementById('sidebar-mobile');
+    if (!hamburger || !sidebar) return;
+    
+    hamburger.classList.toggle('active');
+    sidebar.classList.toggle('active');
 }
 
-function renderCompare() {
-  const pillsEl = document.getElementById('compareSelected');
-  const tableEl = document.getElementById('compareTable');
-
-  pillsEl.innerHTML = compareList.map(pg =>
-    `<div class="compare-pill">${pg.name}
-      <button onclick="removeFromCompare('${pg.name.replace(/'/g,"\\'")}')">×</button>
-    </div>`
-  ).join('');
-
-  if (!compareList.length) {
-    tableEl.innerHTML = '<div class="compare-empty">🔍<br>Search and add PGs above to compare them side by side.</div>';
-    return;
-  }
-
-  const fields = [
-    { label: 'PG Name', key: 'name', bold: true },
-    { label: 'City', key: 'city' },
-    { label: 'Monthly Rent', key: 'price' },
-    { label: 'For', key: 'gender' },
-    { label: 'Amenities', key: 'amenities' },
-    { label: 'Contact', key: 'contact' },
-    { label: 'Rating', key: '_rating' },
-  ];
-
-  const prices = compareList.map(p => parseInt(p.price.replace(/\D/g, '')));
-  const minPrice = Math.min(...prices);
-  const ratings = compareList.map(p => avgRating(p.name));
-  const maxRating = Math.max(...ratings);
-
-  let html = `<table class="compare-table"><thead><tr><th>Feature</th>`;
-  compareList.forEach(pg => { html += `<th>${pg.name}</th>`; });
-  html += `</tr></thead><tbody>`;
-
-  fields.forEach(f => {
-    html += `<tr><td style="font-weight:600;font-size:13px;color:var(--muted)">${f.label}</td>`;
-    compareList.forEach((pg, i) => {
-      let val = '';
-      if (f.key === '_rating') {
-        const r = avgRating(pg.name);
-        val = r > 0 ? `★ ${r.toFixed(1)}` : 'No ratings';
-        const isBest = r === maxRating && r > 0;
-        html += `<td class="${isBest ? 'best-cell' : ''}">${val}</td>`;
-      } else {
-        val = pg[f.key] || '—';
-        const isBestPrice = f.key === 'price' && parseInt(pg.price.replace(/\D/g,'')) === minPrice;
-        html += `<td class="${f.bold ? 'pg-name-cell' : ''} ${isBestPrice ? 'best-cell' : ''}">${val}</td>`;
-      }
+// --- Tab & Navigation System ---
+function switchTab(tabId) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(el => {
+        el.classList.remove('active');
+        el.style.display = 'none';
     });
-    html += `</tr>`;
-  });
+    
+    // Remove active state from all sidebar buttons
+    document.querySelectorAll('.sidebar-btn').forEach(el => {
+        el.classList.remove('active', 'bg-brand-50', 'text-brand-600');
+        el.classList.add('text-slate-600');
+    });
 
-  html += `<tr><td style="font-weight:600;font-size:13px;color:var(--muted)">Action</td>`;
-  compareList.forEach(pg => {
-    html += `<td><button class="bcall" style="width:100%;font-size:12px;padding:7px" onclick="callPG('${pg.contact}')">📞 Call</button></td>`;
-  });
-  html += `</tr></tbody></table>`;
-  tableEl.innerHTML = html;
+    // Show target tab
+    const targetTab = document.getElementById(tabId);
+    if(targetTab) {
+        targetTab.classList.add('active');
+        targetTab.style.display = 'block';
+    }
+    
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    
+    // Close mobile sidebar
+    const hamburger = document.getElementById('hamburger');
+    const sidebar = document.getElementById('sidebar-mobile');
+    if (hamburger && sidebar) {
+        hamburger.classList.remove('active');
+        sidebar.classList.remove('active');
+    }
+}
+
+// --- Theme Controller (Dark/Light Mode) ---
+function initThemeControl() {
+    const btns = document.querySelectorAll('[id*="theme-toggle"]');
+    if(btns.length === 0) return;
+    
+    const saved = localStorage.getItem('ss_theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    
+    btns.forEach(btn => {
+        btn.innerHTML = saved === 'dark' ? '<i class="fas fa-sun text-lg"></i>' : '<i class="fas fa-moon text-lg"></i>';
+        btn.addEventListener('click', () => toggleTheme(btns));
+    });
+}
+
+function toggleTheme(btns) {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const next = isDark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('ss_theme', next);
+    const icon = isDark ? '<i class="fas fa-moon text-lg"></i>' : '<i class="fas fa-sun text-lg"></i>';
+    btns.forEach(btn => btn.innerHTML = icon);
+}
+
+// --- Flat/PG Rendering & Filtering ---
+function renderFlatsGrid(data) {
+    const container = document.getElementById('pg-grid');
+    if(!container) return;
+    
+    container.innerHTML = data.length ? '' : '<div class="col-span-full text-center py-10 text-slate-500">No flats match your current filters.</div>';
+    
+    data.forEach(item => {
+        let tags = '';
+        if(item.wifi) tags += `<span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded-md"><i class="fa-solid fa-wifi mr-1"></i> WiFi</span>`;
+        if(item.ac) tags += `<span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded-md"><i class="fa-solid fa-snowflake mr-1"></i> AC</span>`;
+        if(item.brokerFree) tags += `<span class="bg-emerald-50 text-emerald-600 text-xs px-2 py-1 rounded-md"><i class="fa-solid fa-handshake-slash mr-1"></i> No Broker</span>`;
+
+        const contactPhone = item.contact || "9999999999";
+        container.innerHTML += `
+            <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 card-hover">
+                <div class="h-48 bg-slate-200 relative">
+                    <img src="${item.img}" alt="Flat Image" class="w-full h-full object-cover">
+                    <span class="absolute top-3 right-3 bg-white/90 backdrop-blur text-brand-700 text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">
+                        <i class="fa-solid fa-shield-check"></i> Verified
+                    </span>
+                </div>
+                <div class="p-5">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-lg text-slate-800 line-clamp-1">${item.name}</h3>
+                        <span class="font-bold text-brand-600 whitespace-nowrap ml-2">₹${item.price}<span class="text-xs text-slate-500 font-normal">/mo</span></span>
+                    </div>
+                    <p class="text-slate-500 text-sm mb-4"><i class="fa-solid fa-location-dot mr-1"></i> ${item.loc}, ${item.city}</p>
+                    <div class="flex flex-wrap gap-2 mb-5">${tags}</div>
+                    <button class="w-full bg-brand-50 text-brand-700 font-semibold py-2.5 rounded-xl hover:bg-brand-600 hover:text-white transition btn-hover" onclick="alert('Owner Contact: ${contactPhone}\\n\\nPlease reach out to verify property details.')">View & Contact</button>
+                </div>
+            </div>`;
+    });
 }
 
 // =====================================================
@@ -1114,165 +1172,129 @@ function setBudgetCity(city, btn) {
   document.getElementById('bEntertain').value = avg.entertain;
   document.getElementById('bMisc').value     = avg.misc;
   calcBudget();
+function setupFilterListeners() {
+    const searchInput = document.getElementById('search-pg');
+    const citySelect = document.getElementById('city-select');
+    const budgetSelect = document.getElementById('budget-select');
+    
+    if(searchInput) searchInput.addEventListener('input', filterPGs);
+    if(citySelect) citySelect.addEventListener('change', filterPGs);
+    if(budgetSelect) budgetSelect.addEventListener('change', filterPGs);
 }
 
-function calcBudget() {
-  const pg        = parseInt(document.getElementById('bPG').value) || 0;
-  const food      = parseInt(document.getElementById('bFood').value) || 0;
-  const transport = parseInt(document.getElementById('bTransport').value) || 0;
-  const internet  = parseInt(document.getElementById('bInternet').value) || 0;
-  const entertain = parseInt(document.getElementById('bEntertain').value) || 0;
-  const misc      = parseInt(document.getElementById('bMisc').value) || 0;
-  const income    = parseInt(document.getElementById('budgetIncome').value) || 0;
+function filterPGs() {
+    const searchVal = document.getElementById('search-pg')?.value.toLowerCase() || "";
+    const city = document.getElementById('city-select')?.value || "All";
+    const budget = document.getElementById('budget-select')?.value || "All";
 
-  document.getElementById('bPGVal').textContent        = '₹' + pg.toLocaleString();
-  document.getElementById('bFoodVal').textContent      = '₹' + food.toLocaleString();
-  document.getElementById('bTransportVal').textContent = '₹' + transport.toLocaleString();
-  document.getElementById('bInternetVal').textContent  = '₹' + internet.toLocaleString();
-  document.getElementById('bEntertainVal').textContent = '₹' + entertain.toLocaleString();
-  document.getElementById('bMiscVal').textContent      = '₹' + misc.toLocaleString();
-
-  const total = pg + food + transport + internet + entertain + misc;
-  const savings = income - total;
-
-  const rows = [
-    { icon: '🏠', label: 'PG / Rent', val: pg },
-    { icon: '🍽️', label: 'Food & Meals', val: food },
-    { icon: '🚌', label: 'Transport', val: transport },
-    { icon: '📱', label: 'Internet / Mobile', val: internet },
-    { icon: '🎬', label: 'Entertainment', val: entertain },
-    { icon: '🛍️', label: 'Miscellaneous', val: misc },
-  ];
-
-  document.getElementById('budgetBreakdown').innerHTML = rows.map(r =>
-    `<div class="budget-row">
-      <span class="budget-row-label">${r.icon} ${r.label}</span>
-      <span class="budget-row-val">₹${r.val.toLocaleString()}</span>
-    </div>`
-  ).join('');
-
-  document.getElementById('budgetTotal').textContent = '₹' + total.toLocaleString();
-
-  const savEl = document.getElementById('budgetSavings');
-  if (income > 0) {
-    const cls = savings >= 0 ? 'savings-positive' : 'savings-negative';
-    const msg = savings >= 0
-      ? `✅ You save ₹${savings.toLocaleString()} per month`
-      : `⚠️ Budget shortfall of ₹${Math.abs(savings).toLocaleString()}`;
-    savEl.className = 'budget-savings-row ' + cls;
-    savEl.textContent = msg;
-  } else {
-    savEl.className = 'budget-savings-row';
-    savEl.textContent = '';
-  }
-
-  const avg = cityAvgCost[budgetCity];
-  const avgTotal = Object.values(avg).reduce((a,b) => a + b, 0);
-  const tipEl = document.getElementById('budgetTip');
-  if (total > avgTotal * 1.2) tipEl.textContent = `💡 Tip: Average monthly cost in ${budgetCity} is ₹${avgTotal.toLocaleString()}. You're spending ${Math.round((total/avgTotal-1)*100)}% more than average.`;
-  else if (total < avgTotal * 0.8) tipEl.textContent = `✅ Great! Your budget is below the ${budgetCity} city average of ₹${avgTotal.toLocaleString()}.`;
-  else tipEl.textContent = `📊 Your budget is close to the ${budgetCity} city average of ₹${avgTotal.toLocaleString()}/month.`;
-
-  const avgCard = document.getElementById('budgetAvgCard');
-  avgCard.innerHTML = `
-    <div class="budget-card-title">City Average Costs — ${budgetCity}</div>
-    ${Object.entries(avg).map(([k,v]) => {
-      const labels = {pg:'🏠 PG/Rent',food:'🍽️ Food',transport:'🚌 Transport',internet:'📱 Internet',entertain:'🎬 Entertainment',misc:'🛍️ Misc'};
-      return `<div class="avg-row"><span>${labels[k]||k}</span><span style="font-weight:600">₹${v.toLocaleString()}</span></div>`;
-    }).join('')}
-    <div class="avg-row" style="border-top:2px solid var(--border);padding-top:10px;margin-top:4px"><span style="font-weight:700">Total Average</span><span style="font-weight:700;color:var(--brand)">₹${Object.values(avg).reduce((a,b)=>a+b,0).toLocaleString()}</span></div>`;
+    const filtered = flatsData.filter(item => {
+        let match = true;
+        if(city !== "All" && item.city !== city) match = false;
+        if(budget !== "All" && item.price > parseInt(budget)) match = false;
+        if(searchVal && !item.loc.toLowerCase().includes(searchVal) && !item.name.toLowerCase().includes(searchVal)) match = false;
+        return match;
+    });
+    
+    renderFlatsGrid(filtered);
 }
 
-// Budget initialized in main onload
-
-// =====================================================
-//  CHECKLIST
-// =====================================================
-const checklistData = [
-  {
-    category: '🚉 Arriving at the Station',
-    items: [
-      { id: 'c1', text: 'Exit the platform safely', sub: 'Follow exit boards — ask RPF if confused' },
-      { id: 'c2', text: 'Collect all luggage', sub: 'Double-check overhead racks and under your seat' },
-      { id: 'c3', text: 'Use prepaid auto/cab booth', sub: 'Fixed rates, no bargaining — safest option' },
-      { id: 'c4', text: 'Note vehicle number before boarding', sub: 'Share with family/friends for safety' },
-    ]
-  },
-  {
-    category: '📱 First Things to Do',
-    items: [
-      { id: 'c5', text: 'Buy/activate a local SIM card', sub: 'Carry Aadhaar for new SIM. Jio/Airtel recommended.' },
-      { id: 'c6', text: 'Withdraw some cash from ATM', sub: 'Keep ₹2000–3000 cash for initial expenses' },
-      { id: 'c7', text: 'Save emergency numbers', sub: 'Police: 100, Ambulance: 108, Railway: 139' },
-      { id: 'c8', text: 'Install Ola/Uber app', sub: 'For safe and transparent cab bookings' },
-    ]
-  },
-  {
-    category: '🏠 Finding a Place to Stay',
-    items: [
-      { id: 'c9', text: 'Search PGs on SheherSaathi', sub: 'Filter by city, budget, and gender preference' },
-      { id: 'c10', text: 'Visit PG before paying advance', sub: 'Check room, bathroom, kitchen, and security' },
-      { id: 'c11', text: 'Read rental agreement carefully', sub: 'Check lock-in period, notice period, and charges' },
-      { id: 'c12', text: 'Click photos of the room condition', sub: 'Useful for getting deposit back later' },
-    ]
-  },
-  {
-    category: '🏙️ Settling in the City',
-    items: [
-      { id: 'c13', text: 'Learn local transport routes', sub: 'Metro, buses, auto routes near your area' },
-      { id: 'c14', text: 'Find nearest grocery store', sub: 'Also check Blinkit/Zepto/Swiggy for delivery' },
-      { id: 'c15', text: 'Locate nearest hospital/clinic', sub: 'Important for any medical emergency' },
-      { id: 'c16', text: 'Open a bank account or link UPI', sub: 'Makes transactions much easier' },
-      { id: 'c17', text: 'Connect with local community', sub: 'Join college WhatsApp groups, local Facebook groups' },
-      { id: 'c18', text: 'Update your address with family', sub: 'Share PG address with at least 2 family members' },
-    ]
-  }
-];
-
-function renderChecklist() {
-  const done = JSON.parse(localStorage.getItem('ss_checklist') || '[]');
-  const total = checklistData.reduce((s, c) => s + c.items.length, 0);
-  const completed = done.length;
-
-  const fill = document.getElementById('checkProgressFill');
-  const text = document.getElementById('checkProgressText');
-  if (fill) fill.style.width = (total ? (completed/total*100) : 0) + '%';
-  if (text) text.textContent = `${completed} / ${total} completed`;
-
-  const wrap = document.getElementById('checklistItems');
-  if (!wrap) return;
-
-  wrap.innerHTML = checklistData.map(cat => `
-    <div class="checklist-category">
-      <div class="checklist-cat-header">${cat.category}</div>
-      ${cat.items.map(item => `
-        <div class="checklist-item ${done.includes(item.id) ? 'done' : ''}" onclick="toggleCheck('${item.id}')">
-          <div class="ci-check">${done.includes(item.id) ? '✓' : ''}</div>
-          <div class="ci-body">
-            <div class="ci-text">${item.text}</div>
-            <div class="ci-sub">${item.sub}</div>
-          </div>
-        </div>`).join('')}
-    </div>`).join('');
-
-  if (completed === total && total > 0) {
-    wrap.innerHTML += `<div class="checklist-celebration">🎉<br><strong>All done! You're all set in your new city!</strong></div>`;
-    document.querySelector('.checklist-celebration').style.display = 'block';
-  }
+// --- Add Custom Property ---
+function submitCustomListing() {
+    const name = document.getElementById('add-name')?.value;
+    const city = document.getElementById('add-city')?.value;
+    const price = document.getElementById('add-price')?.value;
+    
+    if(!name || !price || !city) return alert("Please fill in all fields (name, city, and price).");
+    
+    const newFlat = {
+        name: name, 
+        city: city, 
+        loc: "New Listing", 
+        price: parseInt(price),
+        ac: false, 
+        wifi: true, 
+        food: false, 
+        brokerFree: true,
+        img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80",
+        contact: "9999999999"
+    };
+    
+    flatsData.unshift(newFlat);
+    localStorage.setItem("ss_flats", JSON.stringify(flatsData));
+    
+    renderFlatsGrid(flatsData);
+    closeAllModals();
+    alert("✅ Property listed successfully!");
+    
+    document.getElementById('add-name').value = '';
+    document.getElementById('add-city').value = '';
+    document.getElementById('add-price').value = '';
 }
 
-function toggleCheck(id) {
-  let done = JSON.parse(localStorage.getItem('ss_checklist') || '[]');
-  if (done.includes(id)) done = done.filter(d => d !== id);
-  else { done.push(id); addNotif('Checklist item completed! ✅'); }
-  localStorage.setItem('ss_checklist', JSON.stringify(done));
-  renderChecklist();
+// --- Expense Tracker System ---
+let expenses = JSON.parse(localStorage.getItem("ss_expenses")) || [];
+
+function initExpenseTracker() {
+    updateExpenseUI();
 }
 
-function resetChecklist() {
-  if (!confirm('Reset all checklist items?')) return;
-  localStorage.removeItem('ss_checklist');
-  renderChecklist();
+function addNewExpense() {
+    const title = document.getElementById('exp-title')?.value;
+    const amount = parseFloat(document.getElementById('exp-amount')?.value);
+    const splitType = parseInt(document.getElementById('exp-split')?.value) || 1;
+    
+    if(!title || isNaN(amount) || amount <= 0) return alert("Please enter a valid expense name and amount.");
+    
+    expenses.push({ title, amount, split: splitType });
+    localStorage.setItem("ss_expenses", JSON.stringify(expenses));
+    
+    document.getElementById('exp-title').value = '';
+    document.getElementById('exp-amount').value = '';
+    
+    updateExpenseUI();
+    alert("✅ Expense added successfully!");
+}
+
+function updateExpenseUI() {
+    const tbody = document.getElementById('expense-tbody');
+    const totalEl = document.getElementById('total-spend');
+    const shareEl = document.getElementById('split-share');
+    if(!tbody) return;
+
+    tbody.innerHTML = '';
+    let totalSpend = 0;
+    let myShare = 0;
+
+    expenses.forEach((exp, index) => {
+        totalSpend += exp.amount;
+        myShare += (exp.amount / exp.split);
+        
+        let splitText = exp.split === 1 ? 'Personal' : `Split by ${exp.split}`;
+        
+        tbody.innerHTML += `
+            <tr class="hover:bg-slate-50 transition">
+                <td class="px-6 py-4 font-medium text-slate-800">${exp.title}</td>
+                <td class="px-6 py-4 font-bold text-brand-600">₹${exp.amount.toFixed(2)}</td>
+                <td class="px-6 py-4">
+                    <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded-md">${splitText}</span>
+                    <i class="fa-solid fa-trash text-red-400 ml-4 cursor-pointer hover:text-red-600" onclick="deleteExpense(${index})"></i>
+                </td>
+            </tr>
+        `;
+    });
+
+    if(expenses.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" class="px-6 py-8 text-center text-slate-400">No expenses logged yet. Add your rent, groceries, or bills above.</td></tr>`;
+    }
+
+    if(totalEl) totalEl.innerText = `₹${totalSpend.toFixed(0)}`;
+    if(shareEl) shareEl.innerText = `₹${myShare.toFixed(0)}`;
+}
+
+function deleteExpense(index) {
+    expenses.splice(index, 1);
+    localStorage.setItem("ss_expenses", JSON.stringify(expenses));
+    updateExpenseUI();
 }
 
 // =====================================================
@@ -1398,6 +1420,12 @@ function getSmartFallback(msg) {
     return getGuideSummary(city);
   }
 
+  }
+
+  if (m.includes('guide') || m.includes('arrive') || m.includes('first day') || m.includes('new city') || m.includes('tips')) {
+    return getGuideSummary(city);
+  }
+
   if (m.includes('checklist') || m.includes('documents') || m.includes('carry')) {
     return getChecklistSummary();
   }
@@ -1437,11 +1465,120 @@ function showAITyping() {
   div.innerHTML = `<div class="ai-avatar">🤖</div><div class="ai-bubble"><div class="ai-typing"><span></span><span></span><span></span></div></div>`;
   el.appendChild(div);
   el.scrollTop = el.scrollHeight;
+function clearExpenses() {
+    if(confirm("Are you sure you want to reset the entire ledger?")) {
+        expenses = [];
+        localStorage.removeItem("ss_expenses");
+        updateExpenseUI();
+        alert("✅ Ledger reset successfully!");
+    }
 }
 
-function hideAITyping() {
-  const el = document.getElementById('aiTyping');
-  if (el) el.remove();
+// --- Transit Fare Calculator ---
+function runFareCalculation() {
+    const p = document.getElementById('pickup-loc')?.value.trim();
+    const d = document.getElementById('drop-loc')?.value.trim();
+    if(!p || !d) return alert("Please enter both Pickup and Drop locations.");
+    
+    const distanceFactor = Math.abs(p.length - d.length) + 3;
+    const bikeFare = Math.floor(distanceFactor * 7) + 20;
+    const autoFare = Math.floor(distanceFactor * 12) + 40;
+    const cabFare = Math.floor(distanceFactor * 25) + 80;
+    
+    alert(`📍 Estimated Fares\n\n🏍️ Bike: ₹${bikeFare}\n🚗 Auto: ₹${autoFare}\n🚕 Cab: ₹${cabFare}\n\n✅ These rates help you avoid scams!`);
+}
+
+// --- Day 1 Checklist ---
+function initChecklist() {
+    const checkboxes = document.querySelectorAll('#checklist input[type="checkbox"]');
+    const savedState = JSON.parse(localStorage.getItem('ss_checklist')) || {};
+    
+    checkboxes.forEach((checkbox, index) => {
+        checkbox.checked = savedState[index] || false;
+        checkbox.addEventListener('change', () => updateChecklistState());
+    });
+}
+
+function updateChecklistState() {
+    const checkboxes = document.querySelectorAll('#checklist input[type="checkbox"]');
+    const state = {};
+    
+    checkboxes.forEach((checkbox, index) => {
+        state[index] = checkbox.checked;
+    });
+    
+    localStorage.setItem('ss_checklist', JSON.stringify(state));
+}
+
+// --- Modals ---
+function openModal(id) { 
+    const overlay = document.getElementById('modal-overlay');
+    const modal = document.getElementById(id);
+    if(overlay) overlay.classList.add('active');
+    if(modal) modal.classList.add('active'); 
+}
+
+function closeAllModals() { 
+    const overlay = document.getElementById('modal-overlay');
+    if(overlay) overlay.classList.remove('active');
+    document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); 
+}
+
+// --- Utility & Animations ---
+function renderSimpleGrids() {
+    const tg = document.getElementById('tiffin-grid');
+    if(tg) {
+        tg.innerHTML = '';
+        tiffinsData.forEach(t => {
+            tg.innerHTML += `
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 card-hover">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="font-bold text-lg text-slate-800">${t.name}</h3>
+                    <span class="text-sm font-bold text-brand-600">${t.price}</span>
+                </div>
+                <p class="text-slate-500 text-sm mt-3">${t.desc}</p>
+                <div class="mt-4 inline-block bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded-md"><i class="fa-solid fa-location-dot mr-1"></i> ${t.loc}</div>
+                <div class="mt-3 text-xs text-slate-500"><i class="fa-solid fa-phone mr-1"></i> ${t.contact}</div>
+            </div>`;
+        });
+    }
+    
+    const gg = document.getElementById('gym-grid');
+    if(gg) {
+        gg.innerHTML = '';
+        gymsData.forEach(g => {
+            const features = g.features.map(f => `<span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-md">${f}</span>`).join('');
+            gg.innerHTML += `
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 card-hover">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="font-bold text-lg text-slate-800">${g.name}</h3>
+                    <span class="text-sm font-bold text-brand-600">${g.price}</span>
+                </div>
+                <p class="text-slate-500 text-sm mt-3">${g.desc}</p>
+                <div class="flex flex-wrap gap-2 mt-3">${features}</div>
+                <div class="mt-3 inline-block bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded-md"><i class="fa-solid fa-location-dot mr-1"></i> ${g.loc}</div>
+                <div class="mt-2 text-xs text-slate-500"><i class="fa-solid fa-phone mr-1"></i> ${g.contact}</div>
+            </div>`;
+        });
+    }
+}
+
+function animateStats() {
+    const stats = document.querySelectorAll(".stats-section h2");
+    stats.forEach(stat => {
+        const target = parseInt(stat.innerText.replace(/\D/g,''));
+        if(isNaN(target)) return;
+        let count = 0;
+        const speed = target / 40;
+        const timer = setInterval(() => {
+            count += speed;
+            if(count >= target){
+                count = target;
+                clearInterval(timer);
+            }
+            stat.innerText = target >= 1000 ? Math.floor(count/1000) + "k+" : Math.floor(count) + "+";
+        }, 30);
+    });
 }
 
 // =====================================================
@@ -1565,6 +1702,7 @@ function addMarketItem(){
 // =====================================================
 function handleIntent(type){
   const routes = { pg:'pg', navigate:'guide', ai:'ai', food:'tiffin', fitness:'fitness', transport:'fare', expense:'expense', market:'market', tech:'tech', emergency:'helpline' };
+  const tab = document.querySelector(`[data-tab=${type === 'transport' ? 'fare' : type === 'emergency' ? 'helpline' : type === 'navigate' || type === 'food' ? 'nearby' : type === 'roommates' ? 'pg' : type}]`);
   if(type === 'pg'){
     switchTab('pg', document.querySelector('[data-tab=pg]'));
     document.getElementById('pgSearch')?.focus();
@@ -1582,6 +1720,37 @@ function handleIntent(type){
   }
 }
 
+
+  if(type === 'navigate'){
+    switchTab('guide', document.querySelector('[data-tab=guide]'));
+    return;
+  }
+  if(type === 'ai'){
+    switchTab('ai', document.querySelector('[data-tab=ai]'));
+    const input = document.getElementById('aiInput');
+    if(input){ input.value = 'Help me settle in ' + activeCity; input.focus(); }
+    return;
+  }
+  if(type === 'food'){
+    switchTab('nearby', document.querySelector('[data-tab=nearby]'));
+    const btn = Array.from(document.querySelectorAll('.cat-btn')).find(b => b.textContent.toLowerCase().includes('food'));
+    showCategory('food', btn || document.querySelector('.cat-btn'));
+    return;
+  }
+  if(type === 'transport'){
+    switchTab('fare', document.querySelector('[data-tab=fare]'));
+    return;
+  }
+  if(type === 'roommates'){
+    openModal('roommateModal');
+    return;
+  }
+  if(type === 'emergency'){
+    switchTab('helpline', document.querySelector('[data-tab=helpline]'));
+    return;
+  }
+  if(tab) switchTab(type, tab);
+}
 
 function getRoommatePosts(){
   return JSON.parse(localStorage.getItem('ss_roommates') || '[]');

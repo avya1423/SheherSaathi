@@ -23,6 +23,27 @@ Bro, is file me final code alag-alag sections me diya hai. GitHub me har section
 ## SECTION 1 — index.html
 
 File name: `index.html`
+# Full code to copy into GitHub
+
+Copy each section into the matching file in your GitHub repository. Do not paste all sections into one file.
+
+Files included:
+
+- `index.html`
+- `style.css`
+- `script.js`
+- `data.js`
+
+## How to use
+
+1. Open the matching file on GitHub.
+2. Click the pencil icon to edit.
+3. Select all old code.
+4. Paste the code from the matching section below.
+5. Commit changes.
+6. Repeat for every file.
+
+## index.html
 
 ```html
 <!DOCTYPE html>
@@ -32,6 +53,7 @@ File name: `index.html`
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SheherSaathi — Your City Companion</title>
 <meta name="description" content="Find verified PGs and flats, tiffin services, gyms, expenses, marketplace, city fares, AI help, and emergency support across Indian cities.">
+<meta name="description" content="Find verified PGs, compare budgets, calculate city fares, and access emergency help across Indian cities.">
 <meta name="theme-color" content="#0f172a">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -224,6 +246,9 @@ File name: `index.html`
     <button class="intent-card" onclick="handleIntent('roommates')"><span>👥</span><strong>Connect with roommates</strong><small>Post your roommate preference</small></button>
     <button class="intent-card" onclick="handleIntent('market')"><span>🛒</span><strong>Student marketplace</strong><small>Buy and sell used essentials</small></button>
     <button class="intent-card" onclick="handleIntent('tech')"><span>💻</span><strong>CSE tech hub</strong><small>Notes, projects and interview prep</small></button>
+    <button class="intent-card" onclick="handleIntent('food')"><span>🍽️</span><strong>Find food</strong><small>Local food spots and essentials</small></button>
+    <button class="intent-card" onclick="handleIntent('transport')"><span>🚕</span><strong>Get transport guidance</strong><small>Fare calculator and travel tips</small></button>
+    <button class="intent-card" onclick="handleIntent('roommates')"><span>👥</span><strong>Connect with roommates</strong><small>Post your roommate preference</small></button>
     <button class="intent-card danger" onclick="handleIntent('emergency')"><span>🆘</span><strong>Access emergency help</strong><small>Police, ambulance and SOS numbers</small></button>
   </div>
 </section>
@@ -274,6 +299,8 @@ File name: `index.html`
         <option value="PG">PG / Hostel</option>
         <option value="Private Flat">Private Flat</option>
       </select>
+        <input id="pgSearch" placeholder="Search PG name..." onkeyup="renderPGs()">
+      </div>
       <select id="pgGender" class="sel" onchange="renderPGs()">
         <option value="">All Genders</option>
         <option value="Boys">Boys</option>
@@ -821,6 +848,10 @@ File name: `index.html`
 ## SECTION 2 — style.css
 
 File name: `style.css`
+
+```
+
+## style.css
 
 ```css
 :root {
@@ -2074,6 +2105,9 @@ body::before {
 ## SECTION 3 — script.js
 
 File name: `script.js`
+```
+
+## script.js
 
 ```javascript
 // =====================================================
@@ -2749,6 +2783,9 @@ function renderPGs(){
     return (!cityFilter || p.city===cityFilter) &&
       (!typeFilter || type===typeFilter) &&
       (!search||[p.name,p.city,p.address,p.amenities,p.gender,type].filter(Boolean).join(' ').toLowerCase().includes(search)) &&
+    const price=parseInt(p.price.replace(/[^0-9]/g,''));
+    return p.city===activeCity &&
+      (!search||[p.name,p.city,p.address,p.amenities,p.gender].filter(Boolean).join(' ').toLowerCase().includes(search)) &&
       (!gender||p.gender===gender) &&
       price<=(maxPr||999999);
   });
@@ -2761,6 +2798,12 @@ function renderPGs(){
   if(heading) heading.textContent = cityFilter ? `Accommodation in ${cityFilter}` : 'Verified PGs & Flats';
   const count=document.getElementById('pg-count');
   if(count) count.textContent=`${list.length} verified propert${list.length===1?'y':'ies'} found${typeFilter ? ' · '+typeFilter : ''}`;
+  if(sortBy==='price_asc')  list.sort((a,b)=>parseInt(a.price.replace(/\D/g,''))-parseInt(b.price.replace(/\D/g,'')));
+  if(sortBy==='price_desc') list.sort((a,b)=>parseInt(b.price.replace(/\D/g,''))-parseInt(a.price.replace(/\D/g,'')));
+  if(sortBy==='rating')     list.sort((a,b)=>avgRating(b.name)-avgRating(a.name));
+
+  const count=document.getElementById('pg-count');
+  if(count) count.textContent=`${list.length} PG${list.length!==1?'s':''} found`;
 
   const grid=document.getElementById('pgGrid');
   if(!grid) return;
@@ -2773,6 +2816,7 @@ function renderPGs(){
   grid.innerHTML=list.map((pg,i)=>{
     const price   = getListingPrice(pg);
     const type    = getListingType(pg);
+    const price   = parseInt(pg.price.replace(/[^0-9]/g,''));
     const reviews = getReviews(pg.name);
     const avg     = avgRating(pg.name);
     const gClass  = pg.gender==='Boys'?'b-boys':pg.gender==='Girls'?'b-girls':'b-both';
@@ -2793,6 +2837,7 @@ function renderPGs(){
       <div class="pg-body">
         <h3>${pg.name}</h3>
         <div class="pg-city-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${pg.city} · ${type}</div>
+        <div class="pg-city-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${pg.city}</div>
         <div class="pg-rent">₹${price.toLocaleString()} <span>/ month</span></div>
         <div class="pg-amenities">✓ ${amenities}</div>
         <div class="pg-stars">${starsHTML(avg)}<small>(${reviews.length})</small></div>
@@ -3643,6 +3688,7 @@ function addMarketItem(){
 // =====================================================
 function handleIntent(type){
   const routes = { pg:'pg', navigate:'guide', ai:'ai', food:'tiffin', fitness:'fitness', transport:'fare', expense:'expense', market:'market', tech:'tech', emergency:'helpline' };
+  const tab = document.querySelector(`[data-tab=${type === 'transport' ? 'fare' : type === 'emergency' ? 'helpline' : type === 'navigate' || type === 'food' ? 'nearby' : type === 'roommates' ? 'pg' : type}]`);
   if(type === 'pg'){
     switchTab('pg', document.querySelector('[data-tab=pg]'));
     document.getElementById('pgSearch')?.focus();
@@ -3660,6 +3706,37 @@ function handleIntent(type){
   }
 }
 
+
+  if(type === 'navigate'){
+    switchTab('guide', document.querySelector('[data-tab=guide]'));
+    return;
+  }
+  if(type === 'ai'){
+    switchTab('ai', document.querySelector('[data-tab=ai]'));
+    const input = document.getElementById('aiInput');
+    if(input){ input.value = 'Help me settle in ' + activeCity; input.focus(); }
+    return;
+  }
+  if(type === 'food'){
+    switchTab('nearby', document.querySelector('[data-tab=nearby]'));
+    const btn = Array.from(document.querySelectorAll('.cat-btn')).find(b => b.textContent.toLowerCase().includes('food'));
+    showCategory('food', btn || document.querySelector('.cat-btn'));
+    return;
+  }
+  if(type === 'transport'){
+    switchTab('fare', document.querySelector('[data-tab=fare]'));
+    return;
+  }
+  if(type === 'roommates'){
+    openModal('roommateModal');
+    return;
+  }
+  if(type === 'emergency'){
+    switchTab('helpline', document.querySelector('[data-tab=helpline]'));
+    return;
+  }
+  if(tab) switchTab(type, tab);
+}
 
 function getRoommatePosts(){
   return JSON.parse(localStorage.getItem('ss_roommates') || '[]');
@@ -3697,6 +3774,10 @@ function saveRoommatePost(){
 ## SECTION 4 — data.js
 
 File name: `data.js`
+
+```
+
+## data.js
 
 ```javascript
 const pgData = [
@@ -3745,4 +3826,6 @@ const pgData = [
   {name:"Kota Road Student PG",city:"Raipur",price:"₹6000",contact:"9000010025",image:"https://images.unsplash.com/photo-1505691938895-1758d7feb511",gender:"Boys",type:"PG",address:"Kota Road, Raipur",amenities:"WiFi, Meals, Laundry"},
   {name:"Napier Town Girls PG",city:"Jabalpur",price:"₹5200",contact:"9000010026",image:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688",gender:"Girls",type:"PG",address:"Napier Town, Jabalpur",amenities:"Meals, WiFi, CCTV"},
 ];
+];
+
 ```
