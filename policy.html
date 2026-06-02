@@ -4,52 +4,173 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy | SheherSaathi</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: { brand: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 900: '#312e81' } }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="logo"><i class="fa-solid fa-compass-navigational"></i> Sheher<span>Saathi</span></a>
-            <div class="nav-actions">
-                <button id="theme-toggle" class="icon-btn"><i class="fas fa-moon"></i></button>
-                <a href="index.html" class="btn btn-outline-nav">Return to Platform</a>
+<body class="bg-slate-50">
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="index.html" class="flex items-center gap-2 text-xl font-bold text-brand-900">
+                    <div class="bg-brand-600 text-white p-2 rounded-lg"><i class="fa-solid fa-compass-navigational"></i></div>
+                    Sheher<span class="text-brand-600">Saathi</span>
+                </a>
+                <div class="flex items-center gap-4">
+                    <button id="theme-toggle" class="p-2 text-slate-500 hover:text-brand-600 transition rounded-full hover:bg-slate-100">
+                        <i class="fas fa-moon text-lg"></i>
+                    </button>
+                    <a href="index.html" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg font-medium transition">
+                        Back to Platform
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="app-container" style="justify-content: center;">
-        <main class="main-content" style="max-width: 800px; margin-left: 0;">
-            <div class="tab-header">
-                <h2><i class="fa-solid fa-shield-halved text-primary"></i> Privacy & Legal Policy</h2>
-                <p>Transparency on how your local data is secured and managed.</p>
-            </div>
+    <main class="max-w-4xl mx-auto p-6 md:p-10">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-slate-800 mb-2">
+                <i class="fa-solid fa-shield-halved text-brand-600"></i> Privacy & Legal Policy
+            </h1>
+            <p class="text-slate-600">Transparency on how your data is secured and managed.</p>
+            <p class="text-xs text-slate-500 mt-4">Last Updated: June 2026</p>
+        </div>
 
-            <div class="card mb-20">
-                <h3 class="mb-10"><i class="fa-solid fa-server"></i> Data Storage Framework</h3>
-                <p class="text-muted" style="line-height: 1.7;">
-                    SheherSaathi strictly uses <strong>Client-Side LocalStorage</strong>. Your expense trackers, saved PGs, and login session names never leave your physical device. We do not maintain centralized cloud tracking databases for user activity.
+        <div class="space-y-6">
+            <!-- Data Storage -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">
+                    <i class="fa-solid fa-server text-brand-600 mr-2"></i> Data Storage Framework
+                </h2>
+                <p class="text-slate-600 leading-relaxed">
+                    SheherSaathi strictly uses <strong>Client-Side LocalStorage</strong>. Your expense trackers, saved PGs, checklist progress, and login session information never leave your physical device. We do not maintain any remote servers storing your personal information. All data remains 100% encrypted on your browser.
                 </p>
             </div>
 
-            <div class="card mb-20">
-                <h3 class="mb-10"><i class="fa-solid fa-house-circle-check"></i> Property Listing Guidelines</h3>
-                <ul class="text-muted" style="line-height: 1.7; padding-left: 20px;">
-                    <li>Adding standard listings is permanently free.</li>
-                    <li>Submitting fraudulent property images or spoofed numbers will result in network blacklisting.</li>
-                    <li>Always physically verify the flat/PG before releasing advance security deposits.</li>
+            <!-- Property Listing Guidelines -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">
+                    <i class="fa-solid fa-house-circle-check text-brand-600 mr-2"></i> Property Listing Guidelines
+                </h2>
+                <ul class="space-y-3 text-slate-600">
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-check text-green-600 mt-1 flex-shrink-0"></i>
+                        <span><strong>Free Listings:</strong> Adding standard PG/flat listings is permanently free. No hidden charges or surprise fees.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-check text-green-600 mt-1 flex-shrink-0"></i>
+                        <span><strong>Fraud Prevention:</strong> Submitting fraudulent property images or spoofed contact numbers results in immediate network blacklisting and IP ban.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-check text-green-600 mt-1 flex-shrink-0"></i>
+                        <span><strong>Safety First:</strong> Always physically verify the flat/PG before releasing advance security deposits. Meet the landlord/owner in person.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-check text-green-600 mt-1 flex-shrink-0"></i>
+                        <span><strong>Verification Badge:</strong> Only listings verified by our team receive the "Verified" badge.</span>
+                    </li>
                 </ul>
             </div>
 
-            <div class="card">
-                <h3 class="mb-10"><i class="fa-solid fa-user-lock"></i> User Rights & Deletion</h3>
-                <p class="text-muted" style="line-height: 1.7;">
-                    You have total control. To erase all your interactions, budgets, and saved data, simply click the "Reset Ledger" button in the app or clear your browser's LocalStorage cache. No server-side deletion request is required.
+            <!-- User Rights & Deletion -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">
+                    <i class="fa-solid fa-user-lock text-brand-600 mr-2"></i> User Rights & Data Deletion
+                </h2>
+                <p class="text-slate-600 leading-relaxed mb-4">
+                    You have total control over your data. To erase all your interactions, budgets, saved accommodations, and session data, simply:
+                </p>
+                <ol class="space-y-2 text-slate-600 ml-4">
+                    <li><strong>1.</strong> Click the "Reset Ledger" button in the app's Expense section, OR</li>
+                    <li><strong>2.</strong> Clear your browser's LocalStorage cache manually</li>
+                </ol>
+                <p class="text-slate-600 leading-relaxed mt-4">
+                    No confirmation emails needed. Your data is instantly purged from all systems. This action is irreversible.
                 </p>
             </div>
-        </main>
-    </div>
+
+            <!-- Emergency Helpline Privacy -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">
+                    <i class="fa-solid fa-phone-bounce text-brand-600 mr-2"></i> Emergency Helpline Privacy
+                </h2>
+                <p class="text-slate-600 leading-relaxed">
+                    All emergency support communications are confidential. We comply with national safety protocols. Information shared during emergencies is NOT stored in your LocalStorage and is handled by authorized support personnel only.
+                </p>
+            </div>
+
+            <!-- Cookies & Tracking -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">
+                    <i class="fa-solid fa-cookie text-brand-600 mr-2"></i> Cookies & Tracking
+                </h2>
+                <p class="text-slate-600 leading-relaxed">
+                    SheherSaathi does NOT use any third-party analytics, advertisement trackers, or cookie-based surveillance. Your browsing activity on SheherSaathi is completely private and is never shared with marketing companies or data brokers.
+                </p>
+            </div>
+
+            <!-- Liability Disclaimer -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-600 mr-2"></i> Liability Disclaimer
+                </h2>
+                <p class="text-slate-600 leading-relaxed mb-3">
+                    SheherSaathi is a <strong>platform for accommodation discovery and student utilities</strong>. While we verify listings, users should:
+                </p>
+                <ul class="space-y-2 text-slate-600 ml-4">
+                    <li>• Conduct independent background checks on property owners</li>
+                    <li>• Never share OTP codes or bank details during initial contact</li>
+                    <li>• Use secure payment methods (never cash advances)</li>
+                    <li>• Report fraudulent listings immediately</li>
+                </ul>
+                <p class="text-slate-600 leading-relaxed mt-3">
+                    SheherSaathi assumes no liability for disputes, scams, or property-related conflicts. All transactions are user's responsibility.
+                </p>
+            </div>
+
+            <!-- Terms of Service -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">
+                    <i class="fa-solid fa-scroll text-brand-600 mr-2"></i> Terms of Service
+                </h2>
+                <p class="text-slate-600 leading-relaxed mb-3">
+                    By using SheherSaathi, you agree to:
+                </p>
+                <ul class="space-y-2 text-slate-600 ml-4">
+                    <li>✓ Use the platform responsibly and for legitimate accommodation discovery</li>
+                    <li>✓ Not post false or misleading property information</li>
+                    <li>✓ Respect other users' privacy and data</li>
+                    <li>✓ Comply with all local laws and regulations</li>
+                    <li>✓ Report violations and fraudulent activity to our team</li>
+                </ul>
+            </div>
+
+            <!-- Contact & Support -->
+            <div class="bg-gradient-to-r from-brand-50 to-indigo-50 rounded-2xl shadow-sm border border-brand-200 p-6">
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">
+                    <i class="fa-solid fa-headset text-brand-600 mr-2"></i> Questions? Contact Us
+                </h2>
+                <p class="text-slate-600 mb-3">For privacy concerns, policy clarifications, or to request data deletion:</p>
+                <div class="flex flex-col gap-2">
+                    <a href="mailto:privacy@shehersaathi.com" class="text-brand-600 hover:text-brand-700 font-semibold">📧 privacy@shehersaathi.com</a>
+                    <a href="https://wa.me/919876543210" class="text-brand-600 hover:text-brand-700 font-semibold">💬 WhatsApp: +91 98765 43210</a>
+                    <a href="contact.html" class="text-brand-600 hover:text-brand-700 font-semibold">🔗 Contact Support Page</a>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <script src="script.js"></script>
 </body>

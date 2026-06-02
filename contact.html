@@ -4,66 +4,167 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us | SheherSaathi</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: { brand: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 900: '#312e81' } }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="logo"><i class="fa-solid fa-compass-navigational"></i> Sheher<span>Saathi</span></a>
-            <div class="nav-actions">
-                <button id="theme-toggle" class="icon-btn"><i class="fas fa-moon"></i></button>
-                <a href="index.html" class="btn btn-outline-nav">Go to App</a>
+<body class="bg-slate-50">
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="index.html" class="flex items-center gap-2 text-xl font-bold text-brand-900">
+                    <div class="bg-brand-600 text-white p-2 rounded-lg"><i class="fa-solid fa-compass-navigational"></i></div>
+                    Sheher<span class="text-brand-600">Saathi</span>
+                </a>
+                <div class="flex items-center gap-4">
+                    <button id="theme-toggle" class="p-2 text-slate-500 hover:text-brand-600 transition rounded-full hover:bg-slate-100">
+                        <i class="fas fa-moon text-lg"></i>
+                    </button>
+                    <a href="index.html" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg font-medium transition">
+                        Back to App
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="app-container" style="justify-content: center;">
-        <main class="main-content" style="max-width: 800px; margin-left: 0;">
-            <div class="tab-header text-center">
-                <h2><i class="fa-solid fa-headset text-primary"></i> Contact Support</h2>
-                <p>Fastest response times for verification, listings, and queries.</p>
-            </div>
+    <main class="max-w-4xl mx-auto p-6 md:p-10">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-slate-800 mb-2">
+                <i class="fa-solid fa-headset text-brand-600"></i> Contact Support
+            </h1>
+            <p class="text-slate-600 text-lg">Fastest response times for verification, listings, and queries.</p>
+        </div>
 
-            <div class="grid-layout mb-20">
-                <a href="mailto:supportpgkhojo@gmail.com" class="card text-center" style="text-decoration:none; color:inherit;">
-                    <i class="fa-solid fa-envelope fa-2x text-primary mb-10"></i>
-                    <h3>Email Support</h3>
-                    <p class="text-muted text-sm">supportpgkhojo@gmail.com</p>
-                </a>
-                <a href="https://wa.me/919534196255" target="_blank" class="card text-center" style="text-decoration:none; color:inherit;">
-                    <i class="fa-brands fa-whatsapp fa-2x text-success mb-10"></i>
-                    <h3>WhatsApp</h3>
-                    <p class="text-muted text-sm">+91 95341 96255</p>
-                </a>
-            </div>
+        <!-- Contact Methods -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <a href="tel:+919876543210" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition text-center">
+                <div class="inline-block bg-blue-100 text-blue-600 p-4 rounded-full mb-4">
+                    <i class="fa-solid fa-phone text-2xl"></i>
+                </div>
+                <h3 class="font-bold text-slate-800 mb-2">Call Support</h3>
+                <p class="text-slate-600">+91 98765 43210</p>
+                <p class="text-xs text-slate-500 mt-2">Mon-Sat, 10AM-6PM</p>
+            </a>
 
-            <div class="card">
-                <h3>Send a direct message</h3>
-                <div class="form-group style-top">
-                    <input type="text" id="cfName" placeholder="Full Name" class="form-input">
+            <a href="https://wa.me/919876543210" target="_blank" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition text-center">
+                <div class="inline-block bg-green-100 text-green-600 p-4 rounded-full mb-4">
+                    <i class="fa-brands fa-whatsapp text-2xl"></i>
                 </div>
-                <div class="form-group">
-                    <input type="email" id="cfEmail" placeholder="Email Address" class="form-input">
+                <h3 class="font-bold text-slate-800 mb-2">WhatsApp</h3>
+                <p class="text-slate-600">+91 98765 43210</p>
+                <p class="text-xs text-slate-500 mt-2">Instant Response</p>
+            </a>
+
+            <a href="mailto:support@shehersaathi.com" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition text-center">
+                <div class="inline-block bg-purple-100 text-purple-600 p-4 rounded-full mb-4">
+                    <i class="fa-solid fa-envelope text-2xl"></i>
                 </div>
-                <div class="form-group">
-                    <textarea id="cfMsg" placeholder="Describe your issue or listing request..." class="form-input" style="height: 120px; resize: vertical;"></textarea>
+                <h3 class="font-bold text-slate-800 mb-2">Email Us</h3>
+                <p class="text-slate-600 break-all">support@shehersaathi.com</p>
+                <p class="text-xs text-slate-500 mt-2">Within 24 Hours</p>
+            </a>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-8">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6">
+                <i class="fa-solid fa-paper-plane text-brand-600 mr-2"></i> Send us a Message
+            </h2>
+            
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Full Name *</label>
+                    <input type="text" id="cfName" placeholder="Your Name" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition outline-none">
                 </div>
-                <button class="btn btn-primary w-100" onclick="sendMsg()"><i class="fa-solid fa-paper-plane"></i> Submit Ticket</button>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Email Address *</label>
+                    <input type="email" id="cfEmail" placeholder="your@email.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Subject *</label>
+                    <select id="cfSubject" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition outline-none">
+                        <option value="">Select Subject</option>
+                        <option value="Listing Inquiry">Listing Inquiry</option>
+                        <option value="Technical Issue">Technical Issue</option>
+                        <option value="Report Scam">Report Scam</option>
+                        <option value="Feedback">Feedback</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Message *</label>
+                    <textarea id="cfMsg" placeholder="Describe your issue or listing request..." rows="6" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition outline-none resize-none"></textarea>
+                </div>
+
+                <button class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl transition shadow-md" onclick="sendMsg()">
+                    <i class="fa-solid fa-paper-plane mr-2"></i> Submit Ticket
+                </button>
             </div>
-        </main>
-    </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 mt-8">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6">
+                <i class="fa-solid fa-circle-question text-brand-600 mr-2"></i> Frequently Asked Questions
+            </h2>
+            
+            <div class="space-y-4">
+                <details class="border border-slate-200 rounded-lg p-4 cursor-pointer hover:bg-slate-50">
+                    <summary class="font-bold text-slate-800">How quickly do you respond to inquiries?</summary>
+                    <p class="text-slate-600 mt-2">We typically respond within 24 hours. For urgent issues, use WhatsApp for immediate assistance.</p>
+                </details>
+
+                <details class="border border-slate-200 rounded-lg p-4 cursor-pointer hover:bg-slate-50">
+                    <summary class="font-bold text-slate-800">How do I report a fraudulent listing?</summary>
+                    <p class="text-slate-600 mt-2">Contact us immediately through any channel. Please provide property details and screenshots. We verify and remove fake listings within 24 hours.</p>
+                </details>
+
+                <details class="border border-slate-200 rounded-lg p-4 cursor-pointer hover:bg-slate-50">
+                    <summary class="font-bold text-slate-800">Is there a fee to list properties?</summary>
+                    <p class="text-slate-600 mt-2">No! Standard listings are completely free. We believe in transparent accommodation discovery.</p>
+                </details>
+
+                <details class="border border-slate-200 rounded-lg p-4 cursor-pointer hover:bg-slate-50">
+                    <summary class="font-bold text-slate-800">Can I edit my listing after posting?</summary>
+                    <p class="text-slate-600 mt-2">Yes! Contact us with your listing ID and desired changes. We update within 2-4 hours.</p>
+                </details>
+            </div>
+        </div>
+    </main>
 
     <script src="script.js"></script>
     <script>
         function sendMsg() {
             const n = document.getElementById('cfName').value.trim();
             const e = document.getElementById('cfEmail').value.trim();
+            const s = document.getElementById('cfSubject').value;
             const m = document.getElementById('cfMsg').value.trim();
-            if(!n || !e || !m) return alert('⚠️ Complete all fields before submission.');
+            
+            if(!n || !e || !s || !m) return alert('⚠️ Please complete all fields before submission.');
+            
+            // Save to localStorage
+            const messages = JSON.parse(localStorage.getItem('ss_messages')) || [];
+            messages.push({ name: n, email: e, subject: s, message: m, date: new Date().toLocaleString() });
+            localStorage.setItem('ss_messages', JSON.stringify(messages));
+            
             alert('✅ Ticket logged! Operations team will reach out within 2-4 hours.');
-            document.querySelectorAll('.form-input').forEach(input => input.value = '');
+            
+            document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
         }
     </script>
 </body>
