@@ -342,8 +342,10 @@ function setProfilePics(src){
   });
 }
 
-function toggleProfileMenu(){
+function toggleProfileMenu(event){
+  if(event && event.target.closest('.profile-menu')) return;
   const m=document.getElementById('profileMenu');
+  if(!m) return;
   m.style.display=m.style.display==='block'?'none':'block';
 }
 
@@ -601,15 +603,15 @@ function loadCity(city){
 // =====================================================
 //  TAB SWITCH
 // =====================================================
-function switchTab(tab,btn){
+function switchTab(tab,btn,options={}){
   const panel = document.getElementById('tab-'+tab);
   if(!panel) return;
-  const tabBtn = btn || document.querySelector(`[data-tab=\"${tab}\"]`);
+  const tabBtn = btn || document.querySelector(`[data-tab="${tab}"]`);
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   panel.classList.add('active');
   if(tabBtn) tabBtn.classList.add('active');
-  panel.scrollIntoView({behavior:'smooth', block:'start'});
+  if(options.scroll !== false) panel.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 // =====================================================
@@ -878,7 +880,7 @@ function runSmartSearch(value, source='nav'){
   const pgSearch = document.getElementById('pgSearch');
   if(!query){
     if(pgSearch) pgSearch.value = '';
-    switchTab('pg',document.querySelector('[data-tab=pg]'));
+    switchTab('pg',document.querySelector('[data-tab=pg]'), {scroll: false});
     renderPGs();
     return;
   }
@@ -906,7 +908,7 @@ function runSmartSearch(value, source='nav'){
     .replace(/\s+/g, ' ')
     .trim();
   if(pgSearch) pgSearch.value = (match?.exactCity || budget || /\b(girls?|boys?|female|male|women|men)\b/i.test(query)) ? cleanedQuery : query;
-  switchTab('pg',document.querySelector('[data-tab=pg]'));
+  switchTab('pg',document.querySelector('[data-tab=pg]'), {scroll: source !== 'nav'});
   renderPGs();
 
   const count = document.getElementById('pg-count')?.textContent || '';
