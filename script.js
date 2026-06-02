@@ -13,9 +13,9 @@ let currentLang  = 'en';
 // =====================================================
 const T = {
   en: {
-    heroTitle: 'Find Your Home<br><em>Away From Home</em>',
-    heroSub: 'PG Finder · Fare Calculator · City Guide · Emergency Helplines',
-    searchPlaceholder: 'Search PG, area, or city...',
+    heroTitle: 'Move to a new city<br><em>without the confusion.</em>',
+    heroSub: 'Find PGs, compare rent, estimate fares, plan budget and get safety help from one clean dashboard.',
+    searchPlaceholder: 'Try: Girls PG under 7000 in Pune',
     pgHeading: city => `PGs in ${city}`,
     fareHeading: city => `${city} Fare Calculator`,
     guideHeading: city => `${city} City Guide`,
@@ -47,9 +47,9 @@ const T = {
     userNotFound: 'No account found. Please register first.',
   },
   hi: {
-    heroTitle: 'अपना घर खोजें<br><em>नए शहर में</em>',
-    heroSub: 'PG खोजें · किराया जानें · सिटी गाइड · इमरजेंसी हेल्पलाइन',
-    searchPlaceholder: 'PG, इलाका या शहर खोजें...',
+    heroTitle: 'नए शहर में शिफ्ट हों<br><em>बिना कन्फ्यूजन के।</em>',
+    heroSub: 'PG खोजें, किराया तुलना करें, fare estimate करें, budget plan करें और safety help पाएं।',
+    searchPlaceholder: 'Try: Pune में Girls PG under 7000',
     pgHeading: city => `${city} में PG`,
     fareHeading: city => `${city} किराया कैलकुलेटर`,
     guideHeading: city => `${city} सिटी गाइड`,
@@ -275,6 +275,9 @@ window.onload = function(){
   const dp = localStorage.getItem('ss_dp');
   if(dp){ setProfilePics(dp); }
 
+  const statPGs = document.getElementById('statPGs');
+  if(statPGs) statPGs.textContent = `${pgData.length}+`;
+
   loadCity('Bhopal');
   renderNotifs();
 
@@ -304,7 +307,7 @@ function switchLang(){
   currentLang = currentLang==='en'?'hi':'en';
   localStorage.setItem('ss_lang',currentLang);
   applyLang();
-  document.getElementById('profileMenu').style.display='none';
+  const profileMenu = document.getElementById('profileMenu'); if(profileMenu) profileMenu.style.display='none';
 }
 
 // =====================================================
@@ -320,7 +323,7 @@ function toggleDark(){
 // =====================================================
 function updateProfileUI(){
   const name  = localStorage.getItem('ss_user')||'Guest';
-  const email = localStorage.getItem('ss_email')||'';
+  const email = localStorage.getItem('ss_email')||localStorage.getItem('ss_phone')||'';
   const dp    = localStorage.getItem('ss_dp')||'';
   const init  = name.charAt(0).toUpperCase();
 
@@ -345,8 +348,10 @@ function toggleProfileMenu(){
 }
 
 // =====================================================
-//  AUTH
+//  AUTH — static OTP demo login
 // =====================================================
+let otpState = { code: '', contact: '', name: '', expiresAt: 0, timer: null };
+
 function showAuthTab(tab){
   document.getElementById('loginForm').style.display    = tab==='login'?'block':'none';
   document.getElementById('registerForm').style.display = tab==='register'?'block':'none';
@@ -355,31 +360,103 @@ function showAuthTab(tab){
   });
 }
 
-function doLogin(){
-  const name  = (document.getElementById('loginName').value||'').trim();
-  const email = (document.getElementById('loginEmail').value||'').trim();
-  const pass  = document.getElementById('loginPass').value;
+function normalizeContact(value){
+  return (value || '').trim().toLowerCase();
+}
 
-  if(!name||!email||!pass){ alert(t('loginError')); return; }
-  if(!email.includes('@')){ alert(t('invalidEmail')); return; }
+function isValidContact(contact){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact) || /^[6-9]\d{9}$/.test(contact.replace(/\D/g,''));
+}
 
-  // Check registered users
-  const users = JSON.parse(localStorage.getItem('ss_users')||'{}');
-  if(users[email]){
-    if(users[email].pass !== btoa(pass)){ alert(t('wrongPass')); return; }
+function maskContact(contact){
+  if(contact.includes('@')){
+    const [name, domain] = contact.split('@');
+    return `${name.slice(0,2)}***@${domain}`;
   }
+  const digits = contact.replace(/\D/g,'');
+  return digits.length >= 10 ? `******${digits.slice(-4)}` : contact;
+}
 
-  localStorage.setItem('ss_user',name);
-  localStorage.setItem('ss_email',email);
+function generateOTP(){
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
+
+function setOtpStatus(message, type='info'){
+  const el = document.getElementById('otpStatus');
+  if(!el) return;
+  el.className = 'otp-status ' + type;
+  el.textContent = message;
+}
+
+function startOtpTimer(){
+  clearInterval(otpState.timer);
+  const resendBtn = document.getElementById('resendOtpBtn');
+  otpState.timer = setInterval(()=>{
+    const left = Math.max(0, Math.ceil((otpState.expiresAt - Date.now()) / 1000));
+    if(resendBtn){
+      resendBtn.disabled = left > 90;
+      resendBtn.textContent = left > 0 ? `Resend OTP (${left}s)` : 'Resend OTP';
+    }
+    if(left <= 0){
+      clearInterval(otpState.timer);
+      if(resendBtn) resendBtn.disabled = false;
+      setOtpStatus('OTP expired. Please resend a new OTP.', 'warn');
+    }
+  }, 500);
+}
+
+function doLogin(){
+  const name = (document.getElementById('loginName').value || '').trim();
+  const contact = normalizeContact(document.getElementById('loginEmail').value);
+
+  if(!name || !contact){ alert('Please enter your name and email/phone.'); return; }
+  if(!isValidContact(contact)){ alert('Please enter a valid email or 10-digit Indian mobile number.'); return; }
+
+  otpState = { ...otpState, code: generateOTP(), contact, name, expiresAt: Date.now() + 120000 };
+  const otpBox = document.getElementById('otpBox');
+  const otpInput = document.getElementById('loginOtp');
+  if(otpBox) otpBox.classList.remove('hidden');
+  if(otpInput){ otpInput.value = ''; setTimeout(()=>otpInput.focus(), 100); }
+
+  // Static GitHub Pages cannot send real SMS/email. Show demo OTP for verification.
+  setOtpStatus(`Demo OTP for ${maskContact(contact)}: ${otpState.code}. It expires in 2 minutes.`, 'success');
+  startOtpTimer();
+}
+
+function resendOTP(){
+  if(!otpState.contact){ doLogin(); return; }
+  otpState.code = generateOTP();
+  otpState.expiresAt = Date.now() + 120000;
+  const otpInput = document.getElementById('loginOtp');
+  if(otpInput) otpInput.value = '';
+  setOtpStatus(`New demo OTP for ${maskContact(otpState.contact)}: ${otpState.code}.`, 'success');
+  startOtpTimer();
+}
+
+function verifyOTP(){
+  const entered = (document.getElementById('loginOtp').value || '').trim();
+  if(!otpState.code){ alert('Please send OTP first.'); return; }
+  if(Date.now() > otpState.expiresAt){ setOtpStatus('OTP expired. Please resend OTP.', 'warn'); return; }
+  if(entered !== otpState.code){ setOtpStatus('Incorrect OTP. Check the 6-digit code and try again.', 'error'); return; }
+
+  const users = JSON.parse(localStorage.getItem('ss_users')||'{}');
+  const existing = users[otpState.contact] || {};
+  users[otpState.contact] = { ...existing, name: otpState.name, email: otpState.contact.includes('@') ? otpState.contact : (existing.email || ''), phone: otpState.contact.includes('@') ? (existing.phone || '') : otpState.contact, otpLogin: true };
+  localStorage.setItem('ss_users', JSON.stringify(users));
+  localStorage.setItem('ss_user', otpState.name);
+  if(otpState.contact.includes('@')) localStorage.setItem('ss_email', otpState.contact);
+  else localStorage.setItem('ss_phone', otpState.contact);
+
+  clearInterval(otpState.timer);
   document.getElementById('loginModal').style.display='none';
   updateProfileUI();
-  addNotif(`Welcome back, ${name}!`);
+  addNotif(`Welcome, ${otpState.name}! OTP login successful.`);
   loadCity(activeCity);
 }
 
 function doRegister(){
   const name  = (document.getElementById('regName').value||'').trim();
-  const email = (document.getElementById('regEmail').value||'').trim();
+  const email = (document.getElementById('regEmail').value||'').trim().toLowerCase();
   const phone = (document.getElementById('regPhone').value||'').trim();
   const pass  = document.getElementById('regPass').value;
   const pass2 = document.getElementById('regPass2').value;
@@ -393,7 +470,7 @@ function doRegister(){
   users[email] = { name, email, phone, pass: btoa(pass) };
   localStorage.setItem('ss_users',JSON.stringify(users));
 
-  alert(t('registerSuccess'));
+  alert('Profile created! You can now login with OTP.');
   showAuthTab('login');
   document.getElementById('loginName').value  = name;
   document.getElementById('loginEmail').value = email;
@@ -401,6 +478,8 @@ function doRegister(){
 
 function doGuest(){
   localStorage.setItem('ss_user','Guest');
+  localStorage.removeItem('ss_email');
+  localStorage.removeItem('ss_phone');
   document.getElementById('loginModal').style.display='none';
   updateProfileUI();
   loadCity(activeCity);
@@ -409,6 +488,7 @@ function doGuest(){
 function logout(){
   localStorage.removeItem('ss_user');
   localStorage.removeItem('ss_email');
+  localStorage.removeItem('ss_phone');
   localStorage.removeItem('ss_dp');
   location.reload();
 }
@@ -422,16 +502,27 @@ function togglePass(id){
 //  EDIT PROFILE
 // =====================================================
 function openModal(id){
-  document.getElementById(id).classList.remove('hidden');
-  document.getElementById(id).style.display='flex';
+  const modal = document.getElementById(id);
+  if(!modal) return;
+  modal.classList.remove('hidden');
+  modal.style.display='flex';
   if(id==='editProfileModal'){ populateEditProfile(); }
   if(id==='savedPGModal'){ renderSavedPGs(); }
-  document.getElementById('profileMenu').style.display='none';
+  if(id==='roommateModal'){
+    const name = document.getElementById('roommateName');
+    const city = document.getElementById('roommateCity');
+    if(name && !name.value) name.value = localStorage.getItem('ss_user') || '';
+    if(city) city.value = activeCity;
+    renderRoommatePosts();
+  }
+  const profileMenu = document.getElementById('profileMenu'); if(profileMenu) profileMenu.style.display='none';
 }
 
 function closeModal(id){
-  document.getElementById(id).classList.add('hidden');
-  document.getElementById(id).style.display='none';
+  const modal = document.getElementById(id);
+  if(!modal) return;
+  modal.classList.add('hidden');
+  modal.style.display='none';
 }
 
 function populateEditProfile(){
@@ -472,6 +563,7 @@ function saveProfile(){
 }
 
 function changeDP(e){
+  if(!e.target.files || !e.target.files[0]) return;
   const r=new FileReader();
   r.onload=ev=>{
     localStorage.setItem('ss_dp',ev.target.result);
@@ -488,7 +580,7 @@ function changeDP(e){
 function switchCity(city,btn){
   activeCity=city;
   document.querySelectorAll('.city-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  if(btn) btn.classList.add('active');
   loadCity(city);
 }
 
@@ -510,10 +602,14 @@ function loadCity(city){
 //  TAB SWITCH
 // =====================================================
 function switchTab(tab,btn){
+  const panel = document.getElementById('tab-'+tab);
+  if(!panel) return;
+  const tabBtn = btn || document.querySelector(`[data-tab=\"${tab}\"]`);
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+tab).classList.add('active');
-  btn.classList.add('active');
+  panel.classList.add('active');
+  if(tabBtn) tabBtn.classList.add('active');
+  panel.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 // =====================================================
@@ -528,7 +624,7 @@ function renderPGs(){
   let list = pgData.filter(p=>{
     const price=parseInt(p.price.replace(/[^0-9]/g,''));
     return p.city===activeCity &&
-      (!search||p.name.toLowerCase().includes(search)) &&
+      (!search||[p.name,p.city,p.address,p.amenities,p.gender].filter(Boolean).join(' ').toLowerCase().includes(search)) &&
       (!gender||p.gender===gender) &&
       price<=(maxPr||999999);
   });
@@ -740,7 +836,7 @@ function loadHelplines(city){
 function showCategory(cat,btn){
   activeCat=cat;
   document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  if(btn) btn.classList.add('active');
   loadNearby(activeCity,cat);
 }
 
@@ -763,21 +859,73 @@ function catIcon(cat){ return{hospital:'🏥',police:'🚔',atm:'🏧',food:'�
 // =====================================================
 //  SEARCH
 // =====================================================
-function quickSearch(val){
-  if(!val.trim()) return;
-  document.getElementById('pgSearch').value=val;
-  switchTab('pg',document.querySelector('.tab-btn'));
-  renderPGs();
+function cityButtonFor(city){
+  return Array.from(document.querySelectorAll('.city-btn')).find(btn => btn.textContent.toLowerCase().includes(city.toLowerCase()));
 }
 
-function heroSearch(val){ /* live preview optional */ }
+function findBestCityForQuery(query){
+  const q = query.toLowerCase();
+  const exactCity = Object.keys(cityData).find(c => c.toLowerCase() === q);
+  if(exactCity) return { city: exactCity, exactCity: true };
+  const partialCity = Object.keys(cityData).find(c => c.toLowerCase().includes(q) || q.includes(c.toLowerCase()));
+  if(partialCity) return { city: partialCity, exactCity: false };
+  const pgMatch = pgData.find(p => [p.name,p.city,p.address,p.amenities,p.gender].filter(Boolean).join(' ').toLowerCase().includes(q));
+  return pgMatch ? { city: pgMatch.city, exactCity: false } : null;
+}
+
+function runSmartSearch(value, source='nav'){
+  const query = (value || '').trim();
+  const pgSearch = document.getElementById('pgSearch');
+  if(!query){
+    if(pgSearch) pgSearch.value = '';
+    switchTab('pg',document.querySelector('[data-tab=pg]'));
+    renderPGs();
+    return;
+  }
+
+  const match = findBestCityForQuery(query);
+  if(match && match.city !== activeCity){
+    switchCity(match.city, cityButtonFor(match.city) || document.querySelector('.city-btn'));
+  }
+
+  const genderEl = document.getElementById('pgGender');
+  if(genderEl){
+    if(/\bgirls?\b|female|women/i.test(query)) genderEl.value = 'Girls';
+    else if(/\bboys?\b|male|men/i.test(query)) genderEl.value = 'Boys';
+  }
+
+  const priceEl = document.getElementById('pgPrice');
+  const budget = getBudgetFromText(query);
+  if(priceEl && budget){
+    priceEl.value = budget <= 5000 ? '5000' : budget <= 7000 ? '7000' : budget <= 10000 ? '10000' : '';
+  }
+
+  const cleanedQuery = query
+    .replace(/\b(pg|hostel|room|rooms|under|below|less than|upto|up to|budget|rs|₹)\b/ig, '')
+    .replace(/\d{4,5}/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if(pgSearch) pgSearch.value = (match?.exactCity || budget || /\b(girls?|boys?|female|male|women|men)\b/i.test(query)) ? cleanedQuery : query;
+  switchTab('pg',document.querySelector('[data-tab=pg]'));
+  renderPGs();
+
+  const count = document.getElementById('pg-count')?.textContent || '';
+  if(source === 'hero' && count) addNotif(`Search updated: ${count}`);
+}
+
+function quickSearch(val){ runSmartSearch(val, 'nav'); }
+
+function heroSearch(val){
+  const query = (val || '').trim();
+  const input = document.getElementById('heroSearchInput');
+  if(!input) return;
+  const match = query ? findBestCityForQuery(query) : null;
+  input.title = match ? `Will search in ${match.city}` : 'Search PG, area, amenity, or city';
+}
 
 function doHeroSearch(){
   const val=document.getElementById('heroSearchInput').value.trim();
-  if(!val) return;
-  document.getElementById('pgSearch').value=val;
-  switchTab('pg',document.querySelector('.tab-btn'));
-  renderPGs();
+  runSmartSearch(val, 'hero');
 }
 
 // =====================================================
@@ -808,7 +956,7 @@ function searchCompare(val) {
   if (!results.length) { dd.classList.add('hidden'); return; }
   dd.innerHTML = results.map(p =>
     `<div class="compare-drop-item" onclick="addToCompare('${p.name.replace(/'/g,"\\'")}')">
-      ${p.name} — ₹${parseInt(p.price.replace(/\D/g,'').toLocaleString())}/mo · ${p.gender}
+      ${p.name} — ₹${parseInt(p.price.replace(/\D/g,'')).toLocaleString()}/mo · ${p.gender}
     </div>`
   ).join('');
   dd.classList.remove('hidden');
@@ -905,7 +1053,7 @@ const cityAvgCost = {
 function setBudgetCity(city, btn) {
   budgetCity = city;
   document.querySelectorAll('.cbs').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+  if(btn) btn.classList.add('active');
   document.getElementById('budgetCityTag').textContent = '📍 ' + city;
   const avg = cityAvgCost[city];
   document.getElementById('bPG').value       = avg.pg;
@@ -1077,14 +1225,8 @@ function resetChecklist() {
 }
 
 // =====================================================
-//  AI ASSISTANT
+//  AI ASSISTANT — smart local assistant for GitHub Pages
 // =====================================================
-const aiContext = `You are SheherSaathi AI Assistant, helping people who have moved to a new city in India. 
-You know about PGs, transport fares, city guides, emergency numbers, and local tips for Bhopal, Delhi, Mumbai, Pune, and Patna.
-Keep responses concise, friendly, and practical. Use emojis occasionally. Always suggest using SheherSaathi features.
-Current city the user is browsing: ${activeCity}.
-Available PG data: ${JSON.stringify(pgData?.slice(0,5) || [])}.`;
-
 let aiHistory = [];
 
 async function sendAIMessage() {
@@ -1098,83 +1240,133 @@ async function sendAIMessage() {
 async function askAI(msg) {
   appendAIMessage(msg, 'user');
   showAITyping();
-
   aiHistory.push({ role: 'user', content: msg });
 
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: `You are SheherSaathi AI Assistant, a helpful city guide for people moving to new cities in India. 
-You specialize in helping with PG accommodations, transport fares, city navigation, emergency contacts, and local tips for Bhopal, Delhi, Mumbai, Pune, and Patna.
-Be concise, friendly, and practical. Use emojis sparingly. Always give actionable advice.
-Current city context: ${activeCity}. Respond in the same language the user uses (Hindi or English).`,
-        messages: aiHistory.slice(-10),
-      })
-    });
-
-    const data = await response.json();
+  setTimeout(() => {
     hideAITyping();
+    const reply = getSmartFallback(msg);
+    aiHistory.push({ role: 'assistant', content: reply });
+    appendAIMessage(reply, 'bot');
+  }, 450);
+}
 
-    if (data.content && data.content[0]) {
-      const reply = data.content[0].text;
-      aiHistory.push({ role: 'assistant', content: reply });
-      appendAIMessage(reply, 'bot');
-    } else {
-      appendAIMessage('Sorry, I could not process that. Please try again.', 'bot');
-    }
-  } catch (err) {
-    hideAITyping();
-    // Fallback smart response when API unavailable
-    const fallback = getSmartFallback(msg);
-    aiHistory.push({ role: 'assistant', content: fallback });
-    appendAIMessage(fallback, 'bot');
-  }
+function detectCityFromMessage(message){
+  const q = message.toLowerCase();
+  return Object.keys(cityData).find(city => q.includes(city.toLowerCase())) || activeCity;
+}
+
+function rupee(num){ return '₹' + Number(num || 0).toLocaleString('en-IN'); }
+
+function getTopPGs(city, maxBudget){
+  return pgData
+    .filter(p => p.city === city)
+    .filter(p => !maxBudget || parseInt(p.price.replace(/\D/g,'')) <= maxBudget)
+    .sort((a,b) => parseInt(a.price.replace(/\D/g,'')) - parseInt(b.price.replace(/\D/g,'')))
+    .slice(0, 4);
+}
+
+function getBudgetFromText(text){
+  const match = text.match(/(?:under|below|less than|upto|up to|₹|rs\.?\s*)\s*(\d{4,5})/i) || text.match(/(\d{4,5})/);
+  return match ? parseInt(match[1], 10) : null;
+}
+
+function formatPGList(city, maxBudget){
+  const pgs = getTopPGs(city, maxBudget);
+  if(!pgs.length) return `I could not find PGs${maxBudget ? ` under ${rupee(maxBudget)}` : ''} in ${city}. Try increasing budget or checking nearby areas.`;
+  return `${maxBudget ? `PGs under ${rupee(maxBudget)}` : 'Top budget PGs'} in ${city} 🏠:\n\n${pgs.map(p => `• **${p.name}** — ${p.price}/month, ${p.gender}, ${p.address}\n  Amenities: ${p.amenities} | Call: ${p.contact}`).join('\n')}`;
+}
+
+function getFareSummary(city){
+  const data = cityData[city];
+  if(!data) return `Use the 🚗 Fare Calc tab to estimate auto, cab, bike, and e-rickshaw prices.`;
+  const firstFrom = data.fareFrom?.[0];
+  const firstTo = data.fareTo?.[0];
+  const sample = firstFrom && firstTo && data.fares?.[firstFrom.val]?.[firstTo.val];
+  return sample
+    ? `Use 🚗 Fare Calc for exact routes in ${city}. Sample: **${firstFrom.label} → ${firstTo.label}** is about ${sample.d}, ${sample.t}; auto ${sample.a}, cab ${sample.c}. Tip: confirm fare before boarding and share vehicle details at night.`
+    : `Use the 🚗 Fare Calc tab for ${city}; select From and To to compare auto, cab, bike and e-rickshaw fares.`;
+}
+
+function getNearbySummary(city, type){
+  const nearby = cityData[city]?.nearby || {};
+  const key = type || 'hospital';
+  const items = nearby[key] || nearby.hospital || [];
+  if(!items.length) return `Open the 📍 Nearby tab to find hospitals, police stations, ATMs, food and transport points in ${city}.`;
+  return `Useful ${key} places in ${city} 📍:\n\n${items.slice(0,4).map(x => `• **${x.name}** — ${x.dist}${x.desc ? ` (${x.desc})` : ''}`).join('\n')}\n\nOpen the Nearby tab for more categories.`;
+}
+
+function getGuideSummary(city){
+  const steps = cityData[city]?.guide || [];
+  if(!steps.length) return `Use the 🗺️ City Guide tab for arrival steps and local safety tips in ${city}.`;
+  return `First-day plan for ${city} 🗺️:\n\n${steps.slice(0,5).map((s,i)=>`${i+1}. **${s.title}** — ${s.desc}${s.tip ? `\n   Tip: ${s.tip}` : ''}`).join('\n')}\n\nAlso complete the ✅ Checklist tab after arrival.`;
+}
+
+function getBudgetSummary(city){
+  const avg = cityAvgCost[city];
+  if(!avg) return `Use the 💰 Budget Planner tab to customize rent, food, transport and savings.`;
+  const total = Object.values(avg).reduce((a,b)=>a+b,0);
+  return `Average monthly budget for ${city} 💰:\n\n• PG/Rent: ${rupee(avg.pg)}\n• Food: ${rupee(avg.food)}\n• Transport: ${rupee(avg.transport)}\n• Internet: ${rupee(avg.internet)}\n• Extra/Misc: ${rupee(avg.entertain + avg.misc)}\n\nEstimated total: **${rupee(total)}/month**. Use the Budget Planner tab to adjust it to your income.`;
+}
+
+function getChecklistSummary(){
+  return `New city checklist ✅:\n\n1. Share live location with family.\n2. Use prepaid auto/cab or verified ride apps.\n3. Visit PG before paying advance.\n4. Save emergency numbers: 112, 100, 108, 101.\n5. Keep ID proof, cash, charger and water handy.\n\nOpen the Checklist tab to track every step.`;
 }
 
 function getSmartFallback(msg) {
   const m = msg.toLowerCase();
-  const city = activeCity;
+  const city = detectCityFromMessage(msg);
+  const budget = getBudgetFromText(msg);
 
-  if (m.includes('pg') || m.includes('hostel') || m.includes('room')) {
-    const pgs = pgData.filter(p => p.city === city).slice(0, 3);
-    if (pgs.length) {
-      return `Here are some PGs in ${city} 🏠:\n\n${pgs.map(p => `• **${p.name}** — ${p.price}/mo (${p.gender}) | 📞 ${p.contact}`).join('\n')}\n\nUse the PG Finder tab for more options and filters!`;
-    }
-    return `I can help you find PGs in ${city}! Use the 🏠 PG Finder tab to search, filter by budget and gender, and contact owners directly.`;
+  if (m.includes('pg') || m.includes('hostel') || m.includes('room') || m.includes('rent')) {
+    return `${formatPGList(city, budget)}\n\nWant a faster shortlist? Tell me your budget, gender preference, and area (example: “girls PG under 8000 in Pune”).`;
   }
 
-  if (m.includes('fare') || m.includes('auto') || m.includes('cab') || m.includes('transport')) {
-    return `For transport fares in ${city}, use the 🚗 Fare Calc tab! You can check auto, cab, bike taxi, and e-rickshaw fares from any station or bus stand to your destination. 💡 Tip: Always fix auto rate before boarding — meters are often not used.`;
+  if (m.includes('fare') || m.includes('auto') || m.includes('cab') || m.includes('taxi') || m.includes('transport') || m.includes('station')) {
+    return getFareSummary(city);
+  }
+
+  if (m.includes('budget') || m.includes('cost') || m.includes('expensive') || m.includes('money') || m.includes('monthly')) {
+    return getBudgetSummary(city);
   }
 
   if (m.includes('food') || m.includes('eat') || m.includes('restaurant')) {
-    const foods = { Bhopal: 'Poha-Jalebi (breakfast) and Bhutte ka Kees', Delhi: 'Paranthe Wali Gali and Karim\'s', Mumbai: 'Vada Pav and Pav Bhaji', Pune: 'Misal Pav and FC Road street food', Patna: 'Litti-Chokha and Satu Paratha' };
-    return `Must-try food in ${city}: 🍽️ **${foods[city] || 'local street food'}**! Use the 📍 Nearby tab to find restaurants and food stalls close to you.`;
+    const foods = { Bhopal: 'Poha-Jalebi, Bhutte ka Kees, and lake-side snacks', Delhi: 'Paranthe Wali Gali, momos, chole bhature, and Karim\'s', Mumbai: 'Vada Pav, Pav Bhaji, misal and cutting chai', Pune: 'Misal Pav, FC Road cafes, and Maharashtrian thali', Patna: 'Litti-Chokha, Sattu Paratha, and local sweets' };
+    return `Must-try food in ${city} 🍽️: **${foods[city] || 'popular local street food'}**. For nearby options, open the 📍 Nearby tab and choose Food.`;
   }
 
-  if (m.includes('emergency') || m.includes('police') || m.includes('hospital') || m.includes('help')) {
-    return `Emergency numbers to save right now 🆘:\n\n• **Police**: 100\n• **Ambulance**: 108\n• **Fire**: 101\n• **All Emergency**: 112\n• **Railway**: 139\n\nCheck the 📞 Helplines tab for ${city}-specific numbers!`;
+  if (m.includes('hospital') || m.includes('police') || m.includes('atm') || m.includes('nearby')) {
+    const type = m.includes('police') ? 'police' : m.includes('atm') ? 'atm' : m.includes('food') ? 'food' : m.includes('transport') ? 'transport' : 'hospital';
+    return getNearbySummary(city, type);
   }
 
-  if (m.includes('cost') || m.includes('budget') || m.includes('expensive') || m.includes('money')) {
-    const avg = cityAvgCost[city];
-    if (avg) {
-      const total = Object.values(avg).reduce((a,b) => a+b, 0);
-      return `Average monthly cost in ${city} 💰:\n\n• PG/Rent: ₹${avg.pg.toLocaleString()}\n• Food: ₹${avg.food.toLocaleString()}\n• Transport: ₹${avg.transport.toLocaleString()}\n• Total: ~₹${total.toLocaleString()}/month\n\nUse the 💰 Budget Planner tab to customize your estimates!`;
-    }
+  if (m.includes('emergency') || m.includes('help') || m.includes('unsafe') || m.includes('sos')) {
+    return `Emergency help for ${city} 🆘:\n\n• All India Emergency: **112**\n• Police: **100**\n• Ambulance: **108**\n• Fire: **101**\n• Railway: **139**\n\nIf you feel unsafe, move to a public place, call 112, and share your live location. The Helplines tab has city-specific numbers.`;
   }
 
-  return `Great question! I'm your SheherSaathi assistant for ${city}. I can help with:\n\n🏠 Finding PGs\n🚗 Transport fares\n🗺️ City navigation\n📞 Emergency contacts\n💰 Budget planning\n✅ New city checklist\n\nWhat specifically would you like to know?`;
+  if (m.includes('guide') || m.includes('arrive') || m.includes('first day') || m.includes('new city') || m.includes('tips')) {
+    return getGuideSummary(city);
+  }
+
+  if (m.includes('checklist') || m.includes('documents') || m.includes('carry')) {
+    return getChecklistSummary();
+  }
+
+  const variants = [
+    `I can help with ${city} PGs, fares, budgets, nearby places and safety. Try asking: “PG under 7000 in ${city}” or “fare from station in ${city}”.`,
+    `For ${city}, I can make a PG shortlist, estimate monthly cost, suggest arrival steps, or show emergency contacts. What do you want first?`,
+    `Tell me your city + need, for example: “best areas in ${city}”, “girls PG under 9000”, “monthly budget”, or “nearby hospital”.`
+  ];
+  return variants[aiHistory.length % variants.length];
+}
+
+function escapeHTML(value){
+  return String(value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
 }
 
 function appendAIMessage(text, type) {
   const el = document.getElementById('aiMessages');
   if (!el) return;
-  const formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  const formatted = escapeHTML(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
   const div = document.createElement('div');
   div.className = `ai-msg ${type}`;
   div.innerHTML = `
@@ -1187,6 +1379,7 @@ function appendAIMessage(text, type) {
 function showAITyping() {
   const el = document.getElementById('aiMessages');
   if (!el) return;
+  hideAITyping();
   const div = document.createElement('div');
   div.className = 'ai-msg bot';
   div.id = 'aiTyping';
@@ -1211,3 +1404,76 @@ document.addEventListener('click', e => {
     if (dd) dd.classList.add('hidden');
   }
 });
+
+// =====================================================
+//  INTENT HUB + ROOMMATE CONNECT
+// =====================================================
+function handleIntent(type){
+  const tab = document.querySelector(`[data-tab=${type === 'transport' ? 'fare' : type === 'emergency' ? 'helpline' : type === 'navigate' || type === 'food' ? 'nearby' : type === 'roommates' ? 'pg' : type}]`);
+  if(type === 'pg'){
+    switchTab('pg', document.querySelector('[data-tab=pg]'));
+    document.getElementById('pgSearch')?.focus();
+    return;
+  }
+  if(type === 'navigate'){
+    switchTab('guide', document.querySelector('[data-tab=guide]'));
+    return;
+  }
+  if(type === 'ai'){
+    switchTab('ai', document.querySelector('[data-tab=ai]'));
+    const input = document.getElementById('aiInput');
+    if(input){ input.value = 'Help me settle in ' + activeCity; input.focus(); }
+    return;
+  }
+  if(type === 'food'){
+    switchTab('nearby', document.querySelector('[data-tab=nearby]'));
+    const btn = Array.from(document.querySelectorAll('.cat-btn')).find(b => b.textContent.toLowerCase().includes('food'));
+    showCategory('food', btn || document.querySelector('.cat-btn'));
+    return;
+  }
+  if(type === 'transport'){
+    switchTab('fare', document.querySelector('[data-tab=fare]'));
+    return;
+  }
+  if(type === 'roommates'){
+    openModal('roommateModal');
+    return;
+  }
+  if(type === 'emergency'){
+    switchTab('helpline', document.querySelector('[data-tab=helpline]'));
+    return;
+  }
+  if(tab) switchTab(type, tab);
+}
+
+function getRoommatePosts(){
+  return JSON.parse(localStorage.getItem('ss_roommates') || '[]');
+}
+
+function renderRoommatePosts(){
+  const el = document.getElementById('roommateList');
+  if(!el) return;
+  const posts = getRoommatePosts();
+  if(!posts.length){
+    el.innerHTML = '<div class="roommate-empty">No roommate posts yet. Be the first to add one.</div>';
+    return;
+  }
+  el.innerHTML = posts.slice(0, 6).map(p => `
+    <div class="roommate-item">
+      <strong>${escapeHTML(p.name)}</strong>
+      <span>${escapeHTML(p.city)} · ${escapeHTML(p.pref)}</span>
+    </div>`).join('');
+}
+
+function saveRoommatePost(){
+  const name = (document.getElementById('roommateName')?.value || localStorage.getItem('ss_user') || 'Guest').trim();
+  const city = document.getElementById('roommateCity')?.value || activeCity;
+  const pref = (document.getElementById('roommatePref')?.value || '').trim();
+  if(!pref){ alert('Please add your roommate preference or budget.'); return; }
+  const posts = getRoommatePosts();
+  posts.unshift({ name, city, pref, time: Date.now() });
+  localStorage.setItem('ss_roommates', JSON.stringify(posts.slice(0, 20)));
+  document.getElementById('roommatePref').value = '';
+  addNotif('Roommate interest posted locally 👥');
+  renderRoommatePosts();
+}
