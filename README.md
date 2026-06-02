@@ -1,5 +1,6 @@
 # SheherSaathi
 
+SheherSaathi is a city companion website for students and newcomers. It helps users find verified PGs/flats, estimate transport fares, compare stays, plan budgets, track shared expenses, discover tiffin services/gyms, find roommates, use a student marketplace, browse CSE resources, follow arrival checklists, and access emergency information.
 SheherSaathi is a city companion website for students and newcomers. It helps users find PGs, estimate transport fares, compare stays, plan budgets, follow arrival checklists, and access emergency information.
 
 ## Updating the GitHub Pages site
@@ -14,6 +15,8 @@ The main files for the homepage are:
 
 - `index.html` — page structure and content
 - `style.css` — design and responsive UI
+- `script.js` — interactions, tabs, search, login, compare, budget, checklist, assistant, expenses, marketplace and service-directory logic
+- `data.js` — PG/flat listing data across 25+ Indian cities
 - `script.js` — interactions, tabs, search, login, compare, budget, checklist, and assistant logic
 - `data.js` — PG listing data
 

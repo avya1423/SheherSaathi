@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SheherSaathi — Your City Companion</title>
+<meta name="description" content="Find verified PGs and flats, tiffin services, gyms, expenses, marketplace, city fares, AI help, and emergency support across Indian cities.">
 <meta name="description" content="Find verified PGs, compare budgets, calculate city fares, and access emergency help across Indian cities.">
 <meta name="theme-color" content="#0f172a">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -141,6 +142,22 @@
       </div>
     </section>
 
+      </div>
+
+      <div class="hero-actions">
+        <button class="hero-action primary" onclick="switchTab('pg',document.querySelector('[data-tab=pg]'))">Explore PGs</button>
+        <button class="hero-action" onclick="switchTab('checklist',document.querySelector('[data-tab=checklist]'))">Start Checklist</button>
+      </div>
+
+      <div class="city-selector city-selector-v2">
+        <button class="city-btn active" onclick="switchCity('Bhopal',this)">Bhopal</button>
+        <button class="city-btn" onclick="switchCity('Delhi',this)">Delhi</button>
+        <button class="city-btn" onclick="switchCity('Mumbai',this)">Mumbai</button>
+        <button class="city-btn" onclick="switchCity('Pune',this)">Pune</button>
+        <button class="city-btn" onclick="switchCity('Patna',this)">Patna</button>
+      </div>
+    </section>
+
     <section class="city-console" aria-label="SheherSaathi city dashboard preview">
       <div class="console-topbar">
         <span></span><span></span><span></span>
@@ -190,6 +207,13 @@
     <button class="intent-card" onclick="handleIntent('pg')"><span>🏠</span><strong>Find PG</strong><small>Budget, gender and area filters</small></button>
     <button class="intent-card" onclick="handleIntent('navigate')"><span>🧭</span><strong>Navigate city</strong><small>Arrival guide and nearby places</small></button>
     <button class="intent-card" onclick="handleIntent('ai')"><span>🤖</span><strong>Ask AI for help</strong><small>Ask about PGs, fares and safety</small></button>
+    <button class="intent-card" onclick="handleIntent('food')"><span>🍱</span><strong>Find food</strong><small>Tiffin, mess and local meals</small></button>
+    <button class="intent-card" onclick="handleIntent('fitness')"><span>💪</span><strong>Find gym</strong><small>Student gyms and fitness studios</small></button>
+    <button class="intent-card" onclick="handleIntent('transport')"><span>🚕</span><strong>Get transport guidance</strong><small>Fare calculator and travel tips</small></button>
+    <button class="intent-card" onclick="handleIntent('expense')"><span>💸</span><strong>Split expenses</strong><small>Track and split flatmate bills</small></button>
+    <button class="intent-card" onclick="handleIntent('roommates')"><span>👥</span><strong>Connect with roommates</strong><small>Post your roommate preference</small></button>
+    <button class="intent-card" onclick="handleIntent('market')"><span>🛒</span><strong>Student marketplace</strong><small>Buy and sell used essentials</small></button>
+    <button class="intent-card" onclick="handleIntent('tech')"><span>💻</span><strong>CSE tech hub</strong><small>Notes, projects and interview prep</small></button>
     <button class="intent-card" onclick="handleIntent('food')"><span>🍽️</span><strong>Find food</strong><small>Local food spots and essentials</small></button>
     <button class="intent-card" onclick="handleIntent('transport')"><span>🚕</span><strong>Get transport guidance</strong><small>Fare calculator and travel tips</small></button>
     <button class="intent-card" onclick="handleIntent('roommates')"><span>👥</span><strong>Connect with roommates</strong><small>Post your roommate preference</small></button>
@@ -205,6 +229,11 @@
     <button class="tab-btn" onclick="switchTab('guide',this)" data-tab="guide" data-en="🗺️ City Guide" data-hi="🗺️ सिटी गाइड">🗺️ City Guide</button>
     <button class="tab-btn" onclick="switchTab('helpline',this)" data-tab="helpline" data-en="📞 Helplines" data-hi="📞 हेल्पलाइन">📞 Helplines</button>
     <button class="tab-btn" onclick="switchTab('nearby',this)" data-tab="nearby" data-en="📍 Nearby" data-hi="📍 पास में">📍 Nearby</button>
+    <button class="tab-btn" onclick="switchTab('tiffin',this)" data-tab="tiffin" data-en="🍱 Tiffin" data-hi="🍱 टिफिन">🍱 Tiffin</button>
+    <button class="tab-btn" onclick="switchTab('fitness',this)" data-tab="fitness" data-en="💪 Fitness" data-hi="💪 फिटनेस">💪 Fitness</button>
+    <button class="tab-btn" onclick="switchTab('expense',this)" data-tab="expense" data-en="💸 Expenses" data-hi="💸 खर्च">💸 Expenses</button>
+    <button class="tab-btn" onclick="switchTab('market',this)" data-tab="market" data-en="🛒 Market" data-hi="🛒 मार्केट">🛒 Market</button>
+    <button class="tab-btn" onclick="switchTab('tech',this)" data-tab="tech" data-en="💻 CSE Hub" data-hi="💻 CSE हब">💻 CSE Hub</button>
     <button class="tab-btn" onclick="switchTab('compare',this)" data-tab="compare" data-en="⚖️ Compare" data-hi="⚖️ तुलना">⚖️ Compare</button>
     <button class="tab-btn" onclick="switchTab('budget',this)" data-tab="budget" data-en="💰 Budget" data-hi="💰 बजट">💰 Budget</button>
     <button class="tab-btn" onclick="switchTab('checklist',this)" data-tab="checklist" data-en="✅ Checklist" data-hi="✅ चेकलिस्ट">✅ Checklist</button>
@@ -228,8 +257,16 @@
     <div class="filter-bar">
       <div class="filter-search">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input id="pgSearch" placeholder="Search PG name..." onkeyup="renderPGs()">
+        <input id="pgSearch" placeholder="Search city, PG, flat, area or amenity..." onkeyup="renderPGs()">
       </div>
+      <select id="pgCity" class="sel" onchange="renderPGs()">
+        <option value="Bhopal">Bhopal</option>
+      </select>
+      <select id="pgType" class="sel" onchange="renderPGs()">
+        <option value="">PG + Flats</option>
+        <option value="PG">PG / Hostel</option>
+        <option value="Private Flat">Private Flat</option>
+      </select>
       <select id="pgGender" class="sel" onchange="renderPGs()">
         <option value="">All Genders</option>
         <option value="Boys">Boys</option>
@@ -335,6 +372,51 @@
             display: none;
         }
 
+  <!-- TIFFIN & MESS -->
+  <div id="tab-tiffin" class="tab-panel">
+    <div class="panel-header"><div><h2>🍱 Tiffin & Mess Directory</h2><p class="panel-sub">Daily meals, protein diets and student-friendly plans</p></div></div>
+    <div id="tiffinGrid" class="service-grid"></div>
+  </div>
+
+  <!-- FITNESS -->
+  <div id="tab-fitness" class="tab-panel">
+    <div class="panel-header"><div><h2>💪 Gym & Fitness Directory</h2><p class="panel-sub">Nearby gyms, facilities, student plans and contact links</p></div></div>
+    <div id="fitnessGrid" class="service-grid"></div>
+  </div>
+
+  <!-- EXPENSE TRACKER -->
+  <div id="tab-expense" class="tab-panel">
+    <div class="panel-header"><div><h2>💸 Expense & Split Bill Tracker</h2><p class="panel-sub">Add personal/shared expenses and split with flatmates</p></div><button class="btn-sm" onclick="resetExpenses()" style="background:var(--input);color:var(--text)">Reset Ledger</button></div>
+    <div class="expense-layout">
+      <div class="expense-form-card">
+        <div class="budget-card-title">Add Expense</div>
+        <input id="expTitle" class="m-input" placeholder="Expense title e.g. Electricity bill">
+        <input id="expAmount" type="number" class="m-input" placeholder="Amount ₹">
+        <select id="expType" class="m-input"><option value="Personal">Personal</option><option value="Shared">Shared</option></select>
+        <select id="expPeople" class="m-input"><option value="2">Split between 2</option><option value="3">Split between 3</option><option value="4">Split between 4</option></select>
+        <button class="btn-full" onclick="addExpense()">Add to Ledger</button>
+      </div>
+      <div class="expense-summary-card"><div id="expenseSummary"></div><div id="expenseLedger" class="expense-ledger"></div></div>
+    </div>
+  </div>
+
+  <!-- STUDENT MARKETPLACE -->
+  <div id="tab-market" class="tab-panel">
+    <div class="panel-header"><div><h2>🛒 Student Marketplace</h2><p class="panel-sub">Buy/sell coolers, bedding, books, electronics and kitchen items</p></div></div>
+    <div class="market-form">
+      <input id="marketItem" class="m-input" placeholder="Item name e.g. Study table">
+      <select id="marketCategory" class="m-input"><option>Coolers & Bedding</option><option>Mattresses & Furniture</option><option>Books & Study Materials</option><option>Electronics</option><option>Kitchen Items</option></select>
+      <input id="marketPrice" type="number" class="m-input" placeholder="Price ₹">
+      <button onclick="addMarketItem()">List Item</button>
+    </div>
+    <div id="marketGrid" class="service-grid"></div>
+  </div>
+
+  <!-- CSE TECH HUB -->
+  <div id="tab-tech" class="tab-panel">
+    <div class="panel-header"><div><h2>💻 CSE Tech Hub</h2><p class="panel-sub">Programming resources, notes, project templates, ML and interview prep</p></div></div>
+    <div id="techGrid" class="service-grid"></div>
+  </div>
         .desktop-sidebar.show {
             display: block;
         }

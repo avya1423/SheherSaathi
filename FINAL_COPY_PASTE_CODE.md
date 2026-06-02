@@ -31,6 +31,7 @@ File name: `index.html`
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SheherSaathi — Your City Companion</title>
+<meta name="description" content="Find verified PGs and flats, tiffin services, gyms, expenses, marketplace, city fares, AI help, and emergency support across Indian cities.">
 <meta name="description" content="Find verified PGs, compare budgets, calculate city fares, and access emergency help across Indian cities.">
 <meta name="theme-color" content="#0f172a">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -217,6 +218,13 @@ File name: `index.html`
     <button class="intent-card" onclick="handleIntent('pg')"><span>🏠</span><strong>Find PG</strong><small>Budget, gender and area filters</small></button>
     <button class="intent-card" onclick="handleIntent('navigate')"><span>🧭</span><strong>Navigate city</strong><small>Arrival guide and nearby places</small></button>
     <button class="intent-card" onclick="handleIntent('ai')"><span>🤖</span><strong>Ask AI for help</strong><small>Ask about PGs, fares and safety</small></button>
+    <button class="intent-card" onclick="handleIntent('food')"><span>🍱</span><strong>Find food</strong><small>Tiffin, mess and local meals</small></button>
+    <button class="intent-card" onclick="handleIntent('fitness')"><span>💪</span><strong>Find gym</strong><small>Student gyms and fitness studios</small></button>
+    <button class="intent-card" onclick="handleIntent('transport')"><span>🚕</span><strong>Get transport guidance</strong><small>Fare calculator and travel tips</small></button>
+    <button class="intent-card" onclick="handleIntent('expense')"><span>💸</span><strong>Split expenses</strong><small>Track and split flatmate bills</small></button>
+    <button class="intent-card" onclick="handleIntent('roommates')"><span>👥</span><strong>Connect with roommates</strong><small>Post your roommate preference</small></button>
+    <button class="intent-card" onclick="handleIntent('market')"><span>🛒</span><strong>Student marketplace</strong><small>Buy and sell used essentials</small></button>
+    <button class="intent-card" onclick="handleIntent('tech')"><span>💻</span><strong>CSE tech hub</strong><small>Notes, projects and interview prep</small></button>
     <button class="intent-card" onclick="handleIntent('food')"><span>🍽️</span><strong>Find food</strong><small>Local food spots and essentials</small></button>
     <button class="intent-card" onclick="handleIntent('transport')"><span>🚕</span><strong>Get transport guidance</strong><small>Fare calculator and travel tips</small></button>
     <button class="intent-card" onclick="handleIntent('roommates')"><span>👥</span><strong>Connect with roommates</strong><small>Post your roommate preference</small></button>
@@ -232,6 +240,11 @@ File name: `index.html`
     <button class="tab-btn" onclick="switchTab('guide',this)" data-tab="guide" data-en="🗺️ City Guide" data-hi="🗺️ सिटी गाइड">🗺️ City Guide</button>
     <button class="tab-btn" onclick="switchTab('helpline',this)" data-tab="helpline" data-en="📞 Helplines" data-hi="📞 हेल्पलाइन">📞 Helplines</button>
     <button class="tab-btn" onclick="switchTab('nearby',this)" data-tab="nearby" data-en="📍 Nearby" data-hi="📍 पास में">📍 Nearby</button>
+    <button class="tab-btn" onclick="switchTab('tiffin',this)" data-tab="tiffin" data-en="🍱 Tiffin" data-hi="🍱 टिफिन">🍱 Tiffin</button>
+    <button class="tab-btn" onclick="switchTab('fitness',this)" data-tab="fitness" data-en="💪 Fitness" data-hi="💪 फिटनेस">💪 Fitness</button>
+    <button class="tab-btn" onclick="switchTab('expense',this)" data-tab="expense" data-en="💸 Expenses" data-hi="💸 खर्च">💸 Expenses</button>
+    <button class="tab-btn" onclick="switchTab('market',this)" data-tab="market" data-en="🛒 Market" data-hi="🛒 मार्केट">🛒 Market</button>
+    <button class="tab-btn" onclick="switchTab('tech',this)" data-tab="tech" data-en="💻 CSE Hub" data-hi="💻 CSE हब">💻 CSE Hub</button>
     <button class="tab-btn" onclick="switchTab('compare',this)" data-tab="compare" data-en="⚖️ Compare" data-hi="⚖️ तुलना">⚖️ Compare</button>
     <button class="tab-btn" onclick="switchTab('budget',this)" data-tab="budget" data-en="💰 Budget" data-hi="💰 बजट">💰 Budget</button>
     <button class="tab-btn" onclick="switchTab('checklist',this)" data-tab="checklist" data-en="✅ Checklist" data-hi="✅ चेकलिस्ट">✅ Checklist</button>
@@ -255,6 +268,16 @@ File name: `index.html`
     <div class="filter-bar">
       <div class="filter-search">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="pgSearch" placeholder="Search city, PG, flat, area or amenity..." onkeyup="renderPGs()">
+      </div>
+      <select id="pgCity" class="sel" onchange="renderPGs()">
+        <option value="Bhopal">Bhopal</option>
+      </select>
+      <select id="pgType" class="sel" onchange="renderPGs()">
+        <option value="">PG + Flats</option>
+        <option value="PG">PG / Hostel</option>
+        <option value="Private Flat">Private Flat</option>
+      </select>
         <input id="pgSearch" placeholder="Search PG name..." onkeyup="renderPGs()">
       </div>
       <select id="pgGender" class="sel" onchange="renderPGs()">
@@ -381,6 +404,52 @@ File name: `index.html`
       <button class="cat-btn" onclick="showCategory('transport',this)">🚌 Transport</button>
     </div>
     <div id="nearbyItems" class="nearby-list"></div>
+  </div>
+
+  <!-- TIFFIN & MESS -->
+  <div id="tab-tiffin" class="tab-panel">
+    <div class="panel-header"><div><h2>🍱 Tiffin & Mess Directory</h2><p class="panel-sub">Daily meals, protein diets and student-friendly plans</p></div></div>
+    <div id="tiffinGrid" class="service-grid"></div>
+  </div>
+
+  <!-- FITNESS -->
+  <div id="tab-fitness" class="tab-panel">
+    <div class="panel-header"><div><h2>💪 Gym & Fitness Directory</h2><p class="panel-sub">Nearby gyms, facilities, student plans and contact links</p></div></div>
+    <div id="fitnessGrid" class="service-grid"></div>
+  </div>
+
+  <!-- EXPENSE TRACKER -->
+  <div id="tab-expense" class="tab-panel">
+    <div class="panel-header"><div><h2>💸 Expense & Split Bill Tracker</h2><p class="panel-sub">Add personal/shared expenses and split with flatmates</p></div><button class="btn-sm" onclick="resetExpenses()" style="background:var(--input);color:var(--text)">Reset Ledger</button></div>
+    <div class="expense-layout">
+      <div class="expense-form-card">
+        <div class="budget-card-title">Add Expense</div>
+        <input id="expTitle" class="m-input" placeholder="Expense title e.g. Electricity bill">
+        <input id="expAmount" type="number" class="m-input" placeholder="Amount ₹">
+        <select id="expType" class="m-input"><option value="Personal">Personal</option><option value="Shared">Shared</option></select>
+        <select id="expPeople" class="m-input"><option value="2">Split between 2</option><option value="3">Split between 3</option><option value="4">Split between 4</option></select>
+        <button class="btn-full" onclick="addExpense()">Add to Ledger</button>
+      </div>
+      <div class="expense-summary-card"><div id="expenseSummary"></div><div id="expenseLedger" class="expense-ledger"></div></div>
+    </div>
+  </div>
+
+  <!-- STUDENT MARKETPLACE -->
+  <div id="tab-market" class="tab-panel">
+    <div class="panel-header"><div><h2>🛒 Student Marketplace</h2><p class="panel-sub">Buy/sell coolers, bedding, books, electronics and kitchen items</p></div></div>
+    <div class="market-form">
+      <input id="marketItem" class="m-input" placeholder="Item name e.g. Study table">
+      <select id="marketCategory" class="m-input"><option>Coolers & Bedding</option><option>Mattresses & Furniture</option><option>Books & Study Materials</option><option>Electronics</option><option>Kitchen Items</option></select>
+      <input id="marketPrice" type="number" class="m-input" placeholder="Price ₹">
+      <button onclick="addMarketItem()">List Item</button>
+    </div>
+    <div id="marketGrid" class="service-grid"></div>
+  </div>
+
+  <!-- CSE TECH HUB -->
+  <div id="tab-tech" class="tab-panel">
+    <div class="panel-header"><div><h2>💻 CSE Tech Hub</h2><p class="panel-sub">Programming resources, notes, project templates, ML and interview prep</p></div></div>
+    <div id="techGrid" class="service-grid"></div>
   </div>
 
   <!-- COMPARE TAB -->
@@ -1954,6 +2023,59 @@ body::before {
 @media (max-width: 760px) { .intent-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
 @media (max-width: 480px) { .intent-grid { grid-template-columns: 1fr; } .intent-card { min-height: auto; } }
 
+/* ===================== FEATURE MODULES: FOOD, FITNESS, EXPENSE, MARKET, TECH ===================== */
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.service-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 220px;
+  padding: 20px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 14px 36px rgba(15,23,42,.07);
+}
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #ff6b35, #14b8a6, #2563eb);
+}
+.service-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px; }
+.service-icon { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 16px; background: var(--input); font-size: 22px; }
+.service-tag { padding: 7px 10px; border-radius: 999px; background: var(--brand-light); color: var(--brand); font-size: 11px; font-weight: 900; }
+.service-card h3 { font-family: 'Syne', sans-serif; font-size: 20px; margin-bottom: 8px; letter-spacing: -.4px; }
+.service-card p { color: var(--muted); font-size: 13px; line-height: 1.65; margin-bottom: 18px; }
+.service-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; }
+.service-meta strong { color: var(--brand); font-size: 16px; }
+.service-meta a { color: #fff; background: linear-gradient(135deg,var(--brand),#f59e0b); border-radius: 999px; padding: 8px 12px; font-size: 12px; font-weight: 800; }
+.expense-layout { display: grid; grid-template-columns: minmax(260px,.8fr) 1.2fr; gap: 16px; }
+.expense-form-card, .expense-summary-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 12px 32px rgba(15,23,42,.06);
+}
+.expense-total { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.expense-total span { color: var(--muted); }
+.expense-total strong { color: var(--brand); font-family: 'Syne', sans-serif; font-size: 24px; }
+.expense-ledger { display: grid; gap: 10px; margin-top: 14px; }
+.ledger-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 12px 14px; border: 1px solid var(--border); border-radius: 16px; background: var(--input); }
+.ledger-row strong { display: block; font-size: 14px; }
+.ledger-row span, .ledger-row small { color: var(--muted); font-size: 12px; }
+.ledger-row b { color: var(--text); }
+.market-form { display: grid; grid-template-columns: 1.2fr 1fr .7fr auto; gap: 10px; margin-bottom: 18px; }
+.market-form .m-input { margin: 0; }
+@media (max-width: 820px) {
+  .expense-layout, .market-form { grid-template-columns: 1fr; }
+  .ledger-row { grid-template-columns: 1fr; }
+}
 ```
 
 ## SECTION 3 — script.js
@@ -2048,6 +2170,36 @@ const T = {
 function t(key, ...args) {
   const val = T[currentLang][key];
   return typeof val === 'function' ? val(...args) : val;
+}
+
+function getListingType(pg) {
+  const label = [pg.type, pg.name, pg.address].filter(Boolean).join(' ').toLowerCase();
+  return label.includes('flat') || label.includes('apartment') ? 'Private Flat' : 'PG';
+}
+
+function getListingPrice(pg) {
+  return parseInt(String(pg.price || '').replace(/[^0-9]/g, '')) || 0;
+}
+
+function normalizePGData() {
+  if (!Array.isArray(pgData)) return;
+  pgData.forEach((pg, index) => {
+    pg.type = pg.type || getListingType(pg);
+    pg.verified = pg.verified !== false;
+    pg.image = pg.image || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2';
+    pg.contact = pg.contact || '9876543210';
+    pg.amenities = pg.amenities || 'WiFi, Meals, Security';
+    pg.id = pg.id || `${pg.city || 'city'}-${index}`.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  });
+}
+
+function populatePGCityFilter() {
+  const citySelect = document.getElementById('pgCity');
+  if (!citySelect || !Array.isArray(pgData)) return;
+  const cities = [...new Set(pgData.map(p => p.city).filter(Boolean))].sort();
+  const current = citySelect.value || activeCity;
+  citySelect.innerHTML = '<option value="">All Cities</option>' + cities.map(city => `<option value="${escapeHTML(city)}">${escapeHTML(city)}</option>`).join('');
+  citySelect.value = cities.includes(current) ? current : activeCity;
 }
 
 // =====================================================
@@ -2238,6 +2390,9 @@ window.onload = function(){
   const dp = localStorage.getItem('ss_dp');
   if(dp){ setProfilePics(dp); }
 
+  normalizePGData();
+  populatePGCityFilter();
+
   const statPGs = document.getElementById('statPGs');
   if(statPGs) statPGs.textContent = `${pgData.length}+`;
 
@@ -2249,6 +2404,9 @@ window.onload = function(){
     renderChecklist();
     renderCompare();
     setBudgetCity('Bhopal', document.querySelector('.cbs'));
+    renderStudentServices();
+    renderExpenses();
+    renderMarketplace();
   }, 500);
 };
 
@@ -2551,6 +2709,8 @@ function switchCity(city,btn){
 
 function loadCity(city){
   activeCity=city;
+  const pgCitySelect = document.getElementById('pgCity');
+  if(pgCitySelect && [...pgCitySelect.options].some(o => o.value === city)) pgCitySelect.value = city;
   document.getElementById('pg-heading').textContent      = t('pgHeading',city);
   document.getElementById('fare-heading').textContent    = t('fareHeading',city);
   document.getElementById('guide-heading').textContent   = t('guideHeading',city);
@@ -2561,6 +2721,8 @@ function loadCity(city){
   loadGuide(city);
   loadHelplines(city);
   loadNearby(city,activeCat);
+  renderStudentServices();
+  renderMarketplace();
 }
 
 // =====================================================
@@ -2582,11 +2744,18 @@ function switchTab(tab,btn,options={}){
 // =====================================================
 function renderPGs(){
   const search  = (document.getElementById('pgSearch')?.value||'').toLowerCase();
+  const cityFilter = document.getElementById('pgCity')?.value || '';
+  const typeFilter = document.getElementById('pgType')?.value || '';
   const gender  = document.getElementById('pgGender')?.value||'';
   const maxPr   = parseInt(document.getElementById('pgPrice')?.value||'999999');
   const sortBy  = document.getElementById('pgSort')?.value||'';
 
   let list = pgData.filter(p=>{
+    const price = getListingPrice(p);
+    const type = getListingType(p);
+    return (!cityFilter || p.city===cityFilter) &&
+      (!typeFilter || type===typeFilter) &&
+      (!search||[p.name,p.city,p.address,p.amenities,p.gender,type].filter(Boolean).join(' ').toLowerCase().includes(search)) &&
     const price=parseInt(p.price.replace(/[^0-9]/g,''));
     return p.city===activeCity &&
       (!search||[p.name,p.city,p.address,p.amenities,p.gender].filter(Boolean).join(' ').toLowerCase().includes(search)) &&
@@ -2594,6 +2763,14 @@ function renderPGs(){
       price<=(maxPr||999999);
   });
 
+  if(sortBy==='price_asc')  list.sort((a,b)=>getListingPrice(a)-getListingPrice(b));
+  if(sortBy==='price_desc') list.sort((a,b)=>getListingPrice(b)-getListingPrice(a));
+  if(sortBy==='rating')     list.sort((a,b)=>avgRating(b.name)-avgRating(a.name));
+
+  const heading=document.getElementById('pg-heading');
+  if(heading) heading.textContent = cityFilter ? `Accommodation in ${cityFilter}` : 'Verified PGs & Flats';
+  const count=document.getElementById('pg-count');
+  if(count) count.textContent=`${list.length} verified propert${list.length===1?'y':'ies'} found${typeFilter ? ' · '+typeFilter : ''}`;
   if(sortBy==='price_asc')  list.sort((a,b)=>parseInt(a.price.replace(/\D/g,''))-parseInt(b.price.replace(/\D/g,'')));
   if(sortBy==='price_desc') list.sort((a,b)=>parseInt(b.price.replace(/\D/g,''))-parseInt(a.price.replace(/\D/g,'')));
   if(sortBy==='rating')     list.sort((a,b)=>avgRating(b.name)-avgRating(a.name));
@@ -2610,6 +2787,8 @@ function renderPGs(){
   }
 
   grid.innerHTML=list.map((pg,i)=>{
+    const price   = getListingPrice(pg);
+    const type    = getListingType(pg);
     const price   = parseInt(pg.price.replace(/[^0-9]/g,''));
     const reviews = getReviews(pg.name);
     const avg     = avgRating(pg.name);
@@ -2622,12 +2801,15 @@ function renderPGs(){
         <img src="${pg.image}?w=400" loading="lazy" alt="${pg.name}" onerror="this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400'">
         <div class="pg-badges">
           <span class="pg-badge ${gClass}">${gEmoji} ${pg.gender}</span>
+          <span class="pg-badge verified">✅ Verified</span>
+          <span class="pg-badge type">${type}</span>
           ${i<2?'<span class="pg-badge" style="background:rgba(234,179,8,.9);color:#fff">⭐ Top Pick</span>':''}
         </div>
         ${avg>0?`<div class="pg-rating-badge">★ ${avg.toFixed(1)}</div>`:''}
       </div>
       <div class="pg-body">
         <h3>${pg.name}</h3>
+        <div class="pg-city-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${pg.city} · ${type}</div>
         <div class="pg-city-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${pg.city}</div>
         <div class="pg-rent">₹${price.toLocaleString()} <span>/ month</span></div>
         <div class="pg-amenities">✓ ${amenities}</div>
@@ -3370,16 +3552,134 @@ document.addEventListener('click', e => {
   }
 });
 
+
+// =====================================================
+//  STUDENT SERVICES: TIFFIN, FITNESS, EXPENSES, MARKET, TECH
+// =====================================================
+const tiffinServices = [
+  {city:'Bhopal', name:'Protein Bowl Tiffins', price:'₹3,200/mo', tag:'High Protein', desc:'Paneer, dal, eggs add-on, student lunch/dinner plans', contact:'9876543201'},
+  {city:'Bhopal', name:'MP Nagar Mess Club', price:'₹2,600/mo', tag:'Budget', desc:'Home-style veg thali, monthly student mess', contact:'9876543202'},
+  {city:'Delhi', name:'North Campus Tiffin Co.', price:'₹3,800/mo', tag:'Student Plan', desc:'Veg/non-veg meals with weekly menu rotation', contact:'9876543203'},
+  {city:'Mumbai', name:'Andheri Meal Box', price:'₹4,500/mo', tag:'Local Food', desc:'Maharashtrian meals, breakfast add-on available', contact:'9876543204'},
+  {city:'Pune', name:'Hinjawadi Fit Meals', price:'₹4,200/mo', tag:'Gym Diet', desc:'Protein meals, calorie counted subscriptions', contact:'9876543205'},
+  {city:'Patna', name:'Litti Lunch Service', price:'₹2,400/mo', tag:'Local', desc:'Bihari home food, sattvik and regular thali', contact:'9876543206'},
+];
+
+const fitnessServices = [
+  {city:'Bhopal', name:'MP Nagar Fitness Hub', price:'₹999/mo', tag:'Student Discount', desc:'Cardio, weights, trainers, evening batches', contact:'9876500101'},
+  {city:'Delhi', name:'Karol Bagh Iron Club', price:'₹1,499/mo', tag:'Weights', desc:'Strength floor, cardio, locker facility', contact:'9876500102'},
+  {city:'Mumbai', name:'Andheri Studio Fit', price:'₹1,999/mo', tag:'Classes', desc:'Zumba, yoga, HIIT and personal training', contact:'9876500103'},
+  {city:'Pune', name:'Hinjawadi Active Gym', price:'₹1,299/mo', tag:'Tech Park', desc:'Flexible timings for students and interns', contact:'9876500104'},
+  {city:'Patna', name:'Kankarbagh Fitness Point', price:'₹899/mo', tag:'Budget', desc:'Weights, cardio and basic trainer support', contact:'9876500105'},
+];
+
+const techResources = [
+  {name:'DSA Starter Pack', tag:'Programming', desc:'Arrays, strings, recursion, DP roadmap and practice links'},
+  {name:'Semester Notes Vault', tag:'Notes', desc:'DBMS, OS, CN, OOP summaries for quick revision'},
+  {name:'Mini Project Templates', tag:'Projects', desc:'Portfolio, hostel finder, expense tracker and API templates'},
+  {name:'ML Beginner Kit', tag:'AI/ML', desc:'Python notebooks, datasets, regression/classification basics'},
+  {name:'Placement Prep Board', tag:'Interview', desc:'Resume checklist, HR questions, coding round plan'},
+];
+
+function serviceCard(item, icon){
+  return `<div class="service-card">
+    <div class="service-top"><span class="service-icon">${icon}</span><span class="service-tag">${escapeHTML(item.tag)}</span></div>
+    <h3>${escapeHTML(item.name)}</h3>
+    <p>${escapeHTML(item.desc)}</p>
+    <div class="service-meta"><strong>${escapeHTML(item.price || 'Free')}</strong>${item.contact ? `<a href="tel:${item.contact}">Contact</a>` : '<a href="#" onclick="return false">Open</a>'}</div>
+  </div>`;
+}
+
+function renderStudentServices(){
+  const tiffinGrid = document.getElementById('tiffinGrid');
+  if(tiffinGrid){
+    const list = tiffinServices.filter(x => x.city === activeCity || !x.city).slice(0, 6);
+    tiffinGrid.innerHTML = list.map(x => serviceCard(x, '🍱')).join('') || '<div class="no-results">No tiffin services added for this city yet.</div>';
+  }
+  const fitnessGrid = document.getElementById('fitnessGrid');
+  if(fitnessGrid){
+    const list = fitnessServices.filter(x => x.city === activeCity || !x.city).slice(0, 6);
+    fitnessGrid.innerHTML = list.map(x => serviceCard(x, '💪')).join('') || '<div class="no-results">No fitness services added for this city yet.</div>';
+  }
+  const techGrid = document.getElementById('techGrid');
+  if(techGrid) techGrid.innerHTML = techResources.map(x => serviceCard(x, '💻')).join('');
+}
+
+function getExpenses(){ return JSON.parse(localStorage.getItem('ss_expenses') || '[]'); }
+function renderExpenses(){
+  const summary = document.getElementById('expenseSummary');
+  const ledger = document.getElementById('expenseLedger');
+  if(!summary || !ledger) return;
+  const items = getExpenses();
+  const total = items.reduce((s,x)=>s+x.amount,0);
+  const shared = items.filter(x=>x.type==='Shared').reduce((s,x)=>s+x.amount,0);
+  summary.innerHTML = `<div class="expense-total"><span>Total Spent</span><strong>₹${total.toLocaleString()}</strong></div><div class="expense-total"><span>Shared Bills</span><strong>₹${shared.toLocaleString()}</strong></div>`;
+  ledger.innerHTML = items.length ? items.map(x => `<div class="ledger-row"><div><strong>${escapeHTML(x.title)}</strong><span>${x.type} · ${x.people} people · ${new Date(x.time).toLocaleDateString('en-IN')}</span></div><b>₹${x.amount.toLocaleString()}</b><small>₹${Math.ceil(x.amount/x.people).toLocaleString()}/person</small></div>`).join('') : '<div class="roommate-empty">No expenses yet. Add your first bill.</div>';
+}
+function addExpense(){
+  const title = (document.getElementById('expTitle')?.value || '').trim();
+  const amount = parseInt(document.getElementById('expAmount')?.value || '0');
+  const type = document.getElementById('expType')?.value || 'Personal';
+  const people = parseInt(document.getElementById('expPeople')?.value || '1');
+  if(!title || !amount){ alert('Please enter expense title and amount.'); return; }
+  const items = getExpenses();
+  items.unshift({title, amount, type, people: type==='Shared'?people:1, time: Date.now()});
+  localStorage.setItem('ss_expenses', JSON.stringify(items.slice(0,50)));
+  ['expTitle','expAmount'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  renderExpenses();
+}
+function resetExpenses(){ if(confirm('Reset expense ledger?')){ localStorage.removeItem('ss_expenses'); renderExpenses(); } }
+
+function getMarketItems(){
+  const saved = JSON.parse(localStorage.getItem('ss_market') || '[]');
+  return saved.concat([
+    {item:'Desert Cooler', category:'Coolers & Bedding', price:2200, city:activeCity},
+    {item:'Study Table', category:'Mattresses & Furniture', price:1200, city:activeCity},
+    {item:'Engineering Books Set', category:'Books & Study Materials', price:900, city:activeCity},
+    {item:'Induction Cooktop', category:'Kitchen Items', price:1500, city:activeCity},
+  ]);
+}
+function renderMarketplace(){
+  const grid = document.getElementById('marketGrid');
+  if(!grid) return;
+  grid.innerHTML = getMarketItems().slice(0,12).map(x => serviceCard({name:x.item, tag:x.category, price:'₹'+Number(x.price).toLocaleString(), desc:`Available in ${x.city}. Contact seller from marketplace listing.`, contact:''}, '🛒')).join('');
+}
+function addMarketItem(){
+  const item = (document.getElementById('marketItem')?.value || '').trim();
+  const category = document.getElementById('marketCategory')?.value || 'General';
+  const price = parseInt(document.getElementById('marketPrice')?.value || '0');
+  if(!item || !price){ alert('Please add item name and price.'); return; }
+  const saved = JSON.parse(localStorage.getItem('ss_market') || '[]');
+  saved.unshift({item, category, price, city: activeCity});
+  localStorage.setItem('ss_market', JSON.stringify(saved.slice(0,30)));
+  ['marketItem','marketPrice'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  renderMarketplace();
+}
+
 // =====================================================
 //  INTENT HUB + ROOMMATE CONNECT
 // =====================================================
 function handleIntent(type){
+  const routes = { pg:'pg', navigate:'guide', ai:'ai', food:'tiffin', fitness:'fitness', transport:'fare', expense:'expense', market:'market', tech:'tech', emergency:'helpline' };
   const tab = document.querySelector(`[data-tab=${type === 'transport' ? 'fare' : type === 'emergency' ? 'helpline' : type === 'navigate' || type === 'food' ? 'nearby' : type === 'roommates' ? 'pg' : type}]`);
   if(type === 'pg'){
     switchTab('pg', document.querySelector('[data-tab=pg]'));
     document.getElementById('pgSearch')?.focus();
     return;
   }
+  if(type === 'roommates'){
+    openModal('roommateModal');
+    return;
+  }
+  const tab = routes[type];
+  if(tab) switchTab(tab, document.querySelector(`[data-tab=${tab}]`));
+  if(type === 'ai'){
+    const input = document.getElementById('aiInput');
+    if(input){ input.value = 'Help me settle in ' + activeCity; input.focus(); }
+  }
+}
+
+
   if(type === 'navigate'){
     switchTab('guide', document.querySelector('[data-tab=guide]'));
     return;
@@ -3469,6 +3769,33 @@ const pgData = [
   {name:"Pune City Hostel",city:"Pune",price:"₹7000",contact:"8877665544",image:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688",gender:"Boys",address:"Shivajinagar, Pune",amenities:"WiFi, Meals, Laundry"},
   {name:"Girls Comfort PG Pune",city:"Pune",price:"₹8000",contact:"7766554433",image:"https://images.unsplash.com/photo-1505691938895-1758d7feb511",gender:"Girls",address:"Koregaon Park, Pune",amenities:"WiFi, AC, Meals, CCTV"},
   {name:"Hinjawadi Tech PG",city:"Pune",price:"₹9000",contact:"9922334455",image:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",gender:"Both",address:"Hinjawadi Phase 1, Pune",amenities:"WiFi, AC, Meals, Gym, Parking"},
+  {name:"CityNest Private Flat",city:"Bengaluru",price:"₹12000",contact:"9000010001",image:"https://images.unsplash.com/photo-1493809842364-78817add7ffb",gender:"Both",type:"Private Flat",address:"BTM Layout, Bengaluru",amenities:"Furnished, WiFi, Kitchen, Security"},
+  {name:"Koramangala Student PG",city:"Bengaluru",price:"₹9500",contact:"9000010002",image:"https://images.unsplash.com/photo-1555854877-bab0e564b8d5",gender:"Girls",type:"PG",address:"Koramangala, Bengaluru",amenities:"Meals, WiFi, Laundry, CCTV"},
+  {name:"Ameerpet Budget PG",city:"Hyderabad",price:"₹7500",contact:"9000010003",image:"https://images.unsplash.com/photo-1505691938895-1758d7feb511",gender:"Boys",type:"PG",address:"Ameerpet, Hyderabad",amenities:"WiFi, Meals, Study Table"},
+  {name:"Hitech City Flat Share",city:"Hyderabad",price:"₹11000",contact:"9000010004",image:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",gender:"Both",type:"Private Flat",address:"Hitech City, Hyderabad",amenities:"AC, Furnished, WiFi, Kitchen"},
+  {name:"Anna Nagar Girls PG",city:"Chennai",price:"₹8500",contact:"9000010005",image:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688",gender:"Girls",type:"PG",address:"Anna Nagar, Chennai",amenities:"Meals, WiFi, Laundry, Security"},
+  {name:"Salt Lake Boys Hostel",city:"Kolkata",price:"₹7000",contact:"9000010006",image:"https://images.unsplash.com/photo-1560448204-e02f11c3d0e2",gender:"Boys",type:"PG",address:"Salt Lake, Kolkata",amenities:"WiFi, Meals, Parking"},
+  {name:"Sector 62 Tech PG",city:"Noida",price:"₹8000",contact:"9000010007",image:"https://images.unsplash.com/photo-1505693416388-ac5ce068fe85",gender:"Both",type:"PG",address:"Sector 62, Noida",amenities:"WiFi, AC, Meals, CCTV"},
+  {name:"Cyber City Flat",city:"Gurugram",price:"₹13500",contact:"9000010008",image:"https://images.unsplash.com/photo-1493809842364-78817add7ffb",gender:"Both",type:"Private Flat",address:"DLF Phase 3, Gurugram",amenities:"Furnished, AC, Kitchen, Security"},
+  {name:"Malviya Nagar PG",city:"Jaipur",price:"₹6500",contact:"9000010009",image:"https://images.unsplash.com/photo-1505691938895-1758d7feb511",gender:"Girls",type:"PG",address:"Malviya Nagar, Jaipur",amenities:"Meals, WiFi, Laundry"},
+  {name:"SG Highway Student Flat",city:"Ahmedabad",price:"₹9000",contact:"9000010010",image:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",gender:"Both",type:"Private Flat",address:"SG Highway, Ahmedabad",amenities:"Furnished, WiFi, Kitchen"},
+  {name:"Hazratganj Comfort PG",city:"Lucknow",price:"₹6000",contact:"9000010011",image:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688",gender:"Girls",type:"PG",address:"Hazratganj, Lucknow",amenities:"Meals, WiFi, Security"},
+  {name:"Lanka Boys Hostel",city:"Varanasi",price:"₹4500",contact:"9000010012",image:"https://images.unsplash.com/photo-1560448204-e02f11c3d0e2",gender:"Boys",type:"PG",address:"Lanka, Varanasi",amenities:"WiFi, Meals, Study Room"},
+  {name:"Kalinga Nagar PG",city:"Bhubaneswar",price:"₹6500",contact:"9000010013",image:"https://images.unsplash.com/photo-1505693416388-ac5ce068fe85",gender:"Both",type:"PG",address:"Patia, Bhubaneswar",amenities:"WiFi, Meals, AC"},
+  {name:"Indrapuri Student PG",city:"Indore",price:"₹5500",contact:"9000010014",image:"https://images.unsplash.com/photo-1505691938895-1758d7feb511",gender:"Boys",type:"PG",address:"Indrapuri, Indore",amenities:"Meals, WiFi, Parking"},
+  {name:"Civil Lines Girls PG",city:"Nagpur",price:"₹6500",contact:"9000010015",image:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688",gender:"Girls",type:"PG",address:"Civil Lines, Nagpur",amenities:"WiFi, Meals, CCTV"},
+  {name:"Phase 7 Shared Flat",city:"Chandigarh",price:"₹9500",contact:"9000010016",image:"https://images.unsplash.com/photo-1493809842364-78817add7ffb",gender:"Both",type:"Private Flat",address:"Mohali Phase 7, Chandigarh",amenities:"Furnished, Kitchen, WiFi"},
+  {name:"Kankarbagh Private Flat",city:"Patna",price:"₹8500",contact:"9000010017",image:"https://images.unsplash.com/photo-1493809842364-78817add7ffb",gender:"Both",type:"Private Flat",address:"Kankarbagh, Patna",amenities:"Furnished, Kitchen, WiFi, Balcony"},
+  {name:"Karol Bagh Shared Flat",city:"Delhi",price:"₹12000",contact:"9000010018",image:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",gender:"Both",type:"Private Flat",address:"Karol Bagh, Delhi",amenities:"Furnished, AC, WiFi, Kitchen"},
+  {name:"Vesu Student PG",city:"Surat",price:"₹6500",contact:"9000010019",image:"https://images.unsplash.com/photo-1505691938895-1758d7feb511",gender:"Both",type:"PG",address:"Vesu, Surat",amenities:"WiFi, Meals, Laundry"},
+  {name:"Kakkanad Tech Flat",city:"Kochi",price:"₹9000",contact:"9000010020",image:"https://images.unsplash.com/photo-1493809842364-78817add7ffb",gender:"Both",type:"Private Flat",address:"Kakkanad, Kochi",amenities:"Furnished, WiFi, Kitchen"},
+  {name:"Peelamedu Boys Hostel",city:"Coimbatore",price:"₹6000",contact:"9000010021",image:"https://images.unsplash.com/photo-1560448204-e02f11c3d0e2",gender:"Boys",type:"PG",address:"Peelamedu, Coimbatore",amenities:"WiFi, Meals, Study Room"},
+  {name:"Rajpur Road Girls PG",city:"Dehradun",price:"₹7000",contact:"9000010022",image:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688",gender:"Girls",type:"PG",address:"Rajpur Road, Dehradun",amenities:"Meals, WiFi, Security"},
+  {name:"Lalpur Comfort PG",city:"Ranchi",price:"₹5500",contact:"9000010023",image:"https://images.unsplash.com/photo-1505693416388-ac5ce068fe85",gender:"Both",type:"PG",address:"Lalpur, Ranchi",amenities:"WiFi, Meals, Parking"},
+  {name:"GS Road Shared Flat",city:"Guwahati",price:"₹8000",contact:"9000010024",image:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",gender:"Both",type:"Private Flat",address:"GS Road, Guwahati",amenities:"Furnished, Kitchen, WiFi"},
+  {name:"Kota Road Student PG",city:"Raipur",price:"₹6000",contact:"9000010025",image:"https://images.unsplash.com/photo-1505691938895-1758d7feb511",gender:"Boys",type:"PG",address:"Kota Road, Raipur",amenities:"WiFi, Meals, Laundry"},
+  {name:"Napier Town Girls PG",city:"Jabalpur",price:"₹5200",contact:"9000010026",image:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688",gender:"Girls",type:"PG",address:"Napier Town, Jabalpur",amenities:"Meals, WiFi, CCTV"},
+];
 ];
 
 ```

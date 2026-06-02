@@ -1087,6 +1087,59 @@ body::before {
 @media (max-width: 1180px) { .intent-grid { grid-template-columns: repeat(4, minmax(0,1fr)); } }
 @media (max-width: 760px) { .intent-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
 @media (max-width: 480px) { .intent-grid { grid-template-columns: 1fr; } .intent-card { min-height: auto; } }
+
+/* ===================== FEATURE MODULES: FOOD, FITNESS, EXPENSE, MARKET, TECH ===================== */
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.service-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 220px;
+  padding: 20px;
+  border-radius: 26px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 14px 36px rgba(15,23,42,.07);
+}
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #ff6b35, #14b8a6, #2563eb);
+}
+.service-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px; }
+.service-icon { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 16px; background: var(--input); font-size: 22px; }
+.service-tag { padding: 7px 10px; border-radius: 999px; background: var(--brand-light); color: var(--brand); font-size: 11px; font-weight: 900; }
+.service-card h3 { font-family: 'Syne', sans-serif; font-size: 20px; margin-bottom: 8px; letter-spacing: -.4px; }
+.service-card p { color: var(--muted); font-size: 13px; line-height: 1.65; margin-bottom: 18px; }
+.service-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; }
+.service-meta strong { color: var(--brand); font-size: 16px; }
+.service-meta a { color: #fff; background: linear-gradient(135deg,var(--brand),#f59e0b); border-radius: 999px; padding: 8px 12px; font-size: 12px; font-weight: 800; }
+.expense-layout { display: grid; grid-template-columns: minmax(260px,.8fr) 1.2fr; gap: 16px; }
+.expense-form-card, .expense-summary-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 12px 32px rgba(15,23,42,.06);
+}
+.expense-total { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.expense-total span { color: var(--muted); }
+.expense-total strong { color: var(--brand); font-family: 'Syne', sans-serif; font-size: 24px; }
+.expense-ledger { display: grid; gap: 10px; margin-top: 14px; }
+.ledger-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 12px 14px; border: 1px solid var(--border); border-radius: 16px; background: var(--input); }
+.ledger-row strong { display: block; font-size: 14px; }
+.ledger-row span, .ledger-row small { color: var(--muted); font-size: 12px; }
+.ledger-row b { color: var(--text); }
+.market-form { display: grid; grid-template-columns: 1.2fr 1fr .7fr auto; gap: 10px; margin-bottom: 18px; }
+.market-form .m-input { margin: 0; }
+@media (max-width: 820px) {
+  .expense-layout, .market-form { grid-template-columns: 1fr; }
+  .ledger-row { grid-template-columns: 1fr; }
 @media(max-width: 500px) {
     .logo { font-size: 1.2rem; }
     .nav-actions { gap: 12px; }
