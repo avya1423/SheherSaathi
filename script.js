@@ -119,3 +119,206 @@ function renderSimpleGrids() {
 function openModal(id) { document.getElementById('modal-overlay').style.display = 'block'; document.getElementById(id).style.display = 'block'; }
 function closeAllModals() { document.getElementById('modal-overlay').style.display = 'none'; document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
 function handleRealLogin() { localStorage.setItem('ss_active_session_user', document.getElementById('login-email').value); closeAllModals(); alert("Logged in successfully!"); }
+/* =========================
+   PHASE 1 UPGRADE JS
+========================= */
+
+/* MOBILE MENU */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const menuBtn = document.getElementById("menu-toggle");
+    const sidebar = document.querySelector(".sidebar");
+
+    if(menuBtn && sidebar){
+        menuBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("active");
+        });
+    }
+
+});
+
+
+/* SEARCH FUNCTION */
+
+const searchInput = document.getElementById("search-pg");
+
+if(searchInput){
+
+    searchInput.addEventListener("input", () => {
+
+        const keyword =
+            searchInput.value.toLowerCase();
+
+        const baseList =
+            window.flatsData || defaultFlats;
+
+        const filtered =
+            baseList.filter(item => {
+
+                const name =
+                    item.name.toLowerCase();
+
+                const city =
+                    item.city.toLowerCase();
+
+                return (
+                    name.includes(keyword) ||
+                    city.includes(keyword)
+                );
+
+            });
+
+        renderFlatsGrid(filtered);
+
+    });
+
+}
+
+
+/* SAFE FILTER FIX */
+
+function filterPGs() {
+
+    const city =
+        document.getElementById('city-select')?.value || "All";
+
+    const budget =
+        document.getElementById('budget-select')?.value || "All";
+
+    const reqAC =
+        document.getElementById('chk-ac')?.checked || false;
+
+    const reqWiFi =
+        document.getElementById('chk-wifi')?.checked || false;
+
+    const reqFood =
+        document.getElementById('chk-food')?.checked || false;
+
+    const reqBroker =
+        document.getElementById('chk-broker')?.checked || false;
+
+    const baseList =
+        window.flatsData || defaultFlats;
+
+    const filtered =
+        baseList.filter(item => {
+
+            let match = true;
+
+            if(city !== "All" && item.city !== city)
+                match = false;
+
+            if(
+                budget !== "All" &&
+                item.price > parseInt(budget)
+            )
+                match = false;
+
+            if(reqAC && !item.ac)
+                match = false;
+
+            if(reqWiFi && !item.wifi)
+                match = false;
+
+            if(reqFood && !item.food)
+                match = false;
+
+            if(reqBroker && !item.brokerFree)
+                match = false;
+
+            return match;
+
+        });
+
+    renderFlatsGrid(filtered);
+
+}
+
+
+/* HERO BUTTON SUPPORT */
+
+function goToPGs() {
+    switchTab("pg-finder");
+}
+
+function goToFareCalculator() {
+    switchTab("fare-calc");
+}
+
+
+/* SIMPLE WELCOME MESSAGE */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const user =
+        localStorage.getItem(
+            "ss_active_session_user"
+        );
+
+    if(user){
+
+        console.log(
+            "Welcome back:",
+            user
+        );
+
+    }
+
+});
+
+
+/* SCROLL TO TOP */
+
+function scrollTopSmooth() {
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* FUTURE READY STATS ANIMATION */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const stats =
+        document.querySelectorAll(
+            ".stats-section h2"
+        );
+
+    stats.forEach(stat => {
+
+        const target =
+            parseInt(
+                stat.innerText
+                    .replace("+","")
+            );
+
+        if(isNaN(target)) return;
+
+        let count = 0;
+
+        const timer =
+            setInterval(() => {
+
+                count +=
+                    Math.ceil(target / 40);
+
+                if(count >= target){
+
+                    count = target;
+                    clearInterval(timer);
+
+                }
+
+                stat.innerText =
+                    count + "+";
+
+            }, 20);
+
+    });
+
+});
